@@ -1,0 +1,18 @@
+# Node modules
+node_modules/
+npm-debug.log*
+yarn.lock
+package-lock.json
+
+# Env / secrets
+.env
+.env.*
+*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor settings (optional)
+.vscode/
+.idea/
