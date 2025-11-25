@@ -1,22 +1,25 @@
 const cfg = require('../../../config.json');
 
+const productionChannels = cfg.channels?.production || cfg.production || {};
+const mediaChannels = cfg.channels?.media || cfg.media || {};
+
 const channelMap = {
-  'production.crew_roster': cfg.channels?.production?.crewRosterId,
-  'production.gear_log': cfg.channels?.production?.gearLogId,
-  'production.post_pipeline': cfg.channels?.production?.postPipelineId,
-  'production.location': cfg.channels?.production?.gearLogId,
-  'production.tests': cfg.channels?.production?.postPipelineId,
-  'production.post_mortem': cfg.channels?.production?.postPipelineId,
-  'production.archive': cfg.channels?.production?.postPipelineId,
-  'production.sound_library': cfg.channels?.production?.postPipelineId,
-  'media.assignments': cfg.channels?.media?.assignmentsId,
-  'media.edits': cfg.channels?.media?.editsId,
-  'media.fact_check': cfg.channels?.media?.factCheckId,
-  'media.photo': cfg.channels?.media?.photoId,
-  'media.video': cfg.channels?.media?.videoId,
-  'media.graphics': cfg.channels?.media?.graphicsId,
-  'media.sound': cfg.channels?.media?.soundId,
-  'media.exports': cfg.channels?.media?.exportsId,
+  'production.crew_roster': productionChannels.crewRosterId,
+  'production.gear_log': productionChannels.gearLogId,
+  'production.post_pipeline': productionChannels.postPipelineId,
+  'production.location': productionChannels.gearLogId,
+  'production.tests': productionChannels.postPipelineId,
+  'production.post_mortem': productionChannels.postPipelineId,
+  'production.archive': productionChannels.postPipelineId,
+  'production.sound_library': productionChannels.postPipelineId,
+  'media.assignments': mediaChannels.assignmentsId,
+  'media.edits': mediaChannels.editsId,
+  'media.fact_check': mediaChannels.factCheckId,
+  'media.photo': mediaChannels.photoId,
+  'media.video': mediaChannels.videoId,
+  'media.graphics': mediaChannels.graphicsId,
+  'media.sound': mediaChannels.soundId,
+  'media.exports': mediaChannels.exportsId,
   'admin.emergency': null
 };
 
