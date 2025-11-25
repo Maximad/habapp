@@ -4,6 +4,10 @@
   "forum": {
     "productionForumId": "1441833861540741331"
   },
+  "categories": {
+    "managementId": "",
+    "unitMap": {}
+  },
   "channels": {
     "production": {
       "crewRosterId": "1441833858063536268",

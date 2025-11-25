@@ -7,15 +7,17 @@ const path = require('path');
 const { createStore } = require('../../src/core/store');
 const projects = require('../../src/core/projects');
 const { createTask, completeTask, deleteTask, listTasks, createTasksFromTemplates } = require('../../src/core/tasks');
-const { listTaskTemplatesByPipeline } = require('../../src/core/templates/task-templates');
+const { getPipelineByKey } = require('../../src/core/units');
 
-function dedupeById(list) {
-  const seen = new Set();
-  return list.filter(t => {
-    if (seen.has(t.id)) return false;
-    seen.add(t.id);
-    return true;
-  });
+function collectPipelineTemplateIds(key, seen = new Set()) {
+  const pipeline = getPipelineByKey(key);
+  if (!pipeline) return [];
+
+  (pipeline.defaultTemplateIds || []).forEach(id => seen.add(id));
+  (pipeline.supportTemplateIds || []).forEach(id => seen.add(id));
+  (pipeline.inheritTemplatePipelineKeys || []).forEach(parent => collectPipelineTemplateIds(parent, seen));
+
+  return Array.from(seen);
 }
 
 function setupProject(pipelineKey = null) {
@@ -68,17 +70,15 @@ test('createTasksFromTemplates seeds tasks for pipeline', async t => {
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
 
   const created = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
-  const expectedTemplates = dedupeById([
-    ...listTaskTemplatesByPipeline('production.video_basic'),
-    ...listTaskTemplatesByPipeline('production.support')
-  ]);
+  const expectedIds = collectPipelineTemplateIds('production.video_basic');
 
-  assert.strictEqual(created.length, expectedTemplates.length);
+  assert.strictEqual(created.length, expectedIds.length);
   assert.ok(created.every(task => task.status === 'open'));
-  assert.strictEqual(created[0].templateId, expectedTemplates[0].id);
+  assert.ok(expectedIds.includes(created[0].templateId));
+  assert.ok(created.every(task => !!task.due));
 
   const stored = projects.findProject('proj', store);
-  assert.strictEqual(stored.tasks.length, expectedTemplates.length);
+  assert.strictEqual(stored.tasks.length, expectedIds.length);
 });
 
 test('createTasksFromTemplates respects explicit pipeline overrides', async t => {
@@ -90,7 +90,7 @@ test('createTasksFromTemplates respects explicit pipeline overrides', async t =>
     store
   );
 
-  const expectedSupport = listTaskTemplatesByPipeline('production.support');
+  const expectedSupport = collectPipelineTemplateIds('production.support');
   assert.strictEqual(createdSupport.length, expectedSupport.length);
   assert.ok(createdSupport.every(task => task.defaultChannelKey));
 });
@@ -100,11 +100,7 @@ test('createTasksFromTemplates falls back for production video pipelines', async
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
 
   const created = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
-  const expectedTemplates = dedupeById([
-    ...listTaskTemplatesByPipeline('production.video_doc'),
-    ...listTaskTemplatesByPipeline('production.video_basic'),
-    ...listTaskTemplatesByPipeline('production.support')
-  ]);
+  const expectedTemplates = collectPipelineTemplateIds('production.video_doc');
 
   assert.strictEqual(created.length, expectedTemplates.length);
   assert.ok(created.every(task => task.status === 'open'));
