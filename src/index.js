@@ -19,6 +19,12 @@ const {
   handleTaskList
 } = require('./discord/adapters/tasks');
 const {
+  handleTaskReviewQuality,
+  handleTaskReviewEthics
+} = require('./discord/adapters/taskReview');
+const { handleWorkBackfillAdd, handleWorkBackfillVerify } = require('./discord/adapters/workBackfill');
+const { handleProfileSkills, handleProfileLearning } = require('./discord/adapters/profile');
+const {
   handleStatusInfo,
   handleStatusRewards
 } = require('./discord/adapters/status');
@@ -71,6 +77,14 @@ client.on(Events.InteractionCreate, async interaction => {
       if (sub === 'complete') return handleTaskComplete(interaction);
       if (sub === 'delete') return handleTaskDelete(interaction);
       if (sub === 'list') return handleTaskList(interaction);
+    }
+
+    // ───── task_review ─────
+    if (name === 'task_review') {
+      const sub = interaction.options.getSubcommand();
+
+      if (sub === 'quality') return handleTaskReviewQuality(interaction);
+      if (sub === 'ethics') return handleTaskReviewEthics(interaction);
     }
 
     // ───── template ─────
@@ -148,6 +162,20 @@ client.on(Events.InteractionCreate, async interaction => {
       const sub = interaction.options.getSubcommand();
       if (sub === 'info') return handleStatusInfo(interaction);
       if (sub === 'rewards') return handleStatusRewards(interaction);
+    }
+
+    // ───── work_backfill ─────
+    if (name === 'work_backfill') {
+      const sub = interaction.options.getSubcommand();
+      if (sub === 'add') return handleWorkBackfillAdd(interaction);
+      if (sub === 'verify') return handleWorkBackfillVerify(interaction);
+    }
+
+    // ───── profile ─────
+    if (name === 'profile') {
+      const sub = interaction.options.getSubcommand();
+      if (sub === 'skills') return handleProfileSkills(interaction);
+      if (sub === 'learning') return handleProfileLearning(interaction);
     }
   } catch (err) {
     console.error(err);

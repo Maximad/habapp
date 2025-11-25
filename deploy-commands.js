@@ -259,6 +259,66 @@ const commands = [
     ]
   },
   {
+    name: 'task_review',
+    description: 'مراجعة جودة أو أخلاقيات مهمة',
+    dm_permission: false,
+    type: 1,
+    options: [
+      {
+        type: 1,
+        name: 'quality',
+        description: 'تسجيل تقييم جودة لمهمة',
+        options: [
+          { type: 3, name: 'task_id', description: 'معرّف المهمة', required: true },
+          {
+            type: 4,
+            name: 'score',
+            description: 'درجة الجودة (٣ قوي، ٢ جيد، ١ ضعيف)',
+            required: true,
+            choices: [
+              { name: '3 قوي', value: 3 },
+              { name: '2 جيد', value: 2 },
+              { name: '1 ضعيف', value: 1 }
+            ]
+          },
+          {
+            type: 3,
+            name: 'tags',
+            description: 'وسوم ملاحظات مفصولة بفواصل (اختياري)',
+            required: false
+          },
+          { type: 3, name: 'notes', description: 'ملاحظات قصيرة', required: false }
+        ]
+      },
+      {
+        type: 1,
+        name: 'ethics',
+        description: 'تسجيل ملاحظات أخلاقية لمهمة',
+        options: [
+          { type: 3, name: 'task_id', description: 'معرّف المهمة', required: true },
+          {
+            type: 3,
+            name: 'status',
+            description: 'حالة المراجعة',
+            required: true,
+            choices: [
+              { name: 'ok', value: 'ok' },
+              { name: 'needs_discussion', value: 'needs_discussion' },
+              { name: 'violation', value: 'violation' }
+            ]
+          },
+          {
+            type: 3,
+            name: 'tags',
+            description: 'وسوم ملاحظات مفصولة بفواصل (اختياري)',
+            required: false
+          },
+          { type: 3, name: 'notes', description: 'ملاحظات قصيرة', required: false }
+        ]
+      }
+    ]
+  },
+  {
     name: 'status',
     description: 'عرض معلومات حالات حبق',
     dm_permission: false,
@@ -273,6 +333,108 @@ const commands = [
         type: 1,
         name: 'rewards',
         description: 'عرض الحوافز والمكافآت المقترحة لكل حالة'
+      }
+    ]
+  },
+  {
+    name: 'work_backfill',
+    description: 'تسجيل أعمال سابقة أو توثيقها',
+    dm_permission: false,
+    type: 1,
+    options: [
+      {
+        type: 1,
+        name: 'add',
+        description: 'إضافة عمل سابق (backfill)',
+        options: [
+          {
+            type: 3,
+            name: 'unit',
+            description: 'الوحدة المسؤولة',
+            required: true,
+            choices: [
+              { name: 'الإعلام', value: 'media' },
+              { name: 'الإنتاج', value: 'production' },
+              { name: 'الناس', value: 'people' },
+              { name: 'الجيكس', value: 'geeks' },
+              { name: 'فِكر', value: 'think' },
+              { name: 'الأكاديمية', value: 'academy' },
+              { name: 'الإدارة', value: 'admin' }
+            ]
+          },
+          {
+            type: 3,
+            name: 'pipeline',
+            description: 'مسار العمل المرتبط',
+            required: true,
+            choices: pipelineChoices
+          },
+          { type: 3, name: 'title', description: 'عنوان مختصر', required: true },
+          { type: 3, name: 'description', description: 'وصف أو ملخص', required: true },
+          {
+            type: 3,
+            name: 'completed_at',
+            description: 'تاريخ الإنجاز (YYYY-MM أو YYYY-MM-DD)',
+            required: true
+          },
+          {
+            type: 3,
+            name: 'links',
+            description: 'روابط أو مراجع (مفصولة بفواصل)',
+            required: false
+          }
+        ]
+      },
+      {
+        type: 1,
+        name: 'verify',
+        description: 'تأكيد أو رفض عمل سابق (للاستخدام الداخلي)',
+        options: [
+          { type: 3, name: 'entry_id', description: 'معرّف السجل', required: true },
+          { type: 5, name: 'verified', description: 'تأكيد أم لا', required: true }
+        ]
+      }
+    ]
+  },
+  {
+    name: 'profile',
+    description: 'تحديث مهاراتك واهتمامات التعلم',
+    dm_permission: false,
+    type: 1,
+    options: [
+      {
+        type: 1,
+        name: 'skills',
+        description: 'إضافة أو تحديث مهارة',
+        options: [
+          { type: 3, name: 'key', description: 'معرّف المهارة (إنجليزي)', required: true },
+          {
+            type: 3,
+            name: 'level',
+            description: 'المستوى',
+            required: true,
+            choices: [
+              { name: 'beginner', value: 'beginner' },
+              { name: 'intermediate', value: 'intermediate' },
+              { name: 'advanced', value: 'advanced' }
+            ]
+          },
+          {
+            type: 3,
+            name: 'examples',
+            description: 'روابط أو مراجع مختصرة (مفصولة بفواصل)',
+            required: false
+          }
+        ]
+      },
+      {
+        type: 1,
+        name: 'learning',
+        description: 'تسجيل اهتمام تعلّم',
+        options: [
+          { type: 3, name: 'key', description: 'معرّف المجال (إنجليزي)', required: true },
+          { type: 3, name: 'notes', description: 'ملاحظات قصيرة', required: false }
+        ]
       }
     ]
   }

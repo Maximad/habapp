@@ -6,14 +6,25 @@ const path = require('path');
 
 const { createStore } = require('../../src/core/store');
 const projects = require('../../src/core/projects');
-const { createTask, completeTask, deleteTask, listTasks, createTasksFromTemplates } = require('../../src/core/tasks');
+const {
+  createTask,
+  completeTask,
+  deleteTask,
+  listTasks,
+  createTasksFromTemplates,
+  setTaskQuality,
+  setTaskEthics,
+  getTaskById
+} = require('../../src/core/tasks');
 const { getPipelineByKey } = require('../../src/core/units');
 
 function collectPipelineTemplateIds(key, seen = new Set()) {
   const pipeline = getPipelineByKey(key);
   if (!pipeline) return [];
 
-  (pipeline.defaultTemplateIds || []).forEach(id => seen.add(id));
+  (pipeline.defaultTaskTemplateIds || pipeline.defaultTemplateIds || []).forEach(id =>
+    seen.add(id)
+  );
   (pipeline.supportTemplateIds || []).forEach(id => seen.add(id));
   (pipeline.inheritTemplatePipelineKeys || []).forEach(parent => collectPipelineTemplateIds(parent, seen));
 
@@ -104,4 +115,97 @@ test('createTasksFromTemplates falls back for production video pipelines', async
 
   assert.strictEqual(created.length, expectedTemplates.length);
   assert.ok(created.every(task => task.status === 'open'));
+});
+
+test('createTasksFromTemplates scaffolds media pipelines without duplication', async t => {
+  const { store, dir } = setupProject('media.article_short');
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  const created = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
+  const expectedTemplateIds = collectPipelineTemplateIds('media.article_short');
+
+  assert.strictEqual(created.length, expectedTemplateIds.length);
+  assert.ok(created.every(task => expectedTemplateIds.includes(task.templateId)));
+
+  const createdAgain = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
+  assert.strictEqual(createdAgain.length, 0);
+
+  const stored = projects.findProject('proj', store);
+  assert.strictEqual(stored.tasks.length, expectedTemplateIds.length);
+});
+
+test('createTasksFromTemplates scaffolds people pipelines and dedupes', async t => {
+  const { store, dir } = setupProject('people.event_small');
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  const created = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
+  const expectedTemplateIds = collectPipelineTemplateIds('people.event_small');
+
+  assert.strictEqual(created.length, expectedTemplateIds.length);
+  assert.ok(created.every(task => expectedTemplateIds.includes(task.templateId)));
+
+  const createdAgain = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
+  assert.strictEqual(createdAgain.length, 0);
+});
+
+test('createTasksFromTemplates scaffolds geeks pipelines and dedupes', async t => {
+  const { store, dir } = setupProject('geeks.app_small');
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  const created = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
+  const expectedTemplateIds = collectPipelineTemplateIds('geeks.app_small');
+
+  assert.strictEqual(created.length, expectedTemplateIds.length);
+  assert.ok(created.every(task => expectedTemplateIds.includes(task.templateId)));
+
+  const createdAgain = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
+  assert.strictEqual(createdAgain.length, 0);
+});
+
+test('createTasksFromTemplates scaffolds geeks automation pipeline and dedupes', async t => {
+  const { store, dir } = setupProject('geeks.automation_stack');
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  const created = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
+  const expectedTemplateIds = collectPipelineTemplateIds('geeks.automation_stack');
+
+  assert.strictEqual(created.length, expectedTemplateIds.length);
+  assert.ok(created.every(task => expectedTemplateIds.includes(task.templateId)));
+
+  const createdAgain = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
+  assert.strictEqual(createdAgain.length, 0);
+});
+
+test('setTaskQuality and setTaskEthics update existing tasks', t => {
+  const { store, dir } = setupProject();
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  const { task } = createTask('proj', { title: 'Assess me' }, store);
+  const updatedQuality = setTaskQuality(task.id, {
+    score: 3,
+    tags: ['clear'],
+    notes: 'Great quality',
+    reviewerId: 'user-1'
+  }, store);
+
+  assert.strictEqual(updatedQuality.quality.score, 3);
+  assert.deepStrictEqual(updatedQuality.quality.tags, ['clear']);
+  assert.strictEqual(updatedQuality.quality.reviewerId, 'user-1');
+  assert.ok(updatedQuality.quality.updatedAt);
+
+  const updatedEthics = setTaskEthics(task.id, {
+    status: 'ok',
+    tags: ['balanced'],
+    notes: 'No issues',
+    reviewerId: 'user-2'
+  }, store);
+
+  assert.strictEqual(updatedEthics.ethics.status, 'ok');
+  assert.deepStrictEqual(updatedEthics.ethics.tags, ['balanced']);
+  assert.strictEqual(updatedEthics.ethics.reviewerId, 'user-2');
+  assert.ok(updatedEthics.ethics.updatedAt);
+
+  const fetched = getTaskById(task.id, store);
+  assert.strictEqual(fetched.task.quality.score, 3);
+  assert.strictEqual(fetched.task.ethics.status, 'ok');
 });
