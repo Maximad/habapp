@@ -1,6 +1,6 @@
 const { addTaskToProject, completeTask, removeTask, listProjectTasks } = require('../../core/services/tasksService');
 const { unitToArabic, statusToArabic } = require('../utils/formatters');
-const { postToChannel, getChannelIdByKey } = require('../utils/channels');
+const { postToChannelByKey } = require('../utils/channels');
 
 async function handleTaskAdd(interaction) {
   const slug = interaction.options.getString('slug', true);
@@ -29,9 +29,9 @@ async function handleTaskAdd(interaction) {
 
   const { project, task } = result;
 
-  const msg = await postToChannel(
+  const msg = await postToChannelByKey(
     interaction.guild,
-    getChannelIdByKey('media.assignments'),
+    'media.assignments',
     `**[${slug} T-${task.id}]** – ${title}\n` +
       `الوحدة: ${unitToArabic(unit)}\n` +
       `المنفّذ: ${owner ? `<@${owner.id}>` : 'غير معيّن'}\n` +

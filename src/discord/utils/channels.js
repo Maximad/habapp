@@ -37,4 +37,8 @@ async function postToChannel(guild, channelId, content) {
   return ch.send({ content });
 }
 
-module.exports = { postToChannel, getChannelIdByKey };
+async function postToChannelByKey(guild, channelKey, content) {
+  return postToChannel(guild, getChannelIdByKey(channelKey), content);
+}
+
+module.exports = { postToChannel, postToChannelByKey, getChannelIdByKey };
