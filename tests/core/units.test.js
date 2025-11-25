@@ -47,6 +47,16 @@ test('pipelines are linked to units and retrievable by key', () => {
   assert.strictEqual(geeksPipeline.unitKey, 'geeks');
   assert.ok(Array.isArray(geeksPipeline.stages_ar));
   assert.ok(Array.isArray(geeksPipeline.defaultTaskTemplateIds));
+
+  const geeksAutomation = getPipelineByKey('geeks.automation_stack');
+  assert.strictEqual(geeksAutomation.unitKey, 'geeks');
+  assert.ok(Array.isArray(geeksAutomation.stages_ar));
+  assert.ok(geeksAutomation.stages_ar.length > 0);
+
+  const geeksDiscord = getPipelineByKey('geeks.discord_infra');
+  assert.strictEqual(geeksDiscord.unitKey, 'geeks');
+  assert.ok(Array.isArray(geeksDiscord.stages_ar));
+  assert.ok(geeksDiscord.stages_ar.length > 0);
 });
 
 test('listPipelinesByUnit filters by unit key', () => {

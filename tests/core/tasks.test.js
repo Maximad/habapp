@@ -176,6 +176,20 @@ test('createTasksFromTemplates scaffolds geeks automation pipeline and dedupes',
   assert.strictEqual(createdAgain.length, 0);
 });
 
+test('createTasksFromTemplates scaffolds geeks discord infra pipeline and dedupes', async t => {
+  const { store, dir } = setupProject('geeks.discord_infra');
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  const created = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
+  const expectedTemplateIds = collectPipelineTemplateIds('geeks.discord_infra');
+
+  assert.strictEqual(created.length, expectedTemplateIds.length);
+  assert.ok(created.every(task => expectedTemplateIds.includes(task.templateId)));
+
+  const createdAgain = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
+  assert.strictEqual(createdAgain.length, 0);
+});
+
 test('setTaskQuality and setTaskEthics update existing tasks', t => {
   const { store, dir } = setupProject();
   t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
