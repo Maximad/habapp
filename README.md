@@ -14,3 +14,8 @@ Internal bot for Habaq Collective.
 
 - `/project create name:"لقاء مع موسيقيين شباب" slug:"youth-musicians" pipeline:"production.video_basic" units:"production,media"`
 - `/project scaffold slug:"youth-musicians"`
+
+## Learn more
+
+- `docs/PROJECT_OVERVIEW.md` – high-level explanation of how the bot works and
+  what the main capabilities are.
