@@ -1,69 +1,64 @@
 // src/core/projects.js
-const fs = require('fs');
-const path = require('path');
+const { defaultStore } = require('./store');
 
-const DATA_DIR = path.join(__dirname, '..', 'data');
-const DATA_FILE = path.join(DATA_DIR, 'projects.json');
+const PROJECTS_KEY = 'projects';
 
-function ensureDataFile() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-  if (!fs.existsSync(DATA_FILE)) {
-    fs.writeFileSync(DATA_FILE, '[]', 'utf8');
-  }
+function getStore(store = defaultStore) {
+  return store || defaultStore;
 }
 
-function loadProjects() {
-  ensureDataFile();
-  try {
-    const raw = fs.readFileSync(DATA_FILE, 'utf8');
-    const arr = JSON.parse(raw);
-    return Array.isArray(arr) ? arr : [];
-  } catch {
-    return [];
-  }
+function applyProjectDefaults(project) {
+  if (!project) return project;
+  const units = Array.isArray(project.units) && project.units.length > 0 ? project.units : ['production'];
+  const pipelineKey = typeof project.pipelineKey === 'string' && project.pipelineKey.length > 0 ? project.pipelineKey : null;
+  return { ...project, units, pipelineKey };
 }
 
-function saveProjects(list) {
-  ensureDataFile();
-  fs.writeFileSync(DATA_FILE, JSON.stringify(list, null, 2), 'utf8');
+function loadProjects(store = defaultStore) {
+  const raw = getStore(store).read(PROJECTS_KEY, []);
+  return Array.isArray(raw) ? raw.map(applyProjectDefaults) : [];
 }
 
-function findProject(slug) {
-  const projects = loadProjects();
+function saveProjects(list, store = defaultStore) {
+  const normalized = Array.isArray(list) ? list.map(applyProjectDefaults) : [];
+  getStore(store).write(PROJECTS_KEY, normalized);
+}
+
+function findProject(slug, store = defaultStore) {
+  const projects = loadProjects(store);
   const s = String(slug || '').toLowerCase();
   return projects.find(p => (p.slug || '').toLowerCase() === s) || null;
 }
 
-function upsertProject(project) {
-  const projects = loadProjects();
-  const s = String(project.slug || '').toLowerCase();
+function upsertProject(project, store = defaultStore) {
+  const projects = loadProjects(store);
+  const normalized = applyProjectDefaults(project);
+  const s = String(normalized.slug || '').toLowerCase();
   const idx = projects.findIndex(p => (p.slug || '').toLowerCase() === s);
   if (idx >= 0) {
-    projects[idx] = project;
+    projects[idx] = normalized;
   } else {
-    projects.push(project);
+    projects.push(normalized);
   }
-  saveProjects(projects);
-  return project;
+  saveProjects(projects, store);
+  return normalized;
 }
 
-function deleteProject(slug) {
-  const projects = loadProjects();
+function deleteProject(slug, store = defaultStore) {
+  const projects = loadProjects(store);
   const s = String(slug || '').toLowerCase();
   const filtered = projects.filter(p => (p.slug || '').toLowerCase() !== s);
   const changed = filtered.length !== projects.length;
-  if (changed) saveProjects(filtered);
+  if (changed) saveProjects(filtered, store);
   return changed;
 }
 
-function listProjects() {
-  return loadProjects();
+function listProjects(store = defaultStore) {
+  return loadProjects(store);
 }
 
-function ensureProject(slug) {
-  const projects = loadProjects();
+function ensureProject(slug, store = defaultStore) {
+  const projects = loadProjects(store);
   const s = String(slug || '').toLowerCase();
   const idx = projects.findIndex(p => (p.slug || '').toLowerCase() === s);
   if (idx === -1) {
@@ -73,12 +68,12 @@ function ensureProject(slug) {
 }
 
 module.exports = {
-  DATA_FILE,
   loadProjects,
   saveProjects,
   findProject,
   upsertProject,
   deleteProject,
   listProjects,
-  ensureProject
+  ensureProject,
+  applyProjectDefaults
 };

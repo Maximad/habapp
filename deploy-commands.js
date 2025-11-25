@@ -2,6 +2,9 @@
 require('dotenv').config();
 const { REST, Routes } = require('discord.js');
 const cfg = require('./config.json');
+const { pipelines } = require('./src/core/units');
+
+const pipelineChoices = pipelines.map(p => ({ name: p.name_ar, value: p.key }));
 
 const commands = [
   {
@@ -23,7 +26,47 @@ const commands = [
         options: [
           { type: 3, name: 'name', description: 'اسم المشروع', required: true },
           { type: 3, name: 'slug', description: 'رمز قصير للمشروع', required: true },
-          { type: 3, name: 'due', description: 'تاريخ التسليم (اختياري)', required: false }
+          {
+            type: 3,
+            name: 'pipeline',
+            description: 'مسار العمل (اختر المسار المناسب)',
+            required: false,
+            choices: pipelineChoices
+          },
+          {
+            type: 3,
+            name: 'units',
+            description: 'وحدات المشروع (مفصولة بفواصل مثل production,media)',
+            required: false
+          },
+          { type: 3, name: 'due', description: 'تاريخ التسليم (اختياري)', required: false },
+          {
+            type: 3,
+            name: 'template',
+            description: 'قالب الإنتاج (A/B/C)',
+            required: false,
+            choices: [
+              { name: 'قالب A - بسيط/داخلي', value: 'A' },
+              { name: 'قالب B - وثائقي قياسي', value: 'B' },
+              { name: 'قالب C - معيار عميل مرتفع', value: 'C' },
+              { name: 'بدون قالب محدد', value: 'none' }
+            ]
+          }
+        ]
+      },
+      {
+        type: 1,
+        name: 'scaffold',
+        description: 'توليد مهام تلقائية من قوالب المسار',
+        options: [
+          { type: 3, name: 'slug', description: 'رمز المشروع', required: true },
+          {
+            type: 3,
+            name: 'pipeline',
+            description: 'مسار العمل (اختياري، يستخدم مسار المشروع إذا تُرك فارغاً)',
+            required: false,
+            choices: pipelineChoices
+          }
         ]
       },
       {
@@ -198,6 +241,24 @@ const commands = [
           { type: 6, name: 'owner', description: 'تعيين المنفّذ (اختياري)', required: false },
           { type: 3, name: 'due', description: 'تاريخ التسليم (اختياري)', required: false }
         ]
+      }
+    ]
+  },
+  {
+    name: 'status',
+    description: 'عرض معلومات حالات حبق',
+    dm_permission: false,
+    type: 1,
+    options: [
+      {
+        type: 1,
+        name: 'info',
+        description: 'عرض نظرة عامة على الحالات والمبادئ'
+      },
+      {
+        type: 1,
+        name: 'rewards',
+        description: 'عرض الحوافز والمكافآت المقترحة لكل حالة'
       }
     ]
   }

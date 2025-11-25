@@ -20,6 +20,9 @@
  *   defaultDueDays: number | null,      // عدد الأيام المقترحة لإنجاز المهمة
  *
  *   tags: string[]                    // كلمات مفتاحية حرة
+ *
+ *   pipelineKey?: string | null  // optional, points to a pipeline key such as 'production.video_basic'
+ *   pipelines?: string[]         // optional, list of pipelines this template supports
  * }
  */
 
@@ -44,6 +47,9 @@ const productionTaskTemplates = [
     defaultChannelKey: 'production.crew_roster',
     defaultDueDays: 2,
 
+    pipelineKey: 'production.video_basic',
+    pipelines: ['production.video_basic', 'production.video_doc', 'production.video_premium'],
+
     tags: ['طاقم', 'تنسيق', 'تصوير', 'إنتاج']
   },
 
@@ -62,6 +68,9 @@ const productionTaskTemplates = [
     defaultOwnerRole: 'producer',
     defaultChannelKey: 'production.crew_roster',
     defaultDueDays: 2,
+
+    pipelineKey: 'production.video_basic',
+    pipelines: ['production.video_basic', 'production.video_doc', 'production.video_premium'],
 
     tags: ['نداء', 'تصوير', 'سلامة', 'تنسيق']
   },
@@ -82,6 +91,9 @@ const productionTaskTemplates = [
     defaultChannelKey: 'production.location',
     defaultDueDays: 3,
 
+    pipelineKey: 'production.video_basic',
+    pipelines: ['production.video_basic', 'production.video_doc', 'production.video_premium'],
+
     tags: ['موقع', 'موافقات', 'سلامة', 'إنتاج']
   },
 
@@ -100,6 +112,9 @@ const productionTaskTemplates = [
     defaultOwnerRole: 'producer',
     defaultChannelKey: 'production.gear_log',
     defaultDueDays: 1,
+
+    pipelineKey: 'production.video_basic',
+    pipelines: ['production.video_basic', 'production.video_doc', 'production.video_premium'],
 
     tags: ['معدّات', 'حجز', 'لوجستيات']
   },
@@ -120,6 +135,9 @@ const productionTaskTemplates = [
     defaultChannelKey: 'production.tests',
     defaultDueDays: 3,
 
+    pipelineKey: 'production.support',
+    pipelines: ['production.support'],
+
     tags: ['اختبارات', 'كاميرا', 'LUT', 'فيديو']
   },
 
@@ -138,6 +156,9 @@ const productionTaskTemplates = [
     defaultOwnerRole: 'producer',
     defaultChannelKey: 'production.post_mortem',
     defaultDueDays: 2,
+
+    pipelineKey: 'production.video_basic',
+    pipelines: ['production.video_basic', 'production.video_doc', 'production.video_premium'],
 
     tags: ['تقرير', 'تعلم', 'خطر', 'إنتاج']
   },
@@ -158,6 +179,9 @@ const productionTaskTemplates = [
     defaultChannelKey: 'production.post_pipeline',
     defaultDueDays: 3,
 
+    pipelineKey: 'production.video_basic',
+    pipelines: ['production.video_basic', 'production.video_doc', 'production.video_premium'],
+
     tags: ['مونتاج', 'خطة', 'مواعيد', 'ما بعد الإنتاج']
   },
 
@@ -176,6 +200,9 @@ const productionTaskTemplates = [
     defaultOwnerRole: 'editor',
     defaultChannelKey: 'production.post_pipeline',
     defaultDueDays: 5,
+
+    pipelineKey: 'production.video_basic',
+    pipelines: ['production.video_basic', 'production.video_doc', 'production.video_premium'],
 
     tags: ['مونتاج', 'فيديو', 'مراجعة']
   },
@@ -196,6 +223,9 @@ const productionTaskTemplates = [
     defaultChannelKey: 'production.post_pipeline',
     defaultDueDays: 4,
 
+    pipelineKey: 'production.video_basic',
+    pipelines: ['production.video_basic', 'production.video_doc', 'production.video_premium'],
+
     tags: ['ترجمة', 'ترجمات', 'وصول', 'فيديو']
   },
 
@@ -214,6 +244,9 @@ const productionTaskTemplates = [
     defaultOwnerRole: 'colorist',
     defaultChannelKey: 'production.post_pipeline',
     defaultDueDays: 4,
+
+    pipelineKey: 'production.video_basic',
+    pipelines: ['production.video_basic', 'production.video_doc', 'production.video_premium'],
 
     tags: ['لون', 'فيديو', 'مونتاج']
   },
@@ -234,6 +267,9 @@ const productionTaskTemplates = [
     defaultChannelKey: 'production.post_pipeline',
     defaultDueDays: 4,
 
+    pipelineKey: 'production.video_basic',
+    pipelines: ['production.video_basic', 'production.video_doc', 'production.video_premium'],
+
     tags: ['صوت', 'مكس', 'تنظيف', 'فيديو']
   },
 
@@ -252,6 +288,9 @@ const productionTaskTemplates = [
     defaultOwnerRole: 'producer',
     defaultChannelKey: 'media.exports',
     defaultDueDays: 3,
+
+    pipelineKey: 'production.video_basic',
+    pipelines: ['production.video_basic', 'production.video_doc', 'production.video_premium'],
 
     tags: ['تسليم', 'ماستر', 'تصدير', 'فيديو']
   },
@@ -272,6 +311,9 @@ const productionTaskTemplates = [
     defaultChannelKey: 'production.archive',
     defaultDueDays: 4,
 
+    pipelineKey: 'production.video_basic',
+    pipelines: ['production.video_basic', 'production.video_doc', 'production.video_premium'],
+
     tags: ['أرشيف', 'بيانات وصفية', 'تنظيم']
   },
 
@@ -290,6 +332,9 @@ const productionTaskTemplates = [
     defaultOwnerRole: 'sound_mixer',
     defaultChannelKey: 'production.sound_library',
     defaultDueDays: 7,
+
+    pipelineKey: 'production.support',
+    pipelines: ['production.support'],
 
     tags: ['صوت', 'موسيقى', 'ترخيص', 'أرشيف']
   },
@@ -310,6 +355,9 @@ const productionTaskTemplates = [
     defaultChannelKey: 'production.post_pipeline',
     defaultDueDays: 5,
 
+    pipelineKey: 'production.support',
+    pipelines: ['production.support'],
+
     tags: ['تصدير', 'Preset', 'مونتاج']
   },
 
@@ -329,7 +377,392 @@ const productionTaskTemplates = [
     defaultChannelKey: 'admin.emergency',
     defaultDueDays: 3,
 
+    pipelineKey: 'production.support',
+
     tags: ['طوارئ', 'سلامة', 'إنتاج']
+  }
+];
+
+// ==========================
+// Media unit templates
+// ==========================
+
+const mediaTaskTemplates = [
+  {
+    id: 'media_article_brief_short',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'موجز مقال قصير (سؤال/جواب)',
+    description_ar: 'صياغة زوايا الأسئلة وتأكيد المصادر لمقال ٨٠٠–١٢٠٠ كلمة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'موجز منصفحة واحدة يتضمن الفكرة، الأسئلة الرئيسية، المصادر الأولية، والموافقة التحريرية الأولية، منشور في قناة التكليف.',
+
+    defaultOwnerRole: 'editor',
+    defaultChannelKey: 'media.assignments',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.article_short',
+    pipelines: ['media.article_short'],
+
+    tags: ['مقال', 'إعلام', 'تخطيط', 'سؤال/جواب']
+  },
+
+  {
+    id: 'media_article_draft_short',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'مسودة مقال قصير ٨٠٠–١٢٠٠ كلمة',
+    description_ar: 'كتابة مسودة أولى لمقال قصير مع روابط المصادر الأساسية.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'مسودة كاملة بحد أدنى ٨٠٠ كلمة تتضمن اقتباسات موثقة وروابط المصادر، مرفوعة في قناة التحرير مع ملاحظات رئيسية.',
+
+    defaultOwnerRole: 'writer',
+    defaultChannelKey: 'media.edits',
+    defaultDueDays: 4,
+
+    pipelineKey: 'media.article_short',
+    pipelines: ['media.article_short'],
+
+    tags: ['مقال', 'كتابة', 'تحرير']
+  },
+
+  {
+    id: 'media_social_cuts_article',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'اقتطاعات اجتماعية لمقال قصير',
+    description_ar: 'تحضير مقتطفات ونشرات اجتماعية للمقال مع روابط القراءة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      '٣–٥ مقتطفات أو بطاقات جاهزة للنشر مع نصوص مرافقة وروابط المادة الأصلية، مع جدول نشر مقترح.',
+
+    defaultOwnerRole: 'social_editor',
+    defaultChannelKey: 'media.graphics',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.article_short',
+    pipelines: ['media.article_short'],
+
+    tags: ['اجتماعي', 'نشر', 'مقتطفات']
+  },
+
+  {
+    id: 'media_article_brief_long',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'موجز مقال مطوّل',
+    description_ar: 'وضع هيكل وأسئلة ومصادر لمقال ١٥٠٠–٢٠٠٠ كلمة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'موجز يتضمن الأطروحة، الفصول أو الأقسام، قائمة المصادر المقترحة، وجداول مقابلات رئيسية، منشور في قناة التكليف.',
+
+    defaultOwnerRole: 'editor',
+    defaultChannelKey: 'media.assignments',
+    defaultDueDays: 3,
+
+    pipelineKey: 'media.article_long',
+    pipelines: ['media.article_long'],
+    pipelines: ['media.article_long'],
+
+    tags: ['مقال', 'تخطيط', 'بحث']
+  },
+
+  {
+    id: 'media_article_draft_long',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'مسودة مقال مطوّل',
+    description_ar: 'كتابة مسودة مطوّلة تشمل مقدمة، سرد، وخاتمة مدعومة بالمصادر.',
+
+    size: 'L',
+    definitionOfDone_ar:
+      'مسودة كاملة لا تقل عن ١٥٠٠ كلمة مع استشهادات وروابط، جاهزة لجولة تحرير أولى في قناة التحرير.',
+
+    defaultOwnerRole: 'writer',
+    defaultChannelKey: 'media.edits',
+    defaultDueDays: 6,
+
+    pipelineKey: 'media.article_long',
+    pipelines: ['media.article_long'],
+
+    tags: ['مقال', 'كتابة', 'تحرير', 'بحث']
+  },
+
+  {
+    id: 'media_deep_edit_pass',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'جولة تحرير عميقة',
+    description_ar: 'مراجعة بنيوية ولغوية للمقال المطوّل قبل النشر.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'ملاحظات تحريرية واضحة حول البنية واللغة مع نسخة محدثة من النص، منشورة للموافقة النهائية.',
+
+    defaultOwnerRole: 'editor',
+    defaultChannelKey: 'media.edits',
+    defaultDueDays: 3,
+
+    pipelineKey: 'media.article_long',
+
+    tags: ['تحرير', 'مراجعة', 'إعلام']
+  },
+
+  {
+    id: 'media_photo_story_brief',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'موجز قصة مصوّرة',
+    description_ar: 'تحديد زوايا القصة وأسلوب السرد وعدد الصور المطلوبة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ملخص يوضح الشخصيات، المواقع، وعدد اللقطات المستهدفة مع جدول زمني وتصاريح ضرورية.',
+
+    defaultOwnerRole: 'photo_editor',
+    defaultChannelKey: 'media.photo',
+    defaultDueDays: 3,
+
+    pipelineKey: 'media.photo_story',
+    pipelines: ['media.photo_story'],
+
+    tags: ['تصوير', 'قصة', 'تخطيط']
+  },
+
+  {
+    id: 'media_photo_story_selection',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'اختيار صور القصة وتحريرها',
+    description_ar: 'اختيار ٦–٨ صور مع تصحيح لوني أساسي وتسميات.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'مجموعة نهائية من ٦–٨ صور عالية الجودة مع تسميات عربية ووصف مختصر لكل صورة، جاهزة للنشر.',
+
+    defaultOwnerRole: 'photo_editor',
+    defaultChannelKey: 'media.photo',
+    defaultDueDays: 4,
+
+    pipelineKey: 'media.photo_story',
+    pipelines: ['media.photo_story'],
+
+    tags: ['تصوير', 'تحرير', 'نشر']
+  },
+
+  {
+    id: 'media_photo_story_captions',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'تسميات وتعليقات القصة المصوّرة',
+    description_ar: 'كتابة تسميات ونص بديل للقصة المصورة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'تسميات عربية دقيقة لكل صورة مع نص بديل ووصف مختصر للنشر، منشورة في قناة التحرير.',
+
+    defaultOwnerRole: 'editor',
+    defaultChannelKey: 'media.edits',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.photo_story',
+    pipelines: ['media.photo_story'],
+
+    tags: ['وصول', 'تعليقات', 'تصوير']
+  },
+
+  {
+    id: 'media_social_script',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'نص فيديو اجتماعي قصير',
+    description_ar: 'كتابة نص أو مخطط لفيديو ٦٠–١٢٠ ثانية.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'نص أو مخطط زمني يتضمن المشاهد الرئيسية والنص المقترح مع مصدر أو رابط داعم، منشور للموافقة.',
+
+    defaultOwnerRole: 'producer',
+    defaultChannelKey: 'media.assignments',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.short_video_social',
+    pipelines: ['media.short_video_social'],
+
+    tags: ['فيديو', 'اجتماعي', 'تخطيط']
+  },
+
+  {
+    id: 'media_social_edit',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'مونتاج فيديو اجتماعي قصير',
+    description_ar: 'مونتاج نسخة أولية ونهائية لمقطع اجتماعي.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'نسخة أولية ونهائية بطولين ٦٠–١٢٠ ثانية مع موسيقى/رسوم مناسبة، وروابط مرفوعة في قناة الفيديو.',
+
+    defaultOwnerRole: 'editor',
+    defaultChannelKey: 'media.video',
+    defaultDueDays: 4,
+
+    pipelineKey: 'media.short_video_social',
+    pipelines: ['media.short_video_social'],
+
+    tags: ['مونتاج', 'فيديو', 'اجتماعي']
+  },
+
+  {
+    id: 'media_social_cutdowns',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'تقطيعات ونشر اجتماعي للفيديو',
+    description_ar: 'إعداد نسخ متعددة للأحجام والمنصات مع نسخ النشر.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      '٣ نسخ على الأقل بأبعاد ملائمة (١٦:٩، ١:١، ٩:١٦) مع نصوص نشر وروابط الماستر.',
+
+    defaultOwnerRole: 'social_editor',
+    defaultChannelKey: 'media.exports',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.short_video_social',
+    pipelines: ['media.short_video_social'],
+
+    tags: ['نشر', 'اجتماعي', 'تصدير']
+  },
+
+  // ——— Media support / مشتركة ———
+  {
+    id: 'media_translation',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'ترجمة وتدقيق لغوي للمادة',
+    description_ar: 'ترجمة المادة المطلوبة وتدقيقها لغوياً مع مقارنة المصطلحات.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ملف مترجم ومراجع مع جدول مصطلحات رئيسية ومصادرها، منشور في قناة التحرير.',
+
+    defaultOwnerRole: 'translator',
+    defaultChannelKey: 'media.edits',
+    defaultDueDays: 3,
+
+    pipelineKey: 'media.support',
+    pipelines: [
+      'media.support',
+      'media.article_short',
+      'media.article_long',
+      'media.photo_story',
+      'media.short_video_social'
+    ],
+
+    tags: ['ترجمة', 'تحرير', 'مصطلحات']
+  },
+
+  {
+    id: 'media_fact_check',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'تدقيق حقائق',
+    description_ar: 'مراجعة المعلومات والأرقام والمصادر قبل النشر.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'قائمة تحقق بالمصادر والتأكيدات مع ملاحظات المخاطر، منشورة في قناة تدقيق الحقائق.',
+
+    defaultOwnerRole: 'fact_checker',
+    defaultChannelKey: 'media.fact_check',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.support',
+    pipelines: [
+      'media.support',
+      'media.article_short',
+      'media.article_long',
+      'media.photo_story',
+      'media.short_video_social'
+    ],
+
+    tags: ['تحقق', 'مصادر', 'إعلام']
+  },
+
+  {
+    id: 'media_accessibility_review',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'مراجعة الوصول وإتاحة المحتوى',
+    description_ar: 'إضافة نص بديل، تباين، وترجمات/تفريغ حيث يلزم.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ملف نص بديل للصور أو ترجمات/تفريغ للفيديو مع قائمة فحص وصول منشورة قبل النشر.',
+
+    defaultOwnerRole: 'accessibility_editor',
+    defaultChannelKey: 'media.exports',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.support',
+    pipelines: [
+      'media.support',
+      'media.article_short',
+      'media.article_long',
+      'media.photo_story',
+      'media.short_video_social'
+    ],
+
+    tags: ['وصول', 'ترجمات', 'إتاحة']
+  },
+
+  {
+    id: 'media_sources_log',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'سجل المصادر والموافقات',
+    description_ar: 'توثيق المصادر، التصاريح، والملكية الفكرية للمادة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'جدول مصادر مع بيانات التواصل وروابط الموافقات أو رسائل البريد، محفوظ في مجلد المشروع ومثبت في قناة التكليف.',
+
+    defaultOwnerRole: 'editor',
+    defaultChannelKey: 'media.assignments',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.support',
+    pipelines: [
+      'media.support',
+      'media.article_short',
+      'media.article_long',
+      'media.photo_story',
+      'media.short_video_social'
+    ],
+
+    tags: ['مصادر', 'موافقات', 'توثيق']
   }
 ];
 
@@ -338,10 +771,22 @@ const productionTaskTemplates = [
 // ==========================
 
 const taskTemplates = [
-  // حالياً: فقط قوالب الإنتاج
-  ...productionTaskTemplates
-  // لاحقاً: نضيف media / think / people / geeks / academy / admin هنا
+  // قوالب الإنتاج والإعلام حالياً
+  ...productionTaskTemplates,
+  ...mediaTaskTemplates
+  // لاحقاً: نضيف think / people / geeks / academy / admin هنا
 ];
+
+function matchesPipeline(template, pipelineKey) {
+  if (!pipelineKey) return false;
+  if (Array.isArray(template.pipelines) && template.pipelines.includes(pipelineKey)) {
+    return true;
+  }
+  if (template.pipelineKey) {
+    return template.pipelineKey === pipelineKey;
+  }
+  return false;
+}
 
 function getTaskTemplateById(id) {
   return taskTemplates.find(t => t.id === id) || null;
@@ -351,8 +796,20 @@ function listTaskTemplatesByUnit(unit) {
   return taskTemplates.filter(t => t.unit === unit);
 }
 
+function listTaskTemplatesByPipeline(pipelineKey) {
+  return taskTemplates.filter(t => matchesPipeline(t, pipelineKey));
+}
+
+function listTaskTemplatesByUnitAndPipeline(unit, pipelineKey) {
+  return taskTemplates.filter(t =>
+    t.unit === unit && (pipelineKey ? matchesPipeline(t, pipelineKey) : true)
+  );
+}
+
 module.exports = {
   taskTemplates,
   getTaskTemplateById,
-  listTaskTemplatesByUnit
+  listTaskTemplatesByUnit,
+  listTaskTemplatesByPipeline,
+  listTaskTemplatesByUnitAndPipeline
 };
