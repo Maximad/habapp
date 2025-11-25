@@ -24,10 +24,22 @@ test('pipelines are linked to units and retrievable by key', () => {
   const pipelineKeys = pipelines.map(p => p.key);
   assert.ok(pipelineKeys.includes('production.video_basic'));
   assert.ok(pipelineKeys.includes('geeks.app_small'));
+  assert.ok(pipelineKeys.includes('media.translation_adapt'));
+  assert.ok(pipelineKeys.includes('people.volunteer_onboarding'));
 
   const pipeline = getPipelineByKey('production.video_doc');
   assert.strictEqual(pipeline.unitKey, 'production');
   assert.ok(Array.isArray(pipeline.suggestedStages));
+
+  const mediaPipeline = getPipelineByKey('media.article_short');
+  assert.strictEqual(mediaPipeline.unitKey, 'media');
+  assert.ok(Array.isArray(mediaPipeline.stages_ar));
+  assert.ok(Array.isArray(mediaPipeline.defaultTaskTemplateIds));
+
+  const peoplePipeline = getPipelineByKey('people.event_small');
+  assert.strictEqual(peoplePipeline.unitKey, 'people');
+  assert.ok(Array.isArray(peoplePipeline.stages_ar));
+  assert.ok(Array.isArray(peoplePipeline.defaultTaskTemplateIds));
 });
 
 test('listPipelinesByUnit filters by unit key', () => {
