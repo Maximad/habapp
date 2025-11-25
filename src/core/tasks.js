@@ -1,6 +1,7 @@
 // src/core/tasks.js
 const { ensureProject, saveProjects } = require('./projects');
 const { listTaskTemplatesByPipeline } = require('./templates/task-templates');
+const { getPipelineByKey } = require('./units');
 
 function getNextTaskId(project) {
   if (!Array.isArray(project.tasks) || project.tasks.length === 0) return 1;
@@ -98,24 +99,22 @@ function listTasks(slug, status, store) {
 
 function resolveTemplatesForPipeline(effectivePipelineKey) {
   const stacks = [];
+  const pipelineKey = effectivePipelineKey || null;
 
-  if (effectivePipelineKey) {
-    const isProduction = effectivePipelineKey.startsWith('production.');
-    const isProductionVideo = effectivePipelineKey.startsWith('production.video_');
-    const isMedia = effectivePipelineKey.startsWith('media.');
+  if (pipelineKey) {
+    stacks.push(listTaskTemplatesByPipeline(pipelineKey));
 
-    stacks.push(listTaskTemplatesByPipeline(effectivePipelineKey));
+    const pipelineMeta = getPipelineByKey(pipelineKey);
+    const pipelineUnit = pipelineMeta?.unitKey || null;
+    const isProductionVideo = pipelineKey.startsWith('production.video_');
 
-    if (isProductionVideo && effectivePipelineKey !== 'production.video_basic') {
+    if (isProductionVideo && pipelineKey !== 'production.video_basic') {
       stacks.push(listTaskTemplatesByPipeline('production.video_basic'));
     }
 
-    if (isProduction) {
-      stacks.push(listTaskTemplatesByPipeline('production.support'));
-    }
-
-    if (isMedia) {
-      stacks.push(listTaskTemplatesByPipeline('media.support'));
+    if (pipelineUnit) {
+      const supportKey = `${pipelineUnit}.support`;
+      stacks.push(listTaskTemplatesByPipeline(supportKey));
     }
   }
 

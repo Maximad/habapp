@@ -124,3 +124,11 @@ test('createTasksFromTemplates stacks media pipeline templates with support task
   assert.ok(created.every(task => task.status === 'open'));
   assert.strictEqual(created[0].templateId, expectedTemplates[0].id);
 });
+
+test('createTasksFromTemplates tolerates pipelines without task templates', async t => {
+  const { store, dir } = setupProject('people.event_small');
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  const created = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
+  assert.deepStrictEqual(created, []);
+});

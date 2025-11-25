@@ -6,25 +6,31 @@ const units = [
     key: 'production',
     name_ar: 'وحدة الإنتاج',
     description_ar: 'مسؤولة عن الفيديوهات، الوثائقيات، والمشاريع المرئية.',
-    pipelines: ['production.video_basic', 'production.video_doc', 'production.video_premium']
+    pipelines: ['production.video_basic', 'production.video_doc', 'production.video_premium', 'production.support']
   },
   {
     key: 'media',
     name_ar: 'وحدة الإعلام',
     description_ar: 'تكتب وتنشر المقالات والقصص المصوّرة والمحتوى الاجتماعي.',
-    pipelines: ['media.article_short', 'media.article_long', 'media.photo_story', 'media.short_video_social']
+    pipelines: [
+      'media.article_short',
+      'media.article_long',
+      'media.photo_story',
+      'media.short_video_social',
+      'media.support'
+    ]
   },
   {
     key: 'people',
     name_ar: 'وحدة الناس',
     description_ar: 'تنظّم الفعاليات والحوارات والسهرات الثقافية.',
-    pipelines: ['people.event_small', 'people.event_music', 'people.event_forum']
+    pipelines: ['people.event_small', 'people.event_music', 'people.event_forum', 'people.support']
   },
   {
     key: 'geeks',
     name_ar: 'وحدة الجيكس',
     description_ar: 'تطوّر المواقع والأدوات والتطبيقات الصغيرة.',
-    pipelines: ['geeks.site_basic', 'geeks.app_small']
+    pipelines: ['geeks.site_basic', 'geeks.app_small', 'geeks.support']
   }
 ];
 
@@ -49,6 +55,14 @@ const pipelines = [
     name_ar: 'فيديو بريميوم بجودة عالية',
     description_ar: 'مقابلات أو إنتاجات بريميوم (قالب C) بمعايير مرجعية.',
     suggestedStages: ['idea', 'prep', 'execution', 'review', 'archive']
+  },
+  {
+    key: 'production.support',
+    unitKey: 'production',
+    name_ar: 'دعم الإنتاج',
+    description_ar: 'مهام داعمة للإنتاج مثل الاختبارات، المخاطر، وحلول الطوارئ.',
+    suggestedStages: ['idea', 'prep', 'execution', 'archive'],
+    taskTemplates: []
   },
   {
     key: 'media.article_short',
@@ -79,6 +93,14 @@ const pipelines = [
     suggestedStages: ['idea', 'prep', 'shoot', 'edit', 'publish']
   },
   {
+    key: 'media.support',
+    unitKey: 'media',
+    name_ar: 'دعم الإعلام',
+    description_ar: 'مهام مراجعة، توثيق، وتدقيق الحقائق الداعمة لكل قوالب الإعلام.',
+    suggestedStages: ['idea', 'draft', 'edit', 'publish'],
+    taskTemplates: []
+  },
+  {
     key: 'people.event_small',
     unitKey: 'people',
     name_ar: 'فعالية صغيرة / أوبن مايك',
@@ -103,6 +125,14 @@ const pipelines = [
     taskTemplates: [] // لاحقاً: مهام الدعوات، ملخص أسئلة، توثيق الحوار، نشر الخلاصة
   },
   {
+    key: 'people.support',
+    unitKey: 'people',
+    name_ar: 'دعم الفعاليات',
+    description_ar: 'قوالب مساندة للفعاليات مثل التوثيق والمتابعة.',
+    suggestedStages: ['فكرة', 'تنفيذ', 'ختام'],
+    taskTemplates: []
+  },
+  {
     key: 'geeks.site_basic',
     unitKey: 'geeks',
     name_ar: 'موقع بسيط',
@@ -117,6 +147,14 @@ const pipelines = [
     description_ar: 'أدوات أو بوتات صغيرة (مثل HabApp) لتسهيل العمل.',
     suggestedStages: ['فكرة', 'مواصفات', 'تطوير', 'اختبار', 'إطلاق'],
     taskTemplates: [] // لاحقاً: مهام اكتشاف المستخدم، تصميم تدفق، تنفيذ، اختبار، خطة تشغيل
+  },
+  {
+    key: 'geeks.support',
+    unitKey: 'geeks',
+    name_ar: 'دعم الجيكس',
+    description_ar: 'مهام صيانة ومساندة للأدوات والمواقع.',
+    suggestedStages: ['فكرة', 'تطوير', 'إطلاق'],
+    taskTemplates: []
   }
 ];
 

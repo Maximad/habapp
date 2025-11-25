@@ -770,11 +770,16 @@ const mediaTaskTemplates = [
 // Public API
 // ==========================
 
+const peopleTaskTemplates = [];
+const geeksTaskTemplates = [];
+
 const taskTemplates = [
   // قوالب الإنتاج والإعلام حالياً
   ...productionTaskTemplates,
-  ...mediaTaskTemplates
-  // لاحقاً: نضيف think / people / geeks / academy / admin هنا
+  ...mediaTaskTemplates,
+  ...peopleTaskTemplates,
+  ...geeksTaskTemplates
+  // لاحقاً: نضيف think / academy / admin هنا
 ];
 
 function matchesPipeline(template, pipelineKey) {
