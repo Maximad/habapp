@@ -1,6 +1,7 @@
 // src/core/tasks.js
 const { ensureProject, saveProjects } = require('./projects');
-const { listTaskTemplatesByPipeline } = require('./templates/task-templates');
+const { getTaskTemplateById } = require('./templates/task-templates');
+const { getPipelineByKey } = require('./units');
 
 function getNextTaskId(project) {
   if (!Array.isArray(project.tasks) || project.tasks.length === 0) return 1;
@@ -97,32 +98,50 @@ function listTasks(slug, status, store) {
 }
 
 function resolveTemplatesForPipeline(effectivePipelineKey) {
+  if (!effectivePipelineKey) return [];
+  const pipeline = getPipelineByKey(effectivePipelineKey);
+  if (!pipeline) return [];
+
   const stacks = [];
+  if (Array.isArray(pipeline.defaultTemplateIds)) {
+    stacks.push(pipeline.defaultTemplateIds);
+  }
 
-  if (effectivePipelineKey) {
-    const isProduction = effectivePipelineKey.startsWith('production.');
-    const isProductionVideo = effectivePipelineKey.startsWith('production.video_');
-
-    stacks.push(listTaskTemplatesByPipeline(effectivePipelineKey));
-
-    if (isProductionVideo && effectivePipelineKey !== 'production.video_basic') {
-      stacks.push(listTaskTemplatesByPipeline('production.video_basic'));
+  if (Array.isArray(pipeline.inheritTemplatePipelineKeys)) {
+    for (const key of pipeline.inheritTemplatePipelineKeys) {
+      const inherited = resolveTemplatesForPipeline(key);
+      stacks.push(inherited.map(t => t.id));
     }
+  }
 
-    if (isProduction) {
-      stacks.push(listTaskTemplatesByPipeline('production.support'));
-    }
+  if (Array.isArray(pipeline.supportTemplateIds)) {
+    stacks.push(pipeline.supportTemplateIds);
   }
 
   const seen = new Set();
   return stacks
     .flat()
+    .map(id => getTaskTemplateById(id))
     .filter(Boolean)
     .filter(t => {
       if (seen.has(t.id)) return false;
       seen.add(t.id);
       return true;
     });
+}
+
+function resolveTaskDueDate(template, project) {
+  if (typeof template.defaultDueDays === 'number') {
+    const base = new Date();
+    base.setDate(base.getDate() + template.defaultDueDays);
+    return base.toISOString().slice(0, 10);
+  }
+
+  if (project?.dueDate || project?.due) {
+    return (project.dueDate || project.due).toString();
+  }
+
+  return null;
 }
 
 async function createTasksFromTemplates({ projectSlug, pipelineKey }, store) {
@@ -142,7 +161,8 @@ async function createTasksFromTemplates({ projectSlug, pipelineKey }, store) {
       templateId: t.id,
       defaultOwnerRole: t.defaultOwnerRole || null,
       defaultChannelKey: t.defaultChannelKey || null,
-      size: t.size || null
+      size: t.size || null,
+      due: resolveTaskDueDate(t, project)
     })
   );
 

@@ -1,6 +1,14 @@
-const { findProject, upsertProject, deleteProject, applyProjectDefaults } = require('../projects');
+const {
+  findProject,
+  upsertProject,
+  deleteProject,
+  applyProjectDefaults,
+  listProjects
+} = require('../projects');
 const { listTasks } = require('../tasks');
 const { getProductionTemplateByCode } = require('../templates/templates.production');
+const { getPipelineByKey, getUnitByKey } = require('../units');
+const { resolveSlug, validateSlugFormat } = require('../utils/slug');
 
 const ALLOWED_STAGES = ['planning', 'shooting', 'editing', 'review', 'archived'];
 
@@ -12,8 +20,8 @@ function assertStage(stage) {
   }
 }
 
-function ensureProjectExists(slug) {
-  const project = findProject(slug);
+function ensureProjectExists(slug, store) {
+  const project = findProject(slug, store);
   if (!project) {
     const error = new Error('PROJECT_NOT_FOUND');
     error.code = 'PROJECT_NOT_FOUND';
@@ -22,13 +30,107 @@ function ensureProjectExists(slug) {
   return project;
 }
 
-function ensureProjectAvailable(slug) {
-  const existing = findProject(slug);
+function ensureProjectAvailable(slug, store) {
+  const existing = findProject(slug, store);
   if (existing) {
     const error = new Error('PROJECT_EXISTS');
     error.code = 'PROJECT_EXISTS';
     throw error;
   }
+}
+
+function normalizeDueDate(due) {
+  const invalid = () => {
+    const err = new Error('INVALID_DUE_DATE');
+    err.code = 'INVALID_DUE_DATE';
+    throw err;
+  };
+
+  if (!due) invalid();
+
+  if (due instanceof Date) {
+    if (Number.isNaN(due.getTime())) invalid();
+    return due.toISOString().slice(0, 10);
+  }
+
+  const raw = String(due).trim();
+  const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) invalid();
+
+  const [, yearStr, monthStr, dayStr] = match;
+  const year = Number(yearStr);
+  const month = Number(monthStr);
+  const day = Number(dayStr);
+
+  const parsed = new Date(Date.UTC(year, month - 1, day));
+  if (Number.isNaN(parsed.getTime())) invalid();
+
+  if (
+    parsed.getUTCFullYear() !== year ||
+    parsed.getUTCMonth() + 1 !== month ||
+    parsed.getUTCDate() !== day
+  ) {
+    invalid();
+  }
+
+  return parsed.toISOString().slice(0, 10);
+}
+
+function resolveProjectSlug({ name, slug }, store) {
+  const existingSlugs = listProjects(store).map(p => p.slug).filter(Boolean);
+  return resolveSlug({ name, slug }, existingSlugs);
+}
+
+function validateUnitPipeline(unit, pipelineKey) {
+  if (!pipelineKey && !unit) return { unit: null, pipeline: null };
+
+  const normalizedInputUnit = typeof unit === 'string' ? unit.toLowerCase() : unit;
+
+  if (!pipelineKey && normalizedInputUnit) {
+    const unitMeta = getUnitByKey(unit);
+    if (!unitMeta) {
+      const err = new Error('UNIT_NOT_FOUND');
+      err.code = 'UNIT_NOT_FOUND';
+      throw err;
+    }
+    return { unit: unitMeta.key, pipeline: null };
+  }
+
+  const pipeline = pipelineKey ? getPipelineByKey(pipelineKey) : null;
+  if (pipelineKey && !pipeline) {
+    const err = new Error('PIPELINE_NOT_FOUND');
+    err.code = 'PIPELINE_NOT_FOUND';
+    throw err;
+  }
+
+  const pipelineUnit = pipeline?.unitKey || pipeline?.unit || null;
+  if (pipeline && !pipelineUnit) {
+    const err = new Error('PIPELINE_UNIT_UNKNOWN');
+    err.code = 'PIPELINE_UNIT_UNKNOWN';
+    throw err;
+  }
+
+  const normalizedUnit = normalizedInputUnit || (pipelineUnit ? pipelineUnit.toLowerCase() : null);
+  const unitMeta = normalizedUnit ? getUnitByKey(normalizedUnit) : null;
+  if (normalizedUnit && !unitMeta) {
+    const err = new Error('UNIT_NOT_FOUND');
+    err.code = 'UNIT_NOT_FOUND';
+    throw err;
+  }
+
+  if (
+    pipeline &&
+    normalizedUnit &&
+    pipelineUnit &&
+    pipelineUnit.toLowerCase() !== normalizedUnit
+  ) {
+    const err = new Error('PIPELINE_UNIT_MISMATCH');
+    err.code = 'PIPELINE_UNIT_MISMATCH';
+    throw err;
+  }
+
+  const unitKey = (pipelineUnit ? pipelineUnit.toLowerCase() : null) || normalizedUnit;
+  return { unit: unitKey, pipeline };
 }
 
 function getProductionTemplate(code) {
@@ -105,29 +207,48 @@ function createProject({
   createdBy,
   threadId = null,
   templateCode = null,
+  unit = null,
   units = ['production'],
   pipelineKey = null
-}) {
-  ensureProjectAvailable(slug);
+}, store) {
+  const dueDate = normalizeDueDate(due);
+  const resolvedSlug = resolveProjectSlug({ name, slug }, store);
 
   const template = templateCode ? getProductionTemplate(templateCode) : null;
+  if (slug) {
+    validateSlugFormat(slug);
+  }
+
+  ensureProjectAvailable(resolvedSlug, store);
+
+  const { unit: resolvedUnit, pipeline } = validateUnitPipeline(unit, pipelineKey);
+  const unitList = Array.isArray(units)
+    ? Array.from(new Set(units.filter(Boolean).map(u => u.toLowerCase())))
+    : [];
+
+  if (resolvedUnit && !unitList.includes(resolvedUnit)) {
+    unitList.unshift(resolvedUnit);
+  }
+
+  const finalUnits = unitList.length > 0 ? unitList : resolvedUnit ? [resolvedUnit] : ['production'];
 
   const now = new Date().toISOString();
   const project = applyProjectDefaults({
-    slug,
+    slug: resolvedSlug,
     name,
-    due,
+    due: dueDate,
+    dueDate,
     stage: 'planning',
     threadId,
     createdAt: now,
     createdBy: createdBy || null,
     templateCode: template ? template.code : null,
     tasks: [],
-    units,
-    pipelineKey
+    units: finalUnits,
+    pipelineKey: pipeline ? pipeline.key : pipelineKey
   });
 
-  upsertProject(project);
+  upsertProject(project, store);
   return { project, template };
 }
 
@@ -159,5 +280,6 @@ module.exports = {
   ensureProjectExists,
   ensureProjectAvailable,
   getProductionTemplate,
-  summarizeProductionTemplate
+  summarizeProductionTemplate,
+  resolveProjectSlug
 };

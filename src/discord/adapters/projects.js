@@ -8,7 +8,8 @@ const {
   ALLOWED_STAGES,
   summarizeProductionTemplate,
   getProductionTemplate,
-  ensureProjectExists
+  ensureProjectExists,
+  resolveProjectSlug
 } = require('../../core/services/projectsService');
 const { createTasksFromTemplates } = require('../../core/services/tasksService');
 const { getPipelineByKey, getUnitByKey } = require('../../core/units');
@@ -18,14 +19,20 @@ const { postToChannel, getChannelIdByKey } = require('../utils/channels');
 
 async function handleProjectCreate(interaction) {
   const projName = interaction.options.getString('name', true);
-  const slug = interaction.options.getString('slug', true);
+  const slugInput = interaction.options.getString('slug');
   const pipelineRaw = interaction.options.getString('pipeline');
-  const due = interaction.options.getString('due') || null;
+  const due = interaction.options.getString('due', true);
   const templateRaw = interaction.options.getString('template');
   const templateCode = templateRaw && templateRaw !== 'none' ? templateRaw : null;
+  const unitOption = interaction.options.getString('unit');
   const unitsRaw = interaction.options.getString('units');
 
-  let units = unitsRaw
+  const channelParentId = interaction.channel?.parentId || null;
+  const unitCategoryMap = cfg.categories?.unitMap || {};
+  const forcedUnit = channelParentId ? unitCategoryMap[channelParentId] || null : null;
+  const managementCategoryId = cfg.categories?.managementId || null;
+
+  let requestedUnits = unitsRaw
     ? Array.from(
         new Set(
           unitsRaw
@@ -34,19 +41,18 @@ async function handleProjectCreate(interaction) {
             .filter(Boolean)
         )
       )
-    : ['production'];
+    : [];
 
-  if (units.length === 0) {
-    units = ['production'];
+  if (unitOption) {
+    requestedUnits.unshift(unitOption.toLowerCase());
   }
 
-  for (const u of units) {
-    if (!getUnitByKey(u)) {
-      return interaction.reply({
-        content: `❌ وحدة غير معروفة: ${u}`,
-        ephemeral: true
-      });
-    }
+  let chosenUnit = forcedUnit || requestedUnits[0] || null;
+  if (chosenUnit && !getUnitByKey(chosenUnit)) {
+    return interaction.reply({
+      content: `❌ وحدة غير معروفة: ${chosenUnit}`,
+      ephemeral: true
+    });
   }
 
   const pipeline = pipelineRaw ? getPipelineByKey(pipelineRaw) : null;
@@ -54,12 +60,27 @@ async function handleProjectCreate(interaction) {
     return interaction.reply({ content: '❌ لم يتم العثور على مسار بهذا المفتاح.', ephemeral: true });
   }
 
-  if (pipeline && !units.includes(pipeline.unitKey)) {
-    units = [...units, pipeline.unitKey];
+  if (forcedUnit) {
+    chosenUnit = forcedUnit;
   }
 
+  if (pipeline && chosenUnit && pipeline.unitKey !== chosenUnit) {
+    return interaction.reply({
+      content: '⚠️ لا يمكن استخدام هذا المسار في هذه الوحدة/الفئة.',
+      ephemeral: true
+    });
+  }
+
+  if (pipeline && !chosenUnit) {
+    chosenUnit = pipeline.unitKey;
+  }
+
+  const units = chosenUnit ? [chosenUnit] : requestedUnits.length > 0 ? requestedUnits : ['production'];
+
+  const finalSlug = resolveProjectSlug({ name: projName, slug: slugInput });
+
   try {
-    ensureProjectAvailable(slug);
+    ensureProjectAvailable(finalSlug);
   } catch (err) {
     return interaction.reply({
       content: '⚠️ يوجد مشروع بهذا الرمز مسبقاً.',
@@ -85,7 +106,7 @@ async function handleProjectCreate(interaction) {
 
   const { threadId } = await createForumPost(interaction.guild, cfg.forum.productionForumId, {
     name: projName,
-    slug,
+    slug: finalSlug,
     due,
     templateSummary
   });
@@ -93,37 +114,61 @@ async function handleProjectCreate(interaction) {
   await postToChannel(
     interaction.guild,
     getChannelIdByKey('production.crew_roster'),
-    `**${slug}** – فتح مشروع جديد.\n` +
+    `**${finalSlug}** – فتح مشروع جديد.\n` +
       `الأدوار المطلوبة: منتج، مشرف مونتاج، كاميرا، صوت.\n` +
       `استخدم هذا الخيط لتثبيت الطاقم والجدول.`
   );
   await postToChannel(
     interaction.guild,
     getChannelIdByKey('production.gear_log'),
-    `**${slug}** – سجل حجز المعدّات.\n` +
+    `**${finalSlug}** – سجل حجز المعدّات.\n` +
       `سجّل الكاميرات، العدسات، الصوت، الإضاءة، وتواريخ الاستعارة.`
   );
   await postToChannel(
     interaction.guild,
     getChannelIdByKey('production.post_pipeline'),
-    `**${slug}** – مسار المونتاج.\n` +
+    `**${finalSlug}** – مسار المونتاج.\n` +
       `حدّث هنا: المونتاج الأول، المراجعة، القفل، والتسليم النهائي.`
   );
 
-  const { project, template: storedTemplate } = createProject({
-    name: projName,
-    slug,
-    due,
-    createdBy: interaction.user.id,
-    threadId,
-    templateCode,
-    units,
-    pipelineKey: pipeline ? pipeline.key : null
-  });
+  let project;
+  let storedTemplate;
+  try {
+    const result = createProject({
+      name: projName,
+      slug: finalSlug,
+      due,
+      createdBy: interaction.user.id,
+      threadId,
+      templateCode,
+      unit: chosenUnit,
+      units,
+      pipelineKey: pipeline ? pipeline.key : null
+    });
+    project = result.project;
+    storedTemplate = result.template;
+  } catch (err) {
+    if (err.code === 'INVALID_SLUG') {
+      return interaction.editReply('❌ الـ slug يجب أن يكون حروف/أرقام بدون فراغات.');
+    }
+    if (err.code === 'INVALID_DUE_DATE') {
+      return interaction.editReply('❌ تاريخ التسليم غير صالح. الرجاء استخدام تاريخ صحيح (YYYY-MM-DD).');
+    }
+    if (err.code === 'PIPELINE_NOT_FOUND') {
+      return interaction.editReply('❌ مسار العمل غير معروف.');
+    }
+    if (err.code === 'PIPELINE_UNIT_MISMATCH') {
+      return interaction.editReply('❌ المسار المختار لا يتوافق مع الوحدة.');
+    }
+    if (err.code === 'PIPELINE_UNIT_UNKNOWN') {
+      return interaction.editReply('❌ المسار المختار لا يحدد وحدة صالحة.');
+    }
+    throw err;
+  }
   const templateNote = summarizeProductionTemplate(storedTemplate || template);
 
   return interaction.editReply(
-    `✅ تم إنشاء المشروع **${projName}** برمز **${slug}**.\n` +
+    `✅ تم إنشاء المشروع **${projName}** برمز **${project.slug}**.\n` +
       `تم فتح خيط في المنتدى مع مرحلة **${stageToArabic('planning')}**.\n` +
       `استخدم /task add لإضافة مهام، و /project stage لتغيير المرحلة، و /template task-spawn لتوليد مهام جاهزة.` +
       (templateNote ? `\n\nملخص القالب:\n${templateNote}` : '')
@@ -173,7 +218,7 @@ async function handleProjectScaffold(interaction) {
   }
 
   const pipelineLabel = resolvedPipeline?.name_ar || 'مسار غير محدد';
-  return interaction.editReply(`✅ تم توليد ${created.length} مهمة تلقائياً لمسار ${pipelineLabel}.`);
+  return interaction.editReply(`✅ تم إنشاء ${created.length} مهمة افتراضية وفق المسار ${pipelineLabel}.`);
 }
 
 async function handleProjectStage(interaction) {

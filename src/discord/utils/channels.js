@@ -9,6 +9,13 @@ const channelMap = {
   'production.post_mortem': cfg.channels?.production?.postPipelineId,
   'production.archive': cfg.channels?.production?.postPipelineId,
   'production.sound_library': cfg.channels?.production?.postPipelineId,
+  'media.assignments': cfg.channels?.media?.assignmentsId,
+  'media.edits': cfg.channels?.media?.editsId,
+  'media.factcheck': cfg.channels?.media?.factCheckId,
+  'media.photo': cfg.channels?.media?.photoId,
+  'media.video': cfg.channels?.media?.videoId,
+  'media.graphics': cfg.channels?.media?.graphicsId,
+  'media.sound': cfg.channels?.media?.soundId,
   'media.exports': cfg.channels?.media?.exportsId,
   'admin.emergency': null
 };

@@ -368,12 +368,550 @@ const productionTaskTemplates = [
 ];
 
 // ==========================
+// Media unit templates
+// ==========================
+
+const mediaTaskTemplates = [
+  {
+    id: 'media_pitch',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'ملخص فكرة المادة التحريرية',
+    description_ar: 'صياغة زاوية القصة، الجمهور، وأهداف النشر في فقرة قصيرة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'فقرة أو بطاقة واضحة تتضمن الزاوية، الجمهور، المنصات المقترحة، والمصادر الرئيسية، منشورة في قناة التكليفات.',
+
+    defaultOwnerRole: 'editorial_lead',
+    defaultChannelKey: 'media.assignments',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['تحرير', 'تكليف', 'فكرة']
+  },
+  {
+    id: 'media_research_notes',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'ملاحظات بحث وروابط موثوقة',
+    description_ar: 'جمع المصادر الأساسية والمراجع وروابط البيانات.',
+
+    size: 'S',
+    definitionOfDone_ar: 'قائمة روابط وملاحظات منظمة مع تلخيص سريع لكل مصدر، منشورة في خيط أو بطاقة المهمة.',
+
+    defaultOwnerRole: 'writer',
+    defaultChannelKey: 'media.assignments',
+    defaultDueDays: 3,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['بحث', 'مصادر', 'تحقق']
+  },
+  {
+    id: 'media_interviews',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'جدولة مقابلات أساسية',
+    description_ar: 'تنسيق ٢–٣ مقابلات مرتبطة بالمادة التحريرية.',
+
+    size: 'M',
+    definitionOfDone_ar: 'مواعيد مؤكدة أو مراسلات مثبتة للمقابلات مع محاور الأسئلة الرئيسية.',
+
+    defaultOwnerRole: 'writer',
+    defaultChannelKey: 'media.assignments',
+    defaultDueDays: 4,
+
+    pipelineKey: 'media.article_long',
+
+    tags: ['مقابلات', 'تنسيق', 'بحث']
+  },
+  {
+    id: 'media_draft',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'مسودة أولية',
+    description_ar: 'كتابة المسودة الأولى بالمراجع والاقتباسات.',
+
+    size: 'M',
+    definitionOfDone_ar: 'مسودة كاملة مع عناوين فرعية وروابط مصادر، مرفوعة في قناة التحرير أو خيط المشروع.',
+
+    defaultOwnerRole: 'writer',
+    defaultChannelKey: 'media.edits',
+    defaultDueDays: 5,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['مسودة', 'تحرير']
+  },
+  {
+    id: 'media_edit',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'تحرير وتدقيق لغوي',
+    description_ar: 'مراجعة المسودة، تدقيق لغوي، وضبط العناوين.',
+
+    size: 'S',
+    definitionOfDone_ar: 'نسخة محررة مع تعليقات واضحة للمراجعة النهائية، محفوظة في قناة التحرير.',
+
+    defaultOwnerRole: 'editor',
+    defaultChannelKey: 'media.edits',
+    defaultDueDays: 3,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['تحرير', 'تدقيق']
+  },
+  {
+    id: 'media_fact_check',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'تدقيق حقائق ومطابقة المصادر',
+    description_ar: 'التحقق من الأرقام والأسماء والاقتباسات قبل النشر.',
+
+    size: 'S',
+    definitionOfDone_ar: 'قائمة فحص موقعة مع مصادر لكل معلومة أساسية، ونتائج التدقيق في قناة الفاكت تشك.',
+
+    defaultOwnerRole: 'fact_checker',
+    defaultChannelKey: 'media.factcheck',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['تدقيق', 'حقائق']
+  },
+  {
+    id: 'media_publish_package',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'حزمة النشر والتوزيع',
+    description_ar: 'تجهيز العناوين، الملخص، الصور، وروابط النشر.',
+
+    size: 'S',
+    definitionOfDone_ar: 'عنوان نهائي، وصف قصير، صورة مميزة، وروابط النشر الداخلية/الخارجية، مع جدول نشر واضح.',
+
+    defaultOwnerRole: 'publishing',
+    defaultChannelKey: 'media.exports',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['نشر', 'توزيع']
+  },
+  {
+    id: 'media_photo_brief',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'موجز صور القصة',
+    description_ar: 'تحديد اللقطات المطلوبة وزوايا السرد البصري.',
+
+    size: 'S',
+    definitionOfDone_ar: 'موجز بصري من ٥ نقاط على الأقل مع أمثلة أو مراجع، منشور في قناة الصور.',
+
+    defaultOwnerRole: 'photo_editor',
+    defaultChannelKey: 'media.photo',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.photo_story',
+
+    tags: ['صور', 'موجز']
+  },
+  {
+    id: 'media_photo_edit',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'اختيار ومعالجة الصور',
+    description_ar: 'اختيار ٨–١٠ صور ومعالجتها بالألوان والقص.',
+
+    size: 'M',
+    definitionOfDone_ar: 'مجلد صور مختارة مع ضبط ألوان أساسي وتسميات الملفات، جاهز للتعليق.',
+
+    defaultOwnerRole: 'photo_editor',
+    defaultChannelKey: 'media.photo',
+    defaultDueDays: 4,
+
+    pipelineKey: 'media.photo_story',
+
+    tags: ['صور', 'تحرير']
+  },
+  {
+    id: 'media_captions',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'تعليقات وتسويد نصي للصور',
+    description_ar: 'كتابة تعليقات واضحة مع أسماء الأشخاص والأماكن والتواريخ.',
+
+    size: 'S',
+    definitionOfDone_ar: 'تعليقات دقيقة لكل صورة مع مراجعة لغوية سريعة، محفوظة في ملف مشترك أو بطاقة.',
+
+    defaultOwnerRole: 'writer',
+    defaultChannelKey: 'media.photo',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.photo_story',
+
+    tags: ['تعليقات', 'صور']
+  },
+  {
+    id: 'media_social_script',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'سكريبت فيديو قصير',
+    description_ar: 'كتابة سكريبت ٦٠–٩٠ ثانية للمنصات الاجتماعية.',
+
+    size: 'S',
+    definitionOfDone_ar: 'سكريبت بسيط مع دعوة تفاعل وكلمات مفتاحية، منشور في قناة الفيديو القصير.',
+
+    defaultOwnerRole: 'writer',
+    defaultChannelKey: 'media.video',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.short_video_social',
+
+    tags: ['فيديو', 'نص', 'اجتماعي']
+  },
+  {
+    id: 'media_social_edit',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'مونتاج فيديو اجتماعي',
+    description_ar: 'مونتاج قصير مع شعارات وتترات مناسبة للمنصات.',
+
+    size: 'M',
+    definitionOfDone_ar: 'نسخة جاهزة للنشر بصيغة عمودية أو مربعة مع نصوص على الشاشة وصوت متوازن.',
+
+    defaultOwnerRole: 'video_editor',
+    defaultChannelKey: 'media.video',
+    defaultDueDays: 4,
+
+    pipelineKey: 'media.short_video_social',
+
+    tags: ['مونتاج', 'فيديو قصير']
+  },
+  {
+    id: 'media_social_graphics',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'جرافيكس وتترات للفيديو',
+    description_ar: 'تصميم لوحات بداية/نهاية ونصوص للشاشة.',
+
+    size: 'S',
+    definitionOfDone_ar: 'حزمة جرافيكس (لوغو، ألوان، خطوط) ومثال مطبق على الفيديو، جاهزة للاستخدام.',
+
+    defaultOwnerRole: 'designer',
+    defaultChannelKey: 'media.graphics',
+    defaultDueDays: 3,
+
+    pipelineKey: 'media.short_video_social',
+
+    tags: ['جرافيكس', 'فيديو']
+  }
+];
+
+// ==========================
+// People unit templates
+// ==========================
+
+const peopleTaskTemplates = [
+  {
+    id: 'people_brief',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'ملخص الفعالية والأهداف',
+    description_ar: 'تحديد الهدف، الجمهور، والسعة المتوقعة للفعالية.',
+
+    size: 'S',
+    definitionOfDone_ar: 'فقرة موجزة مع التاريخ المقترح، المكان، والسعة، منشورة لفريق التنظيم.',
+
+    defaultOwnerRole: 'event_lead',
+    defaultChannelKey: null,
+    defaultDueDays: 2,
+
+    pipelineKey: 'people.event_small',
+
+    tags: ['فعالية', 'تنظيم']
+  },
+  {
+    id: 'people_announcement',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'تصميم وإرسال إعلان',
+    description_ar: 'إعداد نص الإعلان وتوزيعه على القنوات المناسبة.',
+
+    size: 'S',
+    definitionOfDone_ar: 'نص إعلان مع صورة/ملصق، منشور في القنوات المتفق عليها أو وسائل التواصل.',
+
+    defaultOwnerRole: 'communications',
+    defaultChannelKey: null,
+    defaultDueDays: 3,
+
+    pipelineKey: 'people.event_small',
+
+    tags: ['إعلان', 'نشر']
+  },
+  {
+    id: 'people_soundcheck',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'ساوند تشيك وتجهيز تقنية',
+    description_ar: 'تحضير الصوت/الإضاءة وتجربة قبل الفعالية الموسيقية.',
+
+    size: 'M',
+    definitionOfDone_ar: 'قائمة فحص تقنية مكتملة مع صور أو ملاحظات حول الإعدادات الناجحة.',
+
+    defaultOwnerRole: 'av_lead',
+    defaultChannelKey: null,
+    defaultDueDays: 2,
+
+    pipelineKey: 'people.event_music',
+
+    tags: ['صوت', 'إضاءة', 'فعالية']
+  },
+  {
+    id: 'people_outreach',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'دعوات وضيوف متحدثون',
+    description_ar: 'توجيه الدعوات وتأكيد المتحدثين لمنتدى أو صالون.',
+
+    size: 'M',
+    definitionOfDone_ar: 'قائمة ضيوف مؤكدة مع أوقات وصول وسيرة قصيرة لكل متحدث.',
+
+    defaultOwnerRole: 'outreach',
+    defaultChannelKey: null,
+    defaultDueDays: 4,
+
+    pipelineKey: 'people.event_forum',
+
+    tags: ['دعوات', 'منتدى']
+  },
+  {
+    id: 'people_moderation_plan',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'خطة إدارة الجلسة',
+    description_ar: 'تحضير أسئلة رئيسية، جدول زمن، وأدوار التيسير.',
+
+    size: 'S',
+    definitionOfDone_ar: 'ورقة واحدة بالمحاور والأسئلة والقواعد الأساسية للنقاش، موزعة على الفريق.',
+
+    defaultOwnerRole: 'moderator',
+    defaultChannelKey: null,
+    defaultDueDays: 3,
+
+    pipelineKey: 'people.event_forum',
+
+    tags: ['تيسير', 'منتدى']
+  },
+  {
+    id: 'people_checklist',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'قائمة مهام يوم الفعالية',
+    description_ar: 'توزيع المسؤوليات ولوجستيات المكان في يوم الحدث.',
+
+    size: 'S',
+    definitionOfDone_ar: 'قائمة فحص مقسمة بالأدوار (استقبال، تسجيل، ضيافة، سلامة) مع أسماء المسؤولين.',
+
+    defaultOwnerRole: 'event_ops',
+    defaultChannelKey: null,
+    defaultDueDays: 1,
+
+    pipelineKey: 'people.event_small',
+
+    tags: ['تنظيم', 'لوجستيات']
+  },
+  {
+    id: 'people_feedback',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'جمع ملاحظات بعد الفعالية',
+    description_ar: 'إرسال نموذج قصير وجمع الملاحظات الأساسية.',
+
+    size: 'S',
+    definitionOfDone_ar: 'نموذج أو استبيان مع ملخص لأبرز ٥ ملاحظات قابلة للتنفيذ.',
+
+    defaultOwnerRole: 'event_ops',
+    defaultChannelKey: null,
+    defaultDueDays: 3,
+
+    pipelineKey: 'people.event_small',
+
+    tags: ['تقييم', 'تعلم']
+  }
+];
+
+// ==========================
+// Geeks unit templates
+// ==========================
+
+const geeksTaskTemplates = [
+  {
+    id: 'geeks_brief',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'ملخص تقني للمشروع',
+    description_ar: 'وصف قصير للهدف والنطاق والتقنيات المقترحة.',
+
+    size: 'S',
+    definitionOfDone_ar: 'صفحة واحدة توضح المشكلة، الجمهور، والنطاق التقريبي مع التقنيات المرشحة.',
+
+    defaultOwnerRole: 'tech_lead',
+    defaultChannelKey: null,
+    defaultDueDays: 2,
+
+    pipelineKey: 'geeks.site_basic',
+
+    tags: ['تقني', 'خطة']
+  },
+  {
+    id: 'geeks_content_inventory',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'جرد المحتوى والصفحات',
+    description_ar: 'تحديد الصفحات/الشاشات المطلوبة ومصادر المحتوى.',
+
+    size: 'S',
+    definitionOfDone_ar: 'جدول بالصفحات، البيانات المطلوبة، وأصحاب المحتوى لكل جزء.',
+
+    defaultOwnerRole: 'product',
+    defaultChannelKey: null,
+    defaultDueDays: 3,
+
+    pipelineKey: 'geeks.site_basic',
+
+    tags: ['محتوى', 'موقع']
+  },
+  {
+    id: 'geeks_spec',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'مواصفات بسيطة للوظائف',
+    description_ar: 'كتابة مواصفات مختصرة للشاشات أو الـ API المطلوبة.',
+
+    size: 'S',
+    definitionOfDone_ar: 'مستند مواصفات مختصر (user stories أو checklist) متفق عليه مع صاحب المصلحة.',
+
+    defaultOwnerRole: 'product',
+    defaultChannelKey: null,
+    defaultDueDays: 3,
+
+    pipelineKey: 'geeks.app_small',
+
+    tags: ['مواصفات', 'تطوير']
+  },
+  {
+    id: 'geeks_implementation',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'تنفيذ وبناء أولي',
+    description_ar: 'بناء النسخة الأولى من الموقع/الأداة وفق الخطة.',
+
+    size: 'M',
+    definitionOfDone_ar: 'نسخة قابلة للتجربة على خادم أو رابط تجريبي مع المزايا المتفق عليها.',
+
+    defaultOwnerRole: 'engineer',
+    defaultChannelKey: null,
+    defaultDueDays: 7,
+
+    pipelineKey: 'geeks.site_basic',
+
+    tags: ['تطوير', 'تنفيذ']
+  },
+  {
+    id: 'geeks_review',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'مراجعة وتحسين',
+    description_ar: 'مراجعة مع العميل الداخلي وتطبيق التعديلات الأساسية.',
+
+    size: 'S',
+    definitionOfDone_ar: 'قائمة تعديلات منتهية وموافقة مبدئية من صاحب المصلحة.',
+
+    defaultOwnerRole: 'product',
+    defaultChannelKey: null,
+    defaultDueDays: 3,
+
+    pipelineKey: 'geeks.site_basic',
+
+    tags: ['مراجعة', 'تحسين']
+  },
+  {
+    id: 'geeks_test',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'اختبارات أساسية',
+    description_ar: 'تشغيل سيناريوهات اختبار يدوية أو آلية للمزايا الأساسية.',
+
+    size: 'S',
+    definitionOfDone_ar: 'قائمة فحص اختبارات مع النتائج والملاحظات الحرجة، مرفوعة في بطاقة المهمة.',
+
+    defaultOwnerRole: 'qa',
+    defaultChannelKey: null,
+    defaultDueDays: 3,
+
+    pipelineKey: 'geeks.app_small',
+
+    tags: ['اختبار', 'جودة']
+  },
+  {
+    id: 'geeks_launch',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'إطلاق وتوثيق مختصر',
+    description_ar: 'نشر النسخة النهائية وتوثيق طريقة الاستخدام.',
+
+    size: 'S',
+    definitionOfDone_ar: 'رابط إطلاق أو تثبيت نهائي مع ملاحظات تشغيل مختصرة ودليل استخدام قصير.',
+
+    defaultOwnerRole: 'engineer',
+    defaultChannelKey: null,
+    defaultDueDays: 2,
+
+    pipelineKey: 'geeks.site_basic',
+
+    tags: ['إطلاق', 'توثيق']
+  }
+];
+
+// ==========================
 // Public API
 // ==========================
 
 const taskTemplates = [
   // حالياً: فقط قوالب الإنتاج
-  ...productionTaskTemplates
+  ...productionTaskTemplates,
+  ...mediaTaskTemplates,
+  ...peopleTaskTemplates,
+  ...geeksTaskTemplates
   // لاحقاً: نضيف media / think / people / geeks / academy / admin هنا
 ];
 

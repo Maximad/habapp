@@ -4,7 +4,9 @@ const { REST, Routes } = require('discord.js');
 const cfg = require('./config.json');
 const { pipelines } = require('./src/core/units');
 
-const pipelineChoices = pipelines.map(p => ({ name: p.name_ar, value: p.key }));
+const pipelineChoices = pipelines
+  .filter(p => !p.hidden)
+  .map(p => ({ name: p.name_ar, value: p.key }));
 
 const commands = [
   {
@@ -25,7 +27,7 @@ const commands = [
         description: 'إنشاء مشروع جديد',
         options: [
           { type: 3, name: 'name', description: 'اسم المشروع', required: true },
-          { type: 3, name: 'slug', description: 'رمز قصير للمشروع', required: true },
+          { type: 3, name: 'slug', description: 'رمز قصير للمشروع (اختياري)', required: false },
           {
             type: 3,
             name: 'pipeline',
@@ -35,11 +37,23 @@ const commands = [
           },
           {
             type: 3,
+            name: 'unit',
+            description: 'الوحدة الأساسية إذا لم تكن القناة تفرض وحدة محددة',
+            required: false,
+            choices: [
+              { name: 'الإنتاج', value: 'production' },
+              { name: 'الإعلام', value: 'media' },
+              { name: 'الناس', value: 'people' },
+              { name: 'الجيكس', value: 'geeks' }
+            ]
+          },
+          {
+            type: 3,
             name: 'units',
             description: 'وحدات المشروع (مفصولة بفواصل مثل production,media)',
             required: false
           },
-          { type: 3, name: 'due', description: 'تاريخ التسليم (اختياري)', required: false },
+          { type: 3, name: 'due', description: 'تاريخ التسليم (YYYY-MM-DD)', required: true },
           {
             type: 3,
             name: 'template',
