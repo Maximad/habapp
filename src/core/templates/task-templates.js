@@ -373,252 +373,444 @@ const productionTaskTemplates = [
 
 const mediaTaskTemplates = [
   {
-    id: 'media_pitch',
+    id: 'media_ideas_round',
     type: 'task',
     unit: 'media',
 
-    label_ar: 'ملخص فكرة المادة التحريرية',
-    description_ar: 'صياغة زاوية القصة، الجمهور، وأهداف النشر في فقرة قصيرة.',
+    label_ar: 'جولة أفكار نشر ١٠ أفكار واعتماد ٣',
+    description_ar: 'جلسة سريعة لجمع ١٠ أفكار ونقاشها واعتماد ٣ منها كبدايات مشاريع.',
 
     size: 'S',
     definitionOfDone_ar:
-      'فقرة أو بطاقة واضحة تتضمن الزاوية، الجمهور، المنصات المقترحة، والمصادر الرئيسية، منشورة في قناة التكليفات.',
+      'جدول في قناة أفكار النشر يحتوي على ١٠ أفكار مختصرة، مع تحديد ٣ أفكار معتمدة ومذكور اسم المالك المبدئي لكل فكرة.',
 
-    defaultOwnerRole: 'editorial_lead',
-    defaultChannelKey: 'media.assignments',
+    defaultOwnerRole: 'editor',
+    defaultChannelKey: 'media.ideas',
     defaultDueDays: 2,
 
     pipelineKey: 'media.article_short',
 
-    tags: ['تحرير', 'تكليف', 'فكرة']
+    tags: ['أفكار', 'نشر', 'تخطيط']
   },
   {
-    id: 'media_research_notes',
+    id: 'media_assignment_memo',
     type: 'task',
     unit: 'media',
 
-    label_ar: 'ملاحظات بحث وروابط موثوقة',
-    description_ar: 'جمع المصادر الأساسية والمراجع وروابط البيانات.',
+    label_ar: 'مذكرة تكليف لمادة محددة',
+    description_ar: 'كتابة مذكرة تكليف واضحة لمادة واحدة مع تعريف الإنجاز والموعد والمالك.',
 
     size: 'S',
-    definitionOfDone_ar: 'قائمة روابط وملاحظات منظمة مع تلخيص سريع لكل مصدر، منشورة في خيط أو بطاقة المهمة.',
+    definitionOfDone_ar:
+      'خيط واحد في #assignment-desk يضم ملخص الفكرة، تعريف الإنجاز، المالك، الموعد، ورابط مشروع HabApp إن وجد.',
 
-    defaultOwnerRole: 'writer',
-    defaultChannelKey: 'media.assignments',
-    defaultDueDays: 3,
+    defaultOwnerRole: 'editor',
+    defaultChannelKey: 'media.assignment_desk',
+    defaultDueDays: 1,
 
     pipelineKey: 'media.article_short',
 
-    tags: ['بحث', 'مصادر', 'تحقق']
+    tags: ['تكليف', 'تحرير', 'إدارة مهام']
   },
   {
-    id: 'media_interviews',
+    id: 'media_quick_interview',
     type: 'task',
     unit: 'media',
 
-    label_ar: 'جدولة مقابلات أساسية',
-    description_ar: 'تنسيق ٢–٣ مقابلات مرتبطة بالمادة التحريرية.',
+    label_ar: 'مقابلة سريعة سؤال وجواب',
+    description_ar: 'مقابلة من ٨٠٠ إلى ١٢٠٠ كلمة مع شخص واحد وصورة مرافقة.',
 
     size: 'M',
-    definitionOfDone_ar: 'مواعيد مؤكدة أو مراسلات مثبتة للمقابلات مع محاور الأسئلة الرئيسية.',
+    definitionOfDone_ar:
+      'نص من ٨٠٠ إلى ١٢٠٠ كلمة منظم كسؤال وجواب، مع صورة واحدة على الأقل، وملاحظات تدقيق أساسية، جاهز للتحرير.',
 
-    defaultOwnerRole: 'writer',
-    defaultChannelKey: 'media.assignments',
+    defaultOwnerRole: 'reporter',
+    defaultChannelKey: 'media.drafts',
     defaultDueDays: 4,
 
-    pipelineKey: 'media.article_long',
+    pipelineKey: 'media.article_short',
 
-    tags: ['مقابلات', 'تنسيق', 'بحث']
+    tags: ['مقابلة', 'سؤال وجواب', 'نص']
   },
   {
-    id: 'media_draft',
+    id: 'media_short_article_write',
     type: 'task',
     unit: 'media',
 
-    label_ar: 'مسودة أولية',
-    description_ar: 'كتابة المسودة الأولى بالمراجع والاقتباسات.',
+    label_ar: 'كتابة مقال قصير',
+    description_ar: 'صياغة مادة من ٨٠٠ إلى ١٢٠٠ كلمة بناء على التكليف والمصادر المتاحة.',
 
     size: 'M',
-    definitionOfDone_ar: 'مسودة كاملة مع عناوين فرعية وروابط مصادر، مرفوعة في قناة التحرير أو خيط المشروع.',
+    definitionOfDone_ar:
+      'مسودة كاملة في خيط المادة، ضمن الطول المطلوب، مع عناوين فرعية مقترحة، واقتباس رئيسي واحد على الأقل.',
 
-    defaultOwnerRole: 'writer',
-    defaultChannelKey: 'media.edits',
+    defaultOwnerRole: 'reporter',
+    defaultChannelKey: 'media.drafts',
     defaultDueDays: 5,
 
     pipelineKey: 'media.article_short',
 
-    tags: ['مسودة', 'تحرير']
+    tags: ['مقال', 'نص', 'تحرير']
   },
   {
-    id: 'media_edit',
+    id: 'media_long_article_write',
     type: 'task',
     unit: 'media',
 
-    label_ar: 'تحرير وتدقيق لغوي',
-    description_ar: 'مراجعة المسودة، تدقيق لغوي، وضبط العناوين.',
+    label_ar: 'كتابة مادة مطوّلة',
+    description_ar: 'صياغة مادة معمّقة مع خريطة بناء وأقسام واضحة.',
 
-    size: 'S',
-    definitionOfDone_ar: 'نسخة محررة مع تعليقات واضحة للمراجعة النهائية، محفوظة في قناة التحرير.',
+    size: 'L',
+    definitionOfDone_ar:
+      'مسودة أولى كاملة مع خريطة بناء في رأس المستند، وعناوين فرعية واضحة، وقائمة مراجع أولية.',
 
-    defaultOwnerRole: 'editor',
-    defaultChannelKey: 'media.edits',
-    defaultDueDays: 3,
+    defaultOwnerRole: 'reporter',
+    defaultChannelKey: 'media.drafts',
+    defaultDueDays: 8,
 
-    pipelineKey: 'media.article_short',
+    pipelineKey: 'media.article_long',
 
-    tags: ['تحرير', 'تدقيق']
+    tags: ['تحقيق', 'مادة مطولة', 'بحث']
   },
   {
-    id: 'media_fact_check',
+    id: 'media_research_background',
     type: 'task',
     unit: 'media',
 
-    label_ar: 'تدقيق حقائق ومطابقة المصادر',
-    description_ar: 'التحقق من الأرقام والأسماء والاقتباسات قبل النشر.',
+    label_ar: 'مذكرة خلفية موضوع محدد',
+    description_ar: 'إعداد مذكرة خلفية من صفحة أو صفحتين عن موضوع المادة مع أهم المصادر.',
 
     size: 'S',
-    definitionOfDone_ar: 'قائمة فحص موقعة مع مصادر لكل معلومة أساسية، ونتائج التدقيق في قناة الفاكت تشك.',
+    definitionOfDone_ar:
+      'وثيقة من ١–٢ صفحة تجمع أهم المصادر، المفاهيم، واللاعبين الرئيسيين، مع روابط واضحة، مرفوعة في خيط المشروع.',
 
-    defaultOwnerRole: 'fact_checker',
-    defaultChannelKey: 'media.factcheck',
-    defaultDueDays: 2,
+    defaultOwnerRole: 'researcher',
+    defaultChannelKey: 'media.research',
+    defaultDueDays: 4,
 
-    pipelineKey: 'media.article_short',
+    pipelineKey: 'media.article_long',
 
-    tags: ['تدقيق', 'حقائق']
+    tags: ['خلفية', 'بحث', 'تحرير']
   },
   {
-    id: 'media_publish_package',
+    id: 'media_data_brief',
     type: 'task',
     unit: 'media',
 
-    label_ar: 'حزمة النشر والتوزيع',
-    description_ar: 'تجهيز العناوين، الملخص، الصور، وروابط النشر.',
+    label_ar: 'موجز مدعوم بالبيانات',
+    description_ar: 'إعداد ٥ نقاط رئيسية مع رسم بياني أو خريطة ومراجع.',
 
-    size: 'S',
-    definitionOfDone_ar: 'عنوان نهائي، وصف قصير، صورة مميزة، وروابط النشر الداخلية/الخارجية، مع جدول نشر واضح.',
+    size: 'M',
+    definitionOfDone_ar:
+      'نص من ٥ نقاط واضحة، مع رسم بياني أو خريطة واحدة على الأقل، وقائمة بالمصادر المستخدمة، جاهز للتحرير.',
 
-    defaultOwnerRole: 'publishing',
-    defaultChannelKey: 'media.exports',
-    defaultDueDays: 2,
+    defaultOwnerRole: 'reporter',
+    defaultChannelKey: 'media.data',
+    defaultDueDays: 6,
 
-    pipelineKey: 'media.article_short',
+    pipelineKey: 'media.data_brief',
 
-    tags: ['نشر', 'توزيع']
+    tags: ['بيانات', 'إحصاءات', 'موجز']
   },
   {
-    id: 'media_photo_brief',
+    id: 'media_photo_story_package',
     type: 'task',
     unit: 'media',
 
-    label_ar: 'موجز صور القصة',
-    description_ar: 'تحديد اللقطات المطلوبة وزوايا السرد البصري.',
+    label_ar: 'مقال بصري مصوّر',
+    description_ar: 'تجهيز ٦ إلى ٨ صور مع تسميات ونص مرافِق.',
 
-    size: 'S',
-    definitionOfDone_ar: 'موجز بصري من ٥ نقاط على الأقل مع أمثلة أو مراجع، منشور في قناة الصور.',
+    size: 'M',
+    definitionOfDone_ar:
+      'مجموعة من ٦ إلى ٨ صور مختارة ومحررة، مع تسميات واضحة لكل صورة، ونص مرافِق من ٤٠٠ إلى ٨٠٠ كلمة.',
 
     defaultOwnerRole: 'photo_editor',
     defaultChannelKey: 'media.photo',
-    defaultDueDays: 2,
+    defaultDueDays: 6,
 
     pipelineKey: 'media.photo_story',
 
-    tags: ['صور', 'موجز']
+    tags: ['صور', 'قصة', 'بصري']
   },
   {
-    id: 'media_photo_edit',
+    id: 'media_illustration',
     type: 'task',
     unit: 'media',
 
-    label_ar: 'اختيار ومعالجة الصور',
-    description_ar: 'اختيار ٨–١٠ صور ومعالجتها بالألوان والقص.',
+    label_ar: 'رسم توضيحي ١–٢ لوحات',
+    description_ar: 'إنجاز رسم أو رسمين توضيحيين لمادة محددة.',
 
-    size: 'M',
-    definitionOfDone_ar: 'مجلد صور مختارة مع ضبط ألوان أساسي وتسميات الملفات، جاهز للتعليق.',
+    size: 'S',
+    definitionOfDone_ar:
+      'ملف PNG نهائي وملف المصدر، مع نص بديل قصير، رابط في خيط المادة، وموافقة تحريرية.',
 
-    defaultOwnerRole: 'photo_editor',
-    defaultChannelKey: 'media.photo',
+    defaultOwnerRole: 'illustrator',
+    defaultChannelKey: 'media.graphics',
     defaultDueDays: 4,
 
     pipelineKey: 'media.photo_story',
 
-    tags: ['صور', 'تحرير']
+    tags: ['رسم', 'رسومات', 'توضيح']
   },
   {
-    id: 'media_captions',
+    id: 'media_factcheck_bundle',
     type: 'task',
     unit: 'media',
 
-    label_ar: 'تعليقات وتسويد نصي للصور',
-    description_ar: 'كتابة تعليقات واضحة مع أسماء الأشخاص والأماكن والتواريخ.',
+    label_ar: 'حزمة تدقيق حقائق لمادة محددة',
+    description_ar: 'إعداد قائمة ادعاءات ومصادر ونتائج التحقق لمادة واحدة.',
 
     size: 'S',
-    definitionOfDone_ar: 'تعليقات دقيقة لكل صورة مع مراجعة لغوية سريعة، محفوظة في ملف مشترك أو بطاقة.',
+    definitionOfDone_ar:
+      'وثيقة أو تعليق واحد يحتوي على قائمة الادعاءات الرئيسة، المصادر المستخدمة، ونتيجة التحقق لكل ادعاء، مثبتة في خيط المادة.',
 
-    defaultOwnerRole: 'writer',
-    defaultChannelKey: 'media.photo',
+    defaultOwnerRole: 'fact_checker',
+    defaultChannelKey: 'media.fact_check',
     defaultDueDays: 2,
 
-    pipelineKey: 'media.photo_story',
+    pipelineKey: 'media.article_short',
 
-    tags: ['تعليقات', 'صور']
+    tags: ['تدقيق', 'حقائق', 'منهجية']
   },
   {
-    id: 'media_social_script',
+    id: 'media_corrections_log_entry',
     type: 'task',
     unit: 'media',
 
-    label_ar: 'سكريبت فيديو قصير',
-    description_ar: 'كتابة سكريبت ٦٠–٩٠ ثانية للمنصات الاجتماعية.',
+    label_ar: 'إدخالات تصحيح خلفية',
+    description_ar: 'توثيق ٣ إلى ٥ عناصر خلفية أو تصحيحية في سجلّ مستقل.',
 
     size: 'S',
-    definitionOfDone_ar: 'سكريبت بسيط مع دعوة تفاعل وكلمات مفتاحية، منشور في قناة الفيديو القصير.',
+    definitionOfDone_ar:
+      '٣ إلى ٥ إدخالات جديدة في سجلّ التصحيحات أو سجل الخلفية، مع التاريخ، رابط المادة، وسبب التعديل أو التوضيح.',
 
-    defaultOwnerRole: 'writer',
-    defaultChannelKey: 'media.video',
+    defaultOwnerRole: 'corrections_editor',
+    defaultChannelKey: 'media.corrections_log',
+    defaultDueDays: 3,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['تصحيحات', 'توثيق', 'شفافية']
+  },
+  {
+    id: 'media_styleguide_update',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'تحديث دليل الأسلوب نسخة ٠٫٢',
+    description_ar: 'إضافة أو تعديل نقاط في دليل الأسلوب بناء على أخطاء شائعة أو احتياجات جديدة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ملف PDF أو مستند محدث لدليل الأسلوب، مع سجل تغييرات مختصر، مثبت في قناة دليل الأسلوب.',
+
+    defaultOwnerRole: 'editor',
+    defaultChannelKey: 'media.styleguide',
+    defaultDueDays: 5,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['أسلوب', 'لغة', 'تحرير']
+  },
+  {
+    id: 'media_accessibility_check',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'مراجعة الوصول الرقمي',
+    description_ar: 'فحص Alt للنصوص البديلة، تباين الألوان، والترجمات قبل النشر.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'بطاقة فحص منجزة للمادة تحتوي على حالة النص البديل، تباين الألوان، والترجمات، مع علامة واضحة بأن المادة جاهزة من ناحية الوصول.',
+
+    defaultOwnerRole: 'accessibility_editor',
+    defaultChannelKey: 'media.accessibility',
+    defaultDueDays: 1,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['وصول', 'Alt', 'ترجمة', 'تصميم']
+  },
+  {
+    id: 'media_short_video_script',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'سكريبت أو بنية لفيديو قصير',
+    description_ar: 'كتابة سكريبت بسيط أو بنية نقاط لفيديو قصير.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'سكريبت أو بنية من صفحة واحدة على الأكثر، مع بداية ووسط ونهاية واضحة، وملاحظات بصرية بسيطة.',
+
+    defaultOwnerRole: 'editor',
+    defaultChannelKey: 'media.drafts',
     defaultDueDays: 2,
 
     pipelineKey: 'media.short_video_social',
 
-    tags: ['فيديو', 'نص', 'اجتماعي']
+    tags: ['سكريبت', 'فيديو', 'تحرير']
   },
   {
-    id: 'media_social_edit',
+    id: 'media_short_video_edit',
     type: 'task',
     unit: 'media',
 
-    label_ar: 'مونتاج فيديو اجتماعي',
-    description_ar: 'مونتاج قصير مع شعارات وتترات مناسبة للمنصات.',
+    label_ar: 'فيديو قصير ٦٠–١٢٠ ثانية',
+    description_ar: 'مونتاج فيديو قصير للنشر على شبكات التواصل.',
 
     size: 'M',
-    definitionOfDone_ar: 'نسخة جاهزة للنشر بصيغة عمودية أو مربعة مع نصوص على الشاشة وصوت متوازن.',
+    definitionOfDone_ar:
+      'ملف فيديو نهائي في القياس المطلوب، مع ترجمة مدمجة إن لزم، وعنوان ووصف جاهزان للنشر.',
 
     defaultOwnerRole: 'video_editor',
     defaultChannelKey: 'media.video',
-    defaultDueDays: 4,
+    defaultDueDays: 5,
 
     pipelineKey: 'media.short_video_social',
 
-    tags: ['مونتاج', 'فيديو قصير']
+    tags: ['فيديو', 'اجتماعي', 'مونتاج']
   },
   {
-    id: 'media_social_graphics',
+    id: 'media_podcast_outline',
     type: 'task',
     unit: 'media',
 
-    label_ar: 'جرافيكس وتترات للفيديو',
-    description_ar: 'تصميم لوحات بداية/نهاية ونصوص للشاشة.',
+    label_ar: 'مخطط حلقة بودكاست',
+    description_ar: 'إعداد خط تشغيل لملف صوتي قصير.',
 
     size: 'S',
-    definitionOfDone_ar: 'حزمة جرافيكس (لوغو، ألوان، خطوط) ومثال مطبق على الفيديو، جاهزة للاستخدام.',
+    definitionOfDone_ar:
+      'وثيقة بنقاط رئيسية للحلقة، تتضمن بداية واضحة، محورين أو ثلاثة، وخاتمة، مع وقت تقريبي.',
 
-    defaultOwnerRole: 'designer',
-    defaultChannelKey: 'media.graphics',
+    defaultOwnerRole: 'editor',
+    defaultChannelKey: 'media.drafts',
+    defaultDueDays: 3,
+
+    pipelineKey: 'media.podcast_short',
+
+    tags: ['بودكاست', 'تخطيط', 'نص']
+  },
+  {
+    id: 'media_podcast_edit',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'مونتاج حلقة بودكاست قصيرة',
+    description_ar: 'مونتاج حلقة من ٥ إلى ٨ دقائق مع ملاحظات الحلقة.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'ملف WAV أو MP3 نهائي، مع ملاحظات الحلقة (عنوان، وصف، أسماء الضيوف، روابط)، جاهز للنشر.',
+
+    defaultOwnerRole: 'audio_editor',
+    defaultChannelKey: 'media.audio',
+    defaultDueDays: 7,
+
+    pipelineKey: 'media.podcast_short',
+
+    tags: ['صوت', 'بودكاست', 'مونتاج']
+  },
+  {
+    id: 'media_social_cut_3x',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'تقطيع اجتماعي ٣ نسخ',
+    description_ar: 'إعداد نسخ ٩:١٦ و١:١ و١٦:٩ مع ترجمة مدمجة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ثلاثة ملفات فيديو جاهزة (٩:١٦، ١:١، ١٦:٩) مع ترجمة إذا لزم، وعناوين ووصف مناسب لكل منصة.',
+
+    defaultOwnerRole: 'social_editor',
+    defaultChannelKey: 'media.social',
     defaultDueDays: 3,
 
     pipelineKey: 'media.short_video_social',
 
-    tags: ['جرافيكس', 'فيديو']
+    tags: ['اجتماعي', 'فيديو', 'توزيع']
+  },
+  {
+    id: 'media_translation',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'ترجمة أو تكييف عربي/إنجليزي',
+    description_ar: 'ترجمة أو تكييف مادة بين العربية والإنجليزية مع مراجعة تحريرية.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'نسختان متوازيتان من النص، مع ملاحظات حول الاختلافات الضرورية في التكييف، ومراجعة محرر واحد على الأقل.',
+
+    defaultOwnerRole: 'translator',
+    defaultChannelKey: 'media.translation',
+    defaultDueDays: 4,
+
+    pipelineKey: 'media.translation_adapt',
+
+    tags: ['ترجمة', 'تكييف', 'عربي', 'إنجليزي']
+  },
+  {
+    id: 'media_editor_review',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'مراجعة محرر نهائية',
+    description_ar: 'مراجعة تحريرية نهائية قبل النشر، خاصة للترجمة أو المواد الحساسة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'تعليقات المحرر موثقة في الخيط، مع موافقة صريحة على النشر أو قائمة تعديلات محددة.',
+
+    defaultOwnerRole: 'editor',
+    defaultChannelKey: 'media.drafts',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.translation_adapt',
+
+    tags: ['تحرير', 'مراجعة', 'نشر']
+  },
+  {
+    id: 'media_risk_ethics_review',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'مراجعة مخاطر وأخلاقيات لمشروع',
+    description_ar: 'مراجعة سريعة للمخاطر الأخلاقية والأمنية لمادة أو مشروع قبل النشر.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'قائمة فحص قصيرة للمخاطر مع توصيات واضحة، مثبتة في خيط المشروع، ومذكور فيها قرار المضي أو التعديل.',
+
+    defaultOwnerRole: 'safety_editor',
+    defaultChannelKey: 'media.risk_review',
+    defaultDueDays: 3,
+
+    pipelineKey: 'media.article_long',
+
+    tags: ['مخاطر', 'أخلاقيات', 'سلامة']
+  },
+  {
+    id: 'media_method_memo',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'مذكرة منهج «كيف تحققنا من كذا»',
+    description_ar: 'كتابة مذكرة منهج توضّح خطوات التحقق للمادة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'نص مختصر يشرح كيف تم جمع البيانات والتحقق منها، مع خطوات واضحة وروابط المصادر، يمكن مشاركته مع القراء أو الاحتفاظ به داخلياً.',
+
+    defaultOwnerRole: 'researcher',
+    defaultChannelKey: 'media.method',
+    defaultDueDays: 4,
+
+    pipelineKey: 'media.data_brief',
+
+    tags: ['منهج', 'تحقق', 'بحث']
   }
 ];
 
@@ -759,6 +951,367 @@ const peopleTaskTemplates = [
     pipelineKey: 'people.event_small',
 
     tags: ['تقييم', 'تعلم']
+  },
+  {
+    id: 'people_volunteer_intake_match',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'استقبال المتطوعين والمواءمة',
+    description_ar:
+      'استقبال المتطوعين الجدد، جمع معلوماتهم الأساسية، ومواءمة مهاراتهم مع مسارات ومشاريع حبق.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'جدول واحد محدث يحتوي على بيانات المتطوعين الجدد، مهاراتهم، وتوصية مبدئية لمسار أو مشروع لكل شخص، مع ربط بالخيوط المناسبة في ديسكورد.',
+
+    defaultOwnerRole: 'volunteer_coordinator',
+    defaultChannelKey: 'people.volunteers',
+    defaultDueDays: 5,
+
+    tags: ['متطوعون', 'مواءمة', 'موارد بشرية']
+  },
+  {
+    id: 'people_partner_directory_10',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'دليل الشركاء ١٠ جهات',
+    description_ar: 'إعداد قائمة أولية بالشركاء أو الداعمين المحتملين (١٠ جهات على الأقل).',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'قائمة أولية من ١٠ شركاء محتملين على الأقل مع اسم الجهة، نوعها، طريقة التواصل، وما يمكن أن تقدمه أو تحتاجه من حبق.',
+
+    defaultOwnerRole: 'partnerships_lead',
+    defaultChannelKey: 'people.partners',
+    defaultDueDays: 7,
+
+    tags: ['شركاء', 'تمويل', 'شبكات']
+  },
+  {
+    id: 'people_partner_book_20',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'دفتر شركاء محليين/شتات (٢٠ جهة)',
+    description_ar: 'توسيع دليل الشركاء إلى دفتر يحتوي على ٢٠ جهة على الأقل مع حالة العلاقة.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'دفتر شركاء يتضمن ٢٠ جهة على الأقل مع حالة العلاقة، مسؤول التواصل داخلياً، وآخر تواصل موثّق، محفوظ في مرجع واضح ومربوط في خيط المشروع.',
+
+    defaultOwnerRole: 'partnerships_lead',
+    defaultChannelKey: 'people.partners',
+    defaultDueDays: 14,
+
+    tags: ['شركاء', 'شبكات', 'توثيق']
+  },
+  {
+    id: 'people_mini_training_30min',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'جلسة تدريب قصيرة ٣٠ دقيقة',
+    description_ar: 'تحضير وتنفيذ جلسة تدريب قصيرة داخلية أو لمتطوعين.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'تدريب مسجّل مدته ٣٠ دقيقة تقريباً أو جلسة مباشرة مع تسجيل أو ملخص، إضافة إلى رابط الشرائح أو المواد المساندة، منشور في القناة المناسبة.',
+
+    defaultOwnerRole: 'trainer',
+    defaultChannelKey: 'people.training',
+    defaultDueDays: 7,
+
+    tags: ['تدريب', 'تعلم', 'مجتمع']
+  },
+  {
+    id: 'people_welcome_calls_5',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'مكالمات ترحيب مع ٥ أعضاء جدد',
+    description_ar: 'إجراء مكالمات أو لقاءات ترحيبية مع خمسة أعضاء جدد وتوثيق الملاحظات.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ملاحظات مكتوبة لخمس مكالمات ترحيب على الأقل، مع اسم الشخص، ما يهتم به، وواحدة من المهام الصغيرة المقترحة لكل عضو، موثّقة في خيط واحد.',
+
+    defaultOwnerRole: 'community_coordinator',
+    defaultChannelKey: 'people.onboarding_log',
+    defaultDueDays: 3,
+
+    tags: ['ترحيب', 'متطوعون', 'مجتمع']
+  },
+  {
+    id: 'people_weekly_appreciation_post',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'منشور تقدير أسبوعي',
+    description_ar: 'إعداد ونشر منشور أسبوعي يسلّط الضوء على شخص أو فريق من حبق.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'منشور واحد في #announcements-org أو القناة المعتمدة يسلّط الضوء على مساهمة شخص أو فريق، مع حفظ الرابط في سجل داخلي بسيط.',
+
+    defaultOwnerRole: 'community_coordinator',
+    defaultChannelKey: 'people.announcements_org',
+    defaultDueDays: 7,
+
+    tags: ['تقدير', 'مجتمع', 'إعلان']
+  },
+  {
+    id: 'people_benefit_activation',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'تفعيل منفعة للأعضاء المستحقين',
+    description_ar: 'تحديد وتفعيل منافع محددة (مثل دعم الإنترنت أو مزايا أخرى) لأعضاء نواة/قيادة مستحقين.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'قائمة محدثة بأسماء الأعضاء المستحقين لمنفعة معينة، مع فترة التغطية المتفق عليها، منشورة في قناة داخلية للعمليات.',
+
+    defaultOwnerRole: 'ops_coordinator',
+    defaultChannelKey: 'admin.benefits',
+    defaultDueDays: 5,
+
+    tags: ['منافع', 'دعم', 'عمليات']
+  },
+  {
+    id: 'people_mentoring_pairs',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'إقران إرشادي قيادة إلى نواة',
+    description_ar: 'إعداد أزواج إرشاد بين أعضاء القيادة/النواة والأعضاء الجدد أو النشطين.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'قائمة أزواج إرشاد (مرشد + عضو) مع هدف واحد واضح لكل زوج وفترة مراجعة أولى، مثبتة في قناة الإرشاد أو خيط المشروع.',
+
+    defaultOwnerRole: 'community_coordinator',
+    defaultChannelKey: 'people.mentoring',
+    defaultDueDays: 7,
+
+    tags: ['إرشاد', 'متطوعون', 'تنمية']
+  },
+  {
+    id: 'people_volunteer_onboarding_path',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'مسار اندماج المتطوع خلال ٧ أيام',
+    description_ar: 'تصميم مسار اندماج من ٣ مهام صغيرة لمتطوع جديد مع مُرشِد وتاريخ مراجعة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'مسار اندماج من ٣ مهام صغيرة موثّقة لكل متطوع جديد، مع مُرشِد محدد، وتاريخ مراجعة بعد ٧ أيام، مرتبطة بخيوط المهام أو المشروع.',
+
+    defaultOwnerRole: 'volunteer_coordinator',
+    defaultChannelKey: 'people.onboarding',
+    defaultDueDays: 7,
+
+    tags: ['اندماج', 'متطوعون', 'مسار']
+  },
+  {
+    id: 'people_recognition_system',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'نظام الاعتراف الأسبوعي',
+    description_ar: 'تصميم وتفعيل نظام اعتراف أسبوعي بالمساهمات داخل حبق.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'وصف مختصر لنظام الاعتراف الأسبوعي، قالب ثابت للمنشورات، وأرشيف بسيط يحتوي على إدخالات الأسابيع الثلاثة الأولى على الأقل.',
+
+    defaultOwnerRole: 'community_coordinator',
+    defaultChannelKey: 'people.recognition',
+    defaultDueDays: 10,
+
+    tags: ['اعتراف', 'مجتمع', 'تحفيز']
+  },
+  {
+    id: 'people_speakers_roster',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'لوحة المتحدثين المحليين',
+    description_ar: 'إعداد قائمة بالمتحدثين المحليين المحتملين ومواضيعهم وتوافرهم.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'قائمة من ٢٠ متحدثاً محلياً على الأقل مع المواضيع المفضلة، درجة الجاهزية، وطرق التواصل، محفوظة في ملف واحد ورابطه مثبت في قناة الفعاليات.',
+
+    defaultOwnerRole: 'events_lead',
+    defaultChannelKey: 'people.speakers',
+    defaultDueDays: 10,
+
+    tags: ['متحدثون', 'فعاليات', 'شبكات']
+  },
+  {
+    id: 'people_event_access_guide',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'دليل الوصول للفعالية',
+    description_ar: 'إعداد دليل وصول للفعالية يغطي المكان، المسارات، الصوتيات، والترجمة عند الإمكان.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'دليل وصول فعالية واحدة يوضح مكان التجمع، المداخل، مسارات ذوي الإعاقة، الصوتيات، وخيارات الترجمة، منشور في خيط الفعالية ومشارك مع الفريق.',
+
+    defaultOwnerRole: 'accessibility_coordinator',
+    defaultChannelKey: 'people.accessibility',
+    defaultDueDays: 3,
+
+    tags: ['وصول', 'فعالية', 'سلامة']
+  },
+  {
+    id: 'people_event_feedback_form',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'نموذج تغذية راجعة للحضور',
+    description_ar: 'تصميم نموذج تغذية راجعة للفعالية وجمع النتائج الأساسية.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'نموذج تغذية راجعة جاهز مع ٥ إلى ٨ أسئلة، وعدد مشاركات لا يقل عن ٢٠، مع ملخص نقاط قابلة للتنفيذ منشور في خيط الفعالية.',
+
+    defaultOwnerRole: 'community_coordinator',
+    defaultChannelKey: 'people.feedback',
+    defaultDueDays: 5,
+
+    tags: ['تغذية راجعة', 'فعالية', 'تقييم']
+  },
+  {
+    id: 'people_salon_topic_planning',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'تخطيط موضوع الصالون والمتحدثين/الفنانين',
+    description_ar: 'إعداد خط تشغيل ومحور وأسئلة ومتحدثين أو فنانين لصالون أو فعالية صغيرة.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'خط تشغيل بسيط للصالون أو الجلسة يتضمن المحور، الأسئلة الرئيسية، المتحدثين أو الفنانين، وتوزيع الوقت، منشور في خيط الفعالية.',
+
+    defaultOwnerRole: 'events_lead',
+    defaultChannelKey: 'people.events_planning',
+    defaultDueDays: 5,
+
+    tags: ['صالون', 'برنامج', 'فعاليات']
+  },
+  {
+    id: 'people_tech_rehearsal',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'بروفة تقنية ومنصة',
+    description_ar: 'إجراء بروفة تقنية للفعالية تشمل الصوت، الإضاءة، والمنصة أو البث.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'قائمة فحص منجزة لبروفة تقنية تشمل الصوت، الإضاءة، البث أو التسجيل إن وجد، مع تحديد مسؤول احتياطي للمنصة أو التقديم.',
+
+    defaultOwnerRole: 'tech_lead',
+    defaultChannelKey: 'people.events_logistics',
+    defaultDueDays: 2,
+
+    tags: ['بروفة', 'تقنية', 'فعاليات']
+  },
+  {
+    id: 'people_event_visual_assets',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'مواد بصرية للفعالية',
+    description_ar: 'تحضير غلاف ومنشورات بصرية للفعالية بصيغ متعددة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ثلاثة قياسات على الأقل من المواد البصرية (مثلاً ١:١، ٩:١٦، ١٦:٩) مع نص بديل وجدولة نشر واضحة، وروابطها محفوظة في خيط الفعالية.',
+
+    defaultOwnerRole: 'designer',
+    defaultChannelKey: 'media.graphics',
+    defaultDueDays: 4,
+
+    tags: ['فعالية', 'تصميم', 'بصري']
+  },
+  {
+    id: 'people_listening_session',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'جلسة إصغاء مجتمعي',
+    description_ar: 'تنظيم جلسة إصغاء مجتمعي وتوثيق أهم الملاحظات والخطوات العملية.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'ملخص مكتوب لجلسة إصغاء واحدة يتضمن على الأقل ٥ ملاحظات أو اقتباسات محورية، وثلاث خطوات عملية مقترحة، منشور في خيط المشروع أو الفعالية.',
+
+    defaultOwnerRole: 'community_coordinator',
+    defaultChannelKey: 'people.listening_sessions',
+    defaultDueDays: 5,
+
+    tags: ['إصغاء', 'مجتمع', 'ملاحظات']
+  },
+  {
+    id: 'people_event_debrief',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'ملخص ما بعد الفعالية',
+    description_ar: 'كتابة ملخص قصير لما نجح وما تعثر في الفعالية وما الذي سيتحسن لاحقاً.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ملخص ما بعد الفعالية من ٥ نقاط رئيسية مع صورتين على الأقل أو لقطات، يغطي ما نجح وما لم ينجح وماذا نفعل لاحقاً، منشور في خيط الفعالية.',
+
+    defaultOwnerRole: 'events_lead',
+    defaultChannelKey: 'people.events_reports',
+    defaultDueDays: 3,
+
+    tags: ['تقييم', 'ملخص', 'فعاليات']
+  },
+  {
+    id: 'people_coc_reminder_pack',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'حزمة تذكير بمدونة السلوك',
+    description_ar: 'إعداد حزمة مختصرة لتذكير المشاركين بمدونة السلوك قبل الفعالية.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'حزمة مختصرة لمدونة السلوك تشمل رسم أو بطاقة بصيغة صورة، نص قصير، ورسالة جاهزة للنشر قبل الفعالية، مثبتة في القناة المعتمدة.',
+
+    defaultOwnerRole: 'safety_coordinator',
+    defaultChannelKey: 'people.code_of_conduct',
+    defaultDueDays: 4,
+
+    tags: ['مدونة السلوك', 'سلامة', 'مجتمع']
+  },
+  {
+    id: 'people_accessibility_checklist_event',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'قائمة فحص الوصول الشامل للفعاليات',
+    description_ar: 'إعداد قائمة فحص لتغطية الوصول المكاني والصوتي واللغوي للفعالية.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'وثيقة فحص واحدة للفعالية تغطي المكان والصوت والترجمة واللوحات، مع خانة نعم/لا وتعليقات، ومؤشر نهائي بأن الفعالية مناسبة أو تحتاج تعديلات.',
+
+    defaultOwnerRole: 'accessibility_coordinator',
+    defaultChannelKey: 'people.accessibility',
+    defaultDueDays: 3,
+
+    tags: ['وصول', 'فعاليات', 'سلامة']
   }
 ];
 

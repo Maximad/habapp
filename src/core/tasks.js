@@ -103,8 +103,9 @@ function resolveTemplatesForPipeline(effectivePipelineKey) {
   if (!pipeline) return [];
 
   const stacks = [];
-  if (Array.isArray(pipeline.defaultTemplateIds)) {
-    stacks.push(pipeline.defaultTemplateIds);
+  const defaults = pipeline.defaultTaskTemplateIds || pipeline.defaultTemplateIds;
+  if (Array.isArray(defaults)) {
+    stacks.push(defaults);
   }
 
   if (Array.isArray(pipeline.inheritTemplatePipelineKeys)) {
@@ -153,18 +154,30 @@ async function createTasksFromTemplates({ projectSlug, pipelineKey }, store) {
     return [];
   }
 
-  const created = templates.map(t =>
-    addTaskToProject(project, {
-      title: t.label_ar,
-      title_ar: t.label_ar,
-      unit: t.unit,
-      templateId: t.id,
-      defaultOwnerRole: t.defaultOwnerRole || null,
-      defaultChannelKey: t.defaultChannelKey || null,
-      size: t.size || null,
-      due: resolveTaskDueDate(t, project)
-    })
+  const existingTemplateIds = new Set(
+    Array.isArray(project.tasks)
+      ? project.tasks.map(t => t && t.templateId).filter(Boolean)
+      : []
   );
+
+  const created = templates
+    .filter(t => {
+      if (existingTemplateIds.has(t.id)) return false;
+      existingTemplateIds.add(t.id);
+      return true;
+    })
+    .map(t =>
+      addTaskToProject(project, {
+        title: t.label_ar,
+        title_ar: t.label_ar,
+        unit: t.unit,
+        templateId: t.id,
+        defaultOwnerRole: t.defaultOwnerRole || null,
+        defaultChannelKey: t.defaultChannelKey || null,
+        size: t.size || null,
+        due: resolveTaskDueDate(t, project)
+      })
+    );
 
   projects[index] = project;
   saveProjects(projects, store);

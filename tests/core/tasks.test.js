@@ -13,7 +13,9 @@ function collectPipelineTemplateIds(key, seen = new Set()) {
   const pipeline = getPipelineByKey(key);
   if (!pipeline) return [];
 
-  (pipeline.defaultTemplateIds || []).forEach(id => seen.add(id));
+  (pipeline.defaultTaskTemplateIds || pipeline.defaultTemplateIds || []).forEach(id =>
+    seen.add(id)
+  );
   (pipeline.supportTemplateIds || []).forEach(id => seen.add(id));
   (pipeline.inheritTemplatePipelineKeys || []).forEach(parent => collectPipelineTemplateIds(parent, seen));
 
@@ -104,4 +106,35 @@ test('createTasksFromTemplates falls back for production video pipelines', async
 
   assert.strictEqual(created.length, expectedTemplates.length);
   assert.ok(created.every(task => task.status === 'open'));
+});
+
+test('createTasksFromTemplates scaffolds media pipelines without duplication', async t => {
+  const { store, dir } = setupProject('media.article_short');
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  const created = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
+  const expectedTemplateIds = collectPipelineTemplateIds('media.article_short');
+
+  assert.strictEqual(created.length, expectedTemplateIds.length);
+  assert.ok(created.every(task => expectedTemplateIds.includes(task.templateId)));
+
+  const createdAgain = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
+  assert.strictEqual(createdAgain.length, 0);
+
+  const stored = projects.findProject('proj', store);
+  assert.strictEqual(stored.tasks.length, expectedTemplateIds.length);
+});
+
+test('createTasksFromTemplates scaffolds people pipelines and dedupes', async t => {
+  const { store, dir } = setupProject('people.event_small');
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  const created = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
+  const expectedTemplateIds = collectPipelineTemplateIds('people.event_small');
+
+  assert.strictEqual(created.length, expectedTemplateIds.length);
+  assert.ok(created.every(task => expectedTemplateIds.includes(task.templateId)));
+
+  const createdAgain = await createTasksFromTemplates({ projectSlug: 'proj' }, store);
+  assert.strictEqual(createdAgain.length, 0);
 });

@@ -12,13 +12,28 @@ const units = [
     key: 'media',
     name_ar: 'وحدة الإعلام',
     description_ar: 'تكتب وتنشر المقالات والقصص المصوّرة والمحتوى الاجتماعي.',
-    pipelines: ['media.article_short', 'media.article_long', 'media.photo_story', 'media.short_video_social']
+    pipelines: [
+      'media.article_short',
+      'media.article_long',
+      'media.photo_story',
+      'media.data_brief',
+      'media.short_video_social',
+      'media.podcast_short',
+      'media.translation_adapt'
+    ]
   },
   {
     key: 'people',
     name_ar: 'وحدة الناس',
     description_ar: 'تنظّم الفعاليات والحوارات والسهرات الثقافية.',
-    pipelines: ['people.event_small', 'people.event_music', 'people.event_forum']
+    pipelines: [
+      'people.volunteer_onboarding',
+      'people.partner_mapping',
+      'people.event_small',
+      'people.event_music',
+      'people.event_forum',
+      'people.training_mini'
+    ]
   },
   {
     key: 'geeks',
@@ -118,114 +133,471 @@ const pipelines = [
     key: 'media.article_short',
     unitKey: 'media',
     unit: 'media',
-    name_ar: 'مقال قصير أو سؤال/جواب',
-    description_ar: 'مقالات 800–1200 كلمة بأسلوب Q&A أو قصة قصيرة.',
-    suggestedStages: ['idea', 'research', 'draft', 'edit', 'publish'],
-    profile: 'article_light',
+    name_ar: 'مقال قصير',
+    description_ar: 'مادة تحريرية من ٨٠٠ إلى ١٢٠٠ كلمة، مبنية على مقابلة أو اثنتين ومراجعة أساسية.',
+    stages_ar: [
+      'فكرة',
+      'تكليف',
+      'جمع مادة',
+      'مسودة',
+      'تحرير',
+      'تدقيق حقائق',
+      'وصول وأسلوب',
+      'جاهز للنشر',
+      'منشور',
+      'مؤرشف / مصحح'
+    ],
+    suggestedStages: ['idea', 'assignment', 'research', 'draft', 'edit', 'factcheck', 'accessibility', 'publish', 'archive'],
+    typical_length_words: [800, 1200],
+    typical_turnaround_days: 5,
+    defaultTaskTemplateIds: [
+      'media_ideas_round',
+      'media_assignment_memo',
+      'media_quick_interview',
+      'media_short_article_write',
+      'media_factcheck_bundle',
+      'media_accessibility_check',
+      'media_social_cut_3x',
+      'media_corrections_log_entry'
+    ],
     defaultTemplateIds: [
-      'media_pitch',
-      'media_research_notes',
-      'media_draft',
-      'media_edit',
-      'media_fact_check',
-      'media_publish_package'
+      'media_ideas_round',
+      'media_assignment_memo',
+      'media_quick_interview',
+      'media_short_article_write',
+      'media_factcheck_bundle',
+      'media_accessibility_check',
+      'media_social_cut_3x',
+      'media_corrections_log_entry'
     ]
   },
   {
     key: 'media.article_long',
     unitKey: 'media',
     unit: 'media',
-    name_ar: 'مقال مطوّل',
-    description_ar: 'مقالات 1500–2000 كلمة ببحث وتحرير عميق.',
-    suggestedStages: ['idea', 'research', 'draft', 'edit', 'publish'],
-    profile: 'article_deep',
+    name_ar: 'مادة مطوّلة',
+    description_ar: 'تحقيق أو مادة معمّقة من ١٥٠٠ إلى ٢٠٠٠ كلمة مع مصادر متعددة.',
+    stages_ar: [
+      'فكرة',
+      'تكليف',
+      'جمع مادة',
+      'خريطة بناء',
+      'مسودة أولى',
+      'مسودة نهائية',
+      'تدقيق حقائق متقدّم',
+      'وصول وأسلوب',
+      'جاهز للنشر',
+      'منشور',
+      'مؤرشف / مصحح'
+    ],
+    suggestedStages: ['idea', 'assignment', 'research', 'structure', 'draft', 'final', 'factcheck', 'accessibility', 'publish', 'archive'],
+    typical_length_words: [1500, 2200],
+    typical_turnaround_days: 10,
+    defaultTaskTemplateIds: [
+      'media_ideas_round',
+      'media_assignment_memo',
+      'media_research_background',
+      'media_long_article_write',
+      'media_factcheck_bundle',
+      'media_risk_ethics_review',
+      'media_accessibility_check',
+      'media_corrections_log_entry'
+    ],
     defaultTemplateIds: [
-      'media_pitch',
-      'media_research_notes',
-      'media_interviews',
-      'media_draft',
-      'media_edit',
-      'media_fact_check',
-      'media_publish_package'
+      'media_ideas_round',
+      'media_assignment_memo',
+      'media_research_background',
+      'media_long_article_write',
+      'media_factcheck_bundle',
+      'media_risk_ethics_review',
+      'media_accessibility_check',
+      'media_corrections_log_entry'
     ]
   },
   {
     key: 'media.photo_story',
     unitKey: 'media',
     unit: 'media',
-    name_ar: 'قصة مصوّرة',
-    description_ar: 'قصص مصوّرة من 6–8 صور مع تعليق سردي.',
-    suggestedStages: ['idea', 'shoot', 'select', 'caption', 'publish'],
-    profile: 'photo_story',
+    name_ar: 'مقال بصري مصوّر',
+    description_ar: 'قصة مصورة من ٦ إلى ٨ صور مع تسميات ونص مرافِق.',
+    stages_ar: [
+      'فكرة',
+      'تكليف',
+      'تصوير',
+      'اختيار وتحرير بصري',
+      'كتابة تسميات ونص مرافِق',
+      'تدقيق حقائق أساسي',
+      'وصول وأسلوب',
+      'جاهز للنشر',
+      'منشور',
+      'مؤرشف'
+    ],
+    suggestedStages: ['idea', 'assignment', 'shoot', 'edit', 'publish', 'archive'],
+    typical_length_words: [400, 800],
+    typical_turnaround_days: 6,
+    defaultTaskTemplateIds: [
+      'media_ideas_round',
+      'media_assignment_memo',
+      'media_photo_story_package',
+      'media_factcheck_bundle',
+      'media_accessibility_check',
+      'media_corrections_log_entry'
+    ],
     defaultTemplateIds: [
-      'media_pitch',
-      'media_photo_brief',
-      'media_photo_edit',
-      'media_captions',
-      'media_publish_package'
+      'media_ideas_round',
+      'media_assignment_memo',
+      'media_photo_story_package',
+      'media_factcheck_bundle',
+      'media_accessibility_check',
+      'media_corrections_log_entry'
+    ]
+  },
+  {
+    key: 'media.data_brief',
+    unitKey: 'media',
+    unit: 'media',
+    name_ar: 'موجز مدعوم بالبيانات',
+    description_ar: '٥ نقاط رئيسية مع رسم بياني أو خريطة ومراجع بيانات.',
+    stages_ar: [
+      'فكرة',
+      'تكليف',
+      'جمع بيانات',
+      'تنظيف وتحليل أولي',
+      'صياغة نقاط موجزة',
+      'مراجعة منهجية',
+      'تدقيق حقائق',
+      'وصول وأسلوب',
+      'منشور',
+      'مؤرشف'
+    ],
+    suggestedStages: ['idea', 'assignment', 'analysis', 'draft', 'review', 'publish', 'archive'],
+    typical_length_words: [600, 1200],
+    typical_turnaround_days: 7,
+    defaultTaskTemplateIds: [
+      'media_ideas_round',
+      'media_assignment_memo',
+      'media_data_brief',
+      'media_method_memo',
+      'media_factcheck_bundle',
+      'media_accessibility_check',
+      'media_corrections_log_entry'
+    ],
+    defaultTemplateIds: [
+      'media_ideas_round',
+      'media_assignment_memo',
+      'media_data_brief',
+      'media_method_memo',
+      'media_factcheck_bundle',
+      'media_accessibility_check',
+      'media_corrections_log_entry'
     ]
   },
   {
     key: 'media.short_video_social',
     unitKey: 'media',
     unit: 'media',
-    name_ar: 'فيديو اجتماعي قصير',
-    description_ar: 'مقاطع 60–120 ثانية لمنصات التواصل.',
-    suggestedStages: ['idea', 'prep', 'shoot', 'edit', 'publish'],
-    profile: 'social_video',
+    name_ar: 'فيديو قصير اجتماعي',
+    description_ar: 'فيديو قصير من ٦٠ إلى ١٢٠ ثانية مهيأ للشبكات الاجتماعية.',
+    stages_ar: [
+      'فكرة',
+      'تكليف',
+      'سكريبت أو بنية',
+      'مونتاج أولي',
+      'مراجعة تحريرية',
+      'ترجمة وترجمات',
+      'وصول وأسلوب',
+      'منشور',
+      'مؤرشف'
+    ],
+    suggestedStages: ['idea', 'assignment', 'script', 'edit', 'review', 'publish', 'archive'],
+    typical_length_seconds: [60, 120],
+    typical_turnaround_days: 5,
+    defaultTaskTemplateIds: [
+      'media_ideas_round',
+      'media_assignment_memo',
+      'media_short_video_script',
+      'media_short_video_edit',
+      'media_social_cut_3x',
+      'media_accessibility_check',
+      'media_corrections_log_entry'
+    ],
     defaultTemplateIds: [
-      'media_pitch',
-      'media_social_script',
-      'media_social_edit',
-      'media_social_graphics',
-      'media_publish_package'
+      'media_ideas_round',
+      'media_assignment_memo',
+      'media_short_video_script',
+      'media_short_video_edit',
+      'media_social_cut_3x',
+      'media_accessibility_check',
+      'media_corrections_log_entry'
+    ]
+  },
+  {
+    key: 'media.podcast_short',
+    unitKey: 'media',
+    unit: 'media',
+    name_ar: 'حلقة بودكاست قصيرة',
+    description_ar: 'حلقة من ٥ إلى ٨ دقائق مع ملاحظات الحلقة ونص مختصر.',
+    stages_ar: [
+      'فكرة',
+      'تكليف',
+      'خط حلقة',
+      'تسجيل',
+      'مونتاج صوت',
+      'مراجعة تحريرية',
+      'وصول وأسلوب',
+      'منشور',
+      'مؤرشف'
+    ],
+    suggestedStages: ['idea', 'assignment', 'outline', 'record', 'edit', 'review', 'publish', 'archive'],
+    typical_length_minutes: [5, 8],
+    typical_turnaround_days: 10,
+    defaultTaskTemplateIds: [
+      'media_ideas_round',
+      'media_assignment_memo',
+      'media_podcast_outline',
+      'media_podcast_edit',
+      'media_accessibility_check',
+      'media_corrections_log_entry'
+    ],
+    defaultTemplateIds: [
+      'media_ideas_round',
+      'media_assignment_memo',
+      'media_podcast_outline',
+      'media_podcast_edit',
+      'media_accessibility_check',
+      'media_corrections_log_entry'
+    ]
+  },
+  {
+    key: 'media.translation_adapt',
+    unitKey: 'media',
+    unit: 'media',
+    name_ar: 'ترجمة أو تكييف',
+    description_ar: 'نقل مادة بين العربية والإنجليزية مع تكييف سياقي أساسي.',
+    stages_ar: [
+      'تخصيص',
+      'مسودة ترجمة',
+      'مراجعة تحريرية',
+      'مطابقة مع الأصل',
+      'وصول وأسلوب',
+      'منشور',
+      'مؤرشف'
+    ],
+    suggestedStages: ['assignment', 'draft', 'edit', 'review', 'publish', 'archive'],
+    typical_length_words: [800, 2000],
+    typical_turnaround_days: 4,
+    defaultTaskTemplateIds: [
+      'media_translation',
+      'media_editor_review',
+      'media_accessibility_check',
+      'media_corrections_log_entry'
+    ],
+    defaultTemplateIds: [
+      'media_translation',
+      'media_editor_review',
+      'media_accessibility_check',
+      'media_corrections_log_entry'
+    ]
+  },
+  {
+    key: 'people.volunteer_onboarding',
+    unitKey: 'people',
+    unit: 'people',
+    name_ar: 'مسار اندماج المتطوعين',
+    description_ar: 'من أول تواصل إلى إدماج المتطوع في مسار واضح مع ٣ مهام صغيرة ومُرشِد ومسؤول متابعة.',
+    stages_ar: [
+      'استمارة أو تواصل أولي',
+      'مكالمة أو لقاء ترحيبي',
+      'مواءمة مهارات وتفضيلات',
+      'مهام تجريبية قصيرة',
+      'تقييم أول دورة',
+      'إدماج في المسار المناسب'
+    ],
+    suggestedStages: ['intake', 'welcome', 'alignment', 'trial', 'review', 'integration'],
+    defaultTaskTemplateIds: [
+      'people_volunteer_intake_match',
+      'people_volunteer_onboarding_path',
+      'people_welcome_calls_5',
+      'people_mini_training_30min',
+      'people_recognition_system'
+    ],
+    defaultTemplateIds: [
+      'people_volunteer_intake_match',
+      'people_volunteer_onboarding_path',
+      'people_welcome_calls_5',
+      'people_mini_training_30min',
+      'people_recognition_system'
+    ]
+  },
+  {
+    key: 'people.partner_mapping',
+    unitKey: 'people',
+    unit: 'people',
+    name_ar: 'دفتر الشركاء المحليين والشتات',
+    description_ar: 'بناء دفتر تواصل مع شركاء وداعمين محتملين من داخل السويداء والشتات، مع حالة العلاقة ومسؤول المتابعة.',
+    stages_ar: [
+      'حصر أولي للجهات المحتملة',
+      'تواصل أولي وتعريف حبق',
+      'تسجيل الاهتمامات المتبادلة',
+      'اقتراحات تعاون أولية',
+      'متابعة وتثبيت التفاهمات',
+      'اتفاقات نشطة وتحديث دوري'
+    ],
+    suggestedStages: ['mapping', 'outreach', 'intake', 'proposal', 'followup', 'active'],
+    defaultTaskTemplateIds: [
+      'people_partner_directory_10',
+      'people_partner_book_20',
+      'people_recognition_system'
+    ],
+    defaultTemplateIds: [
+      'people_partner_directory_10',
+      'people_partner_book_20',
+      'people_recognition_system'
     ]
   },
   {
     key: 'people.event_small',
     unitKey: 'people',
     unit: 'people',
-    name_ar: 'فعالية صغيرة / أوبن مايك',
-    description_ar: 'تجمعات صغيرة أو أمسيات أوبن مايك وخفيفة التنظيم.',
-    suggestedStages: ['idea', 'announce', 'execute', 'wrapup'],
-    profile: 'event_small',
+    name_ar: 'فعالية مجتمعية صغيرة',
+    description_ar: 'لقاء صغير أو جلسة إصغاء أو نشاط مجتمعي ضمن مساحة محدودة، مع تخطيط بسيط لكن محترم للحضور.',
+    stages_ar: [
+      'فكرة ومحور',
+      'تخطيط أولي',
+      'دعوات وتأكيدات',
+      'تجهيز المكان والوصول',
+      'تنفيذ',
+      'تجميع تغذية راجعة',
+      'ملخص ما بعد الفعالية'
+    ],
+    suggestedStages: ['idea', 'plan', 'invite', 'logistics', 'execute', 'feedback', 'wrapup'],
+    defaultTaskTemplateIds: [
+      'people_salon_topic_planning',
+      'people_event_access_guide',
+      'people_tech_rehearsal',
+      'people_event_visual_assets',
+      'people_event_feedback_form',
+      'people_listening_session',
+      'people_event_debrief',
+      'people_coc_reminder_pack',
+      'people_accessibility_checklist_event'
+    ],
     defaultTemplateIds: [
-      'people_brief',
-      'people_announcement',
-      'people_checklist',
-      'people_feedback'
+      'people_salon_topic_planning',
+      'people_event_access_guide',
+      'people_tech_rehearsal',
+      'people_event_visual_assets',
+      'people_event_feedback_form',
+      'people_listening_session',
+      'people_event_debrief',
+      'people_coc_reminder_pack',
+      'people_accessibility_checklist_event'
     ]
   },
   {
     key: 'people.event_music',
     unitKey: 'people',
     unit: 'people',
-    name_ar: 'فعالية موسيقية',
-    description_ar: 'سهرات موسيقية مثل ليلة مقهى Notes كل خميس.',
-    suggestedStages: ['idea', 'announce', 'soundcheck', 'execute', 'wrapup'],
-    profile: 'event_music',
+    name_ar: 'فعالية موسيقية / ليلة موسيقى',
+    description_ar: 'أمسية موسيقية أو عرض حي مع جمهور، من اختيار البرنامج إلى التوثيق وما بعد الفعالية.',
+    stages_ar: [
+      'فكرة وبرنامج مبدئي',
+      'تأكيد المكان والفنانين',
+      'خطة الوصول والسلامة',
+      'الترويج',
+      'تنفيذ',
+      'تغذية راجعة',
+      'ملخص ما بعد الفعالية'
+    ],
+    suggestedStages: ['idea', 'booking', 'accessibility', 'promo', 'execute', 'feedback', 'wrapup'],
+    defaultTaskTemplateIds: [
+      'people_salon_topic_planning',
+      'people_event_access_guide',
+      'people_tech_rehearsal',
+      'people_event_visual_assets',
+      'people_event_feedback_form',
+      'people_event_debrief',
+      'people_coc_reminder_pack',
+      'people_accessibility_checklist_event'
+    ],
     defaultTemplateIds: [
-      'people_brief',
-      'people_announcement',
-      'people_soundcheck',
-      'people_checklist',
-      'people_feedback'
+      'people_salon_topic_planning',
+      'people_event_access_guide',
+      'people_tech_rehearsal',
+      'people_event_visual_assets',
+      'people_event_feedback_form',
+      'people_event_debrief',
+      'people_coc_reminder_pack',
+      'people_accessibility_checklist_event'
     ]
   },
   {
     key: 'people.event_forum',
     unitKey: 'people',
     unit: 'people',
-    name_ar: 'صالون / منتدى حواري',
-    description_ar: 'صالونات وندوات عامة للمناقشات المفتوحة.',
-    suggestedStages: ['idea', 'outreach', 'moderation', 'execute', 'wrapup'],
-    profile: 'event_forum',
+    name_ar: 'صالون أو منتدى حواري',
+    description_ar: 'جلسة حوار أو صالون فكري مع متحدثين وجمهور، مع تنظيم للكلمة، السلامة، والوصول.',
+    stages_ar: [
+      'فكرة ومحور',
+      'اختيار المتحدثين',
+      'خط تشغيل وتوزيع وقت',
+      'الترويج',
+      'تنفيذ',
+      'تغذية راجعة',
+      'ملخص ما بعد الفعالية'
+    ],
+    suggestedStages: ['idea', 'speakers', 'run_of_show', 'promo', 'execute', 'feedback', 'wrapup'],
+    defaultTaskTemplateIds: [
+      'people_salon_topic_planning',
+      'people_speakers_roster',
+      'people_event_access_guide',
+      'people_tech_rehearsal',
+      'people_event_visual_assets',
+      'people_event_feedback_form',
+      'people_event_debrief',
+      'people_coc_reminder_pack',
+      'people_accessibility_checklist_event'
+    ],
     defaultTemplateIds: [
-      'people_brief',
-      'people_outreach',
-      'people_moderation_plan',
-      'people_checklist',
-      'people_feedback'
+      'people_salon_topic_planning',
+      'people_speakers_roster',
+      'people_event_access_guide',
+      'people_tech_rehearsal',
+      'people_event_visual_assets',
+      'people_event_feedback_form',
+      'people_event_debrief',
+      'people_coc_reminder_pack',
+      'people_accessibility_checklist_event'
+    ]
+  },
+  {
+    key: 'people.training_mini',
+    unitKey: 'people',
+    unit: 'people',
+    name_ar: 'جلسة تدريب قصيرة',
+    description_ar: 'تدريب بسيط من ٣٠ إلى ٩٠ دقيقة لأعضاء أو متطوعين، مع مواد مرافقة وتغذية راجعة.',
+    stages_ar: [
+      'تحديد الهدف والجمهور',
+      'تصميم المحتوى',
+      'دعوات وتسجيل',
+      'تنفيذ الجلسة',
+      'تغذية راجعة',
+      'متابعة بسيطة أو مهام تطبيقية'
+    ],
+    suggestedStages: ['goal', 'content', 'invite', 'deliver', 'feedback', 'followup'],
+    defaultTaskTemplateIds: [
+      'people_mini_training_30min',
+      'people_event_access_guide',
+      'people_event_visual_assets',
+      'people_event_feedback_form',
+      'people_event_debrief'
+    ],
+    defaultTemplateIds: [
+      'people_mini_training_30min',
+      'people_event_access_guide',
+      'people_event_visual_assets',
+      'people_event_feedback_form',
+      'people_event_debrief'
     ]
   },
   {
