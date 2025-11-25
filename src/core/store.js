@@ -18,7 +18,26 @@ function saveJson(filePath, data) {
   fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf8');
 }
 
+function createStore(options = {}) {
+  const dataDir = options.dataDir || path.join(__dirname, '..', 'data');
+
+  function resolve(name) {
+    return path.join(dataDir, `${name}.json`);
+  }
+
+  return {
+    dataDir,
+    resolve,
+    read: (name, fallback) => loadJson(resolve(name), fallback),
+    write: (name, data) => saveJson(resolve(name), data)
+  };
+}
+
+const defaultStore = createStore();
+
 module.exports = {
   loadJson,
-  saveJson
+  saveJson,
+  createStore,
+  defaultStore
 };

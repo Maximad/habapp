@@ -20,6 +20,8 @@
  *   defaultDueDays: number | null,      // عدد الأيام المقترحة لإنجاز المهمة
  *
  *   tags: string[]                    // كلمات مفتاحية حرة
+ *
+ *   pipelineKey?: string | null  // optional, points to a pipeline key such as 'production.video_basic'
  * }
  */
 
@@ -44,6 +46,8 @@ const productionTaskTemplates = [
     defaultChannelKey: 'production.crew_roster',
     defaultDueDays: 2,
 
+    pipelineKey: 'production.video_basic',
+
     tags: ['طاقم', 'تنسيق', 'تصوير', 'إنتاج']
   },
 
@@ -62,6 +66,8 @@ const productionTaskTemplates = [
     defaultOwnerRole: 'producer',
     defaultChannelKey: 'production.crew_roster',
     defaultDueDays: 2,
+
+    pipelineKey: 'production.video_basic',
 
     tags: ['نداء', 'تصوير', 'سلامة', 'تنسيق']
   },
@@ -82,6 +88,8 @@ const productionTaskTemplates = [
     defaultChannelKey: 'production.location',
     defaultDueDays: 3,
 
+    pipelineKey: 'production.video_basic',
+
     tags: ['موقع', 'موافقات', 'سلامة', 'إنتاج']
   },
 
@@ -100,6 +108,8 @@ const productionTaskTemplates = [
     defaultOwnerRole: 'producer',
     defaultChannelKey: 'production.gear_log',
     defaultDueDays: 1,
+
+    pipelineKey: 'production.video_basic',
 
     tags: ['معدّات', 'حجز', 'لوجستيات']
   },
@@ -120,6 +130,8 @@ const productionTaskTemplates = [
     defaultChannelKey: 'production.tests',
     defaultDueDays: 3,
 
+    pipelineKey: 'production.support',
+
     tags: ['اختبارات', 'كاميرا', 'LUT', 'فيديو']
   },
 
@@ -138,6 +150,8 @@ const productionTaskTemplates = [
     defaultOwnerRole: 'producer',
     defaultChannelKey: 'production.post_mortem',
     defaultDueDays: 2,
+
+    pipelineKey: 'production.video_basic',
 
     tags: ['تقرير', 'تعلم', 'خطر', 'إنتاج']
   },
@@ -158,6 +172,8 @@ const productionTaskTemplates = [
     defaultChannelKey: 'production.post_pipeline',
     defaultDueDays: 3,
 
+    pipelineKey: 'production.video_basic',
+
     tags: ['مونتاج', 'خطة', 'مواعيد', 'ما بعد الإنتاج']
   },
 
@@ -176,6 +192,8 @@ const productionTaskTemplates = [
     defaultOwnerRole: 'editor',
     defaultChannelKey: 'production.post_pipeline',
     defaultDueDays: 5,
+
+    pipelineKey: 'production.video_basic',
 
     tags: ['مونتاج', 'فيديو', 'مراجعة']
   },
@@ -196,6 +214,8 @@ const productionTaskTemplates = [
     defaultChannelKey: 'production.post_pipeline',
     defaultDueDays: 4,
 
+    pipelineKey: 'production.video_basic',
+
     tags: ['ترجمة', 'ترجمات', 'وصول', 'فيديو']
   },
 
@@ -214,6 +234,8 @@ const productionTaskTemplates = [
     defaultOwnerRole: 'colorist',
     defaultChannelKey: 'production.post_pipeline',
     defaultDueDays: 4,
+
+    pipelineKey: 'production.video_basic',
 
     tags: ['لون', 'فيديو', 'مونتاج']
   },
@@ -234,6 +256,8 @@ const productionTaskTemplates = [
     defaultChannelKey: 'production.post_pipeline',
     defaultDueDays: 4,
 
+    pipelineKey: 'production.video_basic',
+
     tags: ['صوت', 'مكس', 'تنظيف', 'فيديو']
   },
 
@@ -252,6 +276,8 @@ const productionTaskTemplates = [
     defaultOwnerRole: 'producer',
     defaultChannelKey: 'media.exports',
     defaultDueDays: 3,
+
+    pipelineKey: 'production.video_basic',
 
     tags: ['تسليم', 'ماستر', 'تصدير', 'فيديو']
   },
@@ -272,6 +298,8 @@ const productionTaskTemplates = [
     defaultChannelKey: 'production.archive',
     defaultDueDays: 4,
 
+    pipelineKey: 'production.video_basic',
+
     tags: ['أرشيف', 'بيانات وصفية', 'تنظيم']
   },
 
@@ -290,6 +318,8 @@ const productionTaskTemplates = [
     defaultOwnerRole: 'sound_mixer',
     defaultChannelKey: 'production.sound_library',
     defaultDueDays: 7,
+
+    pipelineKey: 'production.support',
 
     tags: ['صوت', 'موسيقى', 'ترخيص', 'أرشيف']
   },
@@ -310,6 +340,8 @@ const productionTaskTemplates = [
     defaultChannelKey: 'production.post_pipeline',
     defaultDueDays: 5,
 
+    pipelineKey: 'production.support',
+
     tags: ['تصدير', 'Preset', 'مونتاج']
   },
 
@@ -328,6 +360,8 @@ const productionTaskTemplates = [
     defaultOwnerRole: 'producer',
     defaultChannelKey: 'admin.emergency',
     defaultDueDays: 3,
+
+    pipelineKey: 'production.support',
 
     tags: ['طوارئ', 'سلامة', 'إنتاج']
   }
@@ -351,8 +385,20 @@ function listTaskTemplatesByUnit(unit) {
   return taskTemplates.filter(t => t.unit === unit);
 }
 
+function listTaskTemplatesByPipeline(pipelineKey) {
+  return taskTemplates.filter(t => t.pipelineKey === pipelineKey);
+}
+
+function listTaskTemplatesByUnitAndPipeline(unit, pipelineKey) {
+  return taskTemplates.filter(t =>
+    t.unit === unit && (pipelineKey ? t.pipelineKey === pipelineKey : true)
+  );
+}
+
 module.exports = {
   taskTemplates,
   getTaskTemplateById,
-  listTaskTemplatesByUnit
+  listTaskTemplatesByUnit,
+  listTaskTemplatesByPipeline,
+  listTaskTemplatesByUnitAndPipeline
 };
