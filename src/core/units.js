@@ -39,7 +39,12 @@ const units = [
     key: 'geeks',
     name_ar: 'وحدة الجيكس',
     description_ar: 'تطوّر المواقع والأدوات والتطبيقات الصغيرة.',
-    pipelines: ['geeks.site_basic', 'geeks.app_small']
+    pipelines: [
+      'geeks.site_basic',
+      'geeks.app_small',
+      'geeks.automation_stack',
+      'geeks.discord_infra'
+    ]
   }
 ];
 
@@ -604,32 +609,135 @@ const pipelines = [
     key: 'geeks.site_basic',
     unitKey: 'geeks',
     unit: 'geeks',
-    name_ar: 'موقع بسيط',
-    description_ar: 'مواقع ووردبريس أو صفحات بسيطة لنشر المحتوى.',
-    suggestedStages: ['idea', 'plan', 'build', 'review', 'launch'],
+    name_ar: 'موقع بسيط (مؤسسة أو مشروع)',
+    description_ar:
+      'موقع بسيط من صفحة إلى ثلاث صفحات لتعريف مؤسسة أو مشروع، مع بنية واضحة وسهلة الصيانة.',
+    stages_ar: [
+      'اكتشاف وملخص احتياج',
+      'هيكل الصفحات والمحتوى',
+      'التنفيذ والتكويد',
+      'اختبار وتجربة',
+      'إطلاق',
+      'تسليم وتوثيق'
+    ],
+    suggestedStages: ['discovery', 'structure', 'build', 'test', 'launch', 'handoff'],
     profile: 'site_basic',
+    defaultTaskTemplateIds: [
+      'geeks_site_brief',
+      'geeks_site_structure',
+      'geeks_site_setup',
+      'geeks_site_qc',
+      'geeks_site_launch_doc'
+    ],
     defaultTemplateIds: [
-      'geeks_brief',
-      'geeks_content_inventory',
-      'geeks_implementation',
-      'geeks_review',
-      'geeks_launch'
+      'geeks_site_brief',
+      'geeks_site_structure',
+      'geeks_site_setup',
+      'geeks_site_qc',
+      'geeks_site_launch_doc'
     ]
   },
   {
     key: 'geeks.app_small',
     unitKey: 'geeks',
     unit: 'geeks',
-    name_ar: 'أداة أو بوت صغير',
-    description_ar: 'أدوات أو بوتات صغيرة (مثل HabApp) لتسهيل العمل.',
-    suggestedStages: ['idea', 'spec', 'build', 'test', 'launch'],
+    name_ar: 'تطبيق أو أداة صغيرة',
+    description_ar:
+      'أداة صغيرة أو Bot أو سكربت أتمتة يخدم وحدة واحدة أو عملية محددة داخل حبق.',
+    stages_ar: [
+      'تعريف المشكلة والاحتياج',
+      'تصميم بسيط للحل',
+      'تنفيذ أولي',
+      'اختبار داخلي',
+      'إطلاق تجريبي',
+      'تحسين وصيانة'
+    ],
+    suggestedStages: ['problem', 'design', 'build', 'test', 'beta', 'improve'],
     profile: 'app_small',
+    defaultTaskTemplateIds: [
+      'geeks_app_brief',
+      'geeks_app_architecture_note',
+      'geeks_app_prototype',
+      'geeks_app_internal_test',
+      'geeks_app_launch_note',
+      'geeks_app_maintenance_log'
+    ],
     defaultTemplateIds: [
-      'geeks_brief',
-      'geeks_spec',
-      'geeks_implementation',
-      'geeks_test',
-      'geeks_launch'
+      'geeks_app_brief',
+      'geeks_app_architecture_note',
+      'geeks_app_prototype',
+      'geeks_app_internal_test',
+      'geeks_app_launch_note',
+      'geeks_app_maintenance_log'
+    ]
+  },
+  {
+    key: 'geeks.automation_stack',
+    unitKey: 'geeks',
+    unit: 'geeks',
+    name_ar: 'أتمتة وتكاملات داخلية',
+    description_ar:
+      'مشاريع أتمتة تربط ووردبريس وDiscord وDrive وأنظمة أخرى، مع نسخ احتياطي وتسمية ملفات منضبطة.',
+    stages_ar: [
+      'حصر الاحتياج ووصف التدفق',
+      'تصميم مسار الأتمتة',
+      'تنفيذ وربط الخدمات',
+      'اختبارات على بيانات حقيقية',
+      'توثيق وتدريب الفريق',
+      'مراقبة وصيانة'
+    ],
+    suggestedStages: ['intake', 'design', 'implement', 'test', 'document', 'maintain'],
+    profile: 'automation_stack',
+    defaultTaskTemplateIds: [
+      'geeks_formsbot_to_onboarding',
+      'geeks_wp_webhook_bridge',
+      'geeks_wp_to_announcements_webhook',
+      'geeks_filename_alert_bot',
+      'geeks_filename_naming_bot',
+      'geeks_monthly_backup_routine',
+      'geeks_attachments_backup',
+      'geeks_media_compression_presets'
+    ],
+    defaultTemplateIds: [
+      'geeks_formsbot_to_onboarding',
+      'geeks_wp_webhook_bridge',
+      'geeks_wp_to_announcements_webhook',
+      'geeks_filename_alert_bot',
+      'geeks_filename_naming_bot',
+      'geeks_monthly_backup_routine',
+      'geeks_attachments_backup',
+      'geeks_media_compression_presets'
+    ]
+  },
+  {
+    key: 'geeks.discord_infra',
+    unitKey: 'geeks',
+    unit: 'geeks',
+    name_ar: 'بنية ديسكورد والأمان الرقمي',
+    description_ar: 'مشاريع تضبط بنية ديسكورد، صلاحيات الأدوار، استجابات البوتات، وسلامة القنوات.',
+    stages_ar: [
+      'حصر الوضع الحالي والأخطار',
+      'تخطيط الأدوار والقنوات',
+      'تحديث إعدادات البوتات',
+      'اختبار صلاحيات ومنبهات',
+      'توثيق وتدريب مختصر',
+      'مراجعة دورية'
+    ],
+    suggestedStages: ['audit', 'plan_roles', 'update_bots', 'test', 'document', 'review'],
+    profile: 'discord_infra',
+    defaultTaskTemplateIds: [
+      'geeks_carl_roles_audit',
+      'geeks_pins_update_script',
+      'geeks_permissions_audit_script',
+      'geeks_security_audit_tokens',
+      'geeks_formsbot_to_onboarding'
+    ],
+    defaultTemplateIds: [
+      'geeks_carl_roles_audit',
+      'geeks_pins_update_script',
+      'geeks_permissions_audit_script',
+      'geeks_security_audit_tokens',
+      'geeks_formsbot_to_onboarding'
     ]
   }
 ];

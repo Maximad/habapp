@@ -1321,6 +1321,458 @@ const peopleTaskTemplates = [
 
 const geeksTaskTemplates = [
   {
+    id: 'geeks_site_brief',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'ملخص احتياج لموقع بسيط',
+    description_ar: 'كتابة ملخص احتياج لموقع بسيط (الجمهور، الأهداف، الصفحات الأساسية، اللغة).',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'وثيقة أو ملاحظة واحدة واضحة تلخص جمهور الموقع، هدفه، ٣ صفحات أساسية على الأقل، واللغة/اللغات المطلوبة، منشورة في خيط المشروع.',
+
+    defaultOwnerRole: 'web_lead',
+    defaultChannelKey: 'geeks.web',
+    defaultDueDays: 3,
+
+    tags: ['موقع', 'احتياج', 'تحليل']
+  },
+  {
+    id: 'geeks_site_structure',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'هيكل الصفحات والمحتوى',
+    description_ar: 'رسم هيكل الصفحات والقوائم والمحتوى الأساسي للموقع.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'مخطط بسيط لهيكل الصفحات والقائمة، مع وصف قصير لكل صفحة، وجدول بالمحتوى المطلوب لكل صفحة، منشور في خيط المشروع.',
+
+    defaultOwnerRole: 'web_lead',
+    defaultChannelKey: 'geeks.web',
+    defaultDueDays: 4,
+
+    tags: ['موقع', 'هيكل', 'محتوى']
+  },
+  {
+    id: 'geeks_site_setup',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'إعداد الموقع (استضافة ونطاق/قالب)',
+    description_ar: 'تهيئة الاستضافة والنطاق والقالب الأساسي أو النظام المستخدم للموقع.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'موقع يعمل على عنوان مؤقت أو نهائي، مع إعداد القالب أو الثيم، وحسابات الوصول الأساسية موثقة في مكان آمن.',
+
+    defaultOwnerRole: 'web_engineer',
+    defaultChannelKey: 'geeks.web_ops',
+    defaultDueDays: 5,
+
+    tags: ['استضافة', 'نطاق', 'ووردبريس', 'ويب']
+  },
+  {
+    id: 'geeks_site_qc',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'اختبار وتجربة الموقع',
+    description_ar: 'اختبار الموقع على عدة أجهزة ومتصفحات والتحقق من الروابط والمحتوى.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'قائمة فحص مكتملة تغطي الروابط الأساسية، النماذج، التصفح من الموبايل والكمبيوتر، مع قائمة بالأخطاء التي تم إصلاحها قبل الإطلاق.',
+
+    defaultOwnerRole: 'qa_tester',
+    defaultChannelKey: 'geeks.qa',
+    defaultDueDays: 3,
+
+    tags: ['اختبار', 'جودة', 'ويب']
+  },
+  {
+    id: 'geeks_site_launch_doc',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'ورقة إطلاق وتوثيق الموقع',
+    description_ar: 'توثيق طريقة الدخول، الصلاحيات، وأهم الإعدادات بعد إطلاق الموقع.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ورقة أو مستند واحد يحتوي على الروابط، حسابات الإدارة، قواعد الأمان الأساسية، وخطوات الدعم الأولى، منشور في خيط المشروع وقناة العمليات.',
+
+    defaultOwnerRole: 'web_lead',
+    defaultChannelKey: 'admin.docs',
+    defaultDueDays: 3,
+
+    tags: ['توثيق', 'إطلاق', 'ويب']
+  },
+  {
+    id: 'geeks_app_brief',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'ملخص احتياج لتطبيق/أداة صغيرة',
+    description_ar: 'تعريف المشكلة التي يحلّها التطبيق أو الأداة، والمستخدمين الأساسيين، والناتج المتوقع.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ملخص مكتوب يحدد المشكلة، من سيتعامل مع الأداة، وما هو الناتج المتوقع، مع ٣ حالات استخدام على الأقل، منشور في خيط المشروع.',
+
+    defaultOwnerRole: 'geeks_lead',
+    defaultChannelKey: 'geeks.apps',
+    defaultDueDays: 3,
+
+    tags: ['تطبيق', 'أداة', 'تحليل']
+  },
+  {
+    id: 'geeks_app_architecture_note',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'مذكرة بنية بسيطة للتطبيق',
+    description_ar: 'وصف بسيط لبنية التطبيق أو الأداة والتقنيات المستخدمة والتكاملات المطلوبة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'مذكرة من صفحة واحدة توضح التقنية الأساسية، مصادر البيانات، نقاط التكامل (مثل Discord, Drive, WordPress)، وخطوات النشر المبدئية.',
+
+    defaultOwnerRole: 'geeks_lead',
+    defaultChannelKey: 'geeks.apps',
+    defaultDueDays: 4,
+
+    tags: ['معمارية', 'تطبيق', 'تكامل']
+  },
+  {
+    id: 'geeks_app_prototype',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'نموذج أولي للتطبيق',
+    description_ar: 'بناء نموذج أولي للتطبيق للاختبار الداخلي.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'نموذج أولي يعمل يغطي المسار الأساسي، مع تعليمات قصيرة لكيفية تجربته من قبل الفريق الداخلي، ورابط في خيط المشروع.',
+
+    defaultOwnerRole: 'geeks_dev',
+    defaultChannelKey: 'geeks.apps',
+    defaultDueDays: 7,
+
+    tags: ['نموذج أولي', 'تطبيق', 'تطوير']
+  },
+  {
+    id: 'geeks_app_internal_test',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'اختبار داخلي للتطبيق',
+    description_ar: 'تنظيم جولة اختبار داخلية للتطبيق وتوثيق الملاحظات الأساسية.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'قائمة ملاحظات من ٥ أشخاص على الأقل، تتضمن ما يعمل جيداً وما لا يعمل، مع قرارات مبدئية لما سيتم إصلاحه قبل الإطلاق التجريبي.',
+
+    defaultOwnerRole: 'qa_tester',
+    defaultChannelKey: 'geeks.qa',
+    defaultDueDays: 5,
+
+    tags: ['اختبار', 'تطبيق', 'ملاحظات']
+  },
+  {
+    id: 'geeks_app_launch_note',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'مذكرة إطلاق التطبيق',
+    description_ar: 'كتابة مذكرة قصيرة توضح كيفية استخدام التطبيق وحدود استخدامه في المرحلة الأولى.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'نص موجز يشرح الغرض من الأداة، لمن هي، وكيفية استخدامها، وما الذي لا تفعله، منشور في القناة المناسبة ومرتبط بخيط المشروع.',
+
+    defaultOwnerRole: 'geeks_lead',
+    defaultChannelKey: 'admin.docs',
+    defaultDueDays: 3,
+
+    tags: ['إطلاق', 'تطبيق', 'توثيق']
+  },
+  {
+    id: 'geeks_app_maintenance_log',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'سجل صيانة للتطبيق',
+    description_ar: 'إعداد سجل بسيط لتحديثات التطبيق وإصلاح الأعطال.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'سجل محدث يضم أول ٣ تحديثات أو إصلاحات على الأقل، مع تواريخها وما تغيّر، محفوظ في مكان ثابت ومرتبط بالمشروع.',
+
+    defaultOwnerRole: 'geeks_dev',
+    defaultChannelKey: 'geeks.logs',
+    defaultDueDays: 10,
+
+    tags: ['صيانة', 'تطبيق', 'سجل']
+  },
+  {
+    id: 'geeks_formsbot_to_onboarding',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'توجيه FormsBot إلى #onboarding-log',
+    description_ar: 'ربط الردود من FormsBot بقناة سجل الانضمام أو الان onboarding-log مع ملخص نظيف.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'رسائل ملخصة في قناة #onboarding-log لكل استمارة جديدة، بدون ضوضاء غير ضرورية، مع توثيق الخطوات في خيط داخلي.',
+
+    defaultOwnerRole: 'automation_dev',
+    defaultChannelKey: 'geeks.integrations',
+    defaultDueDays: 4,
+
+    tags: ['FormsBot', 'تكامل', 'أتمتة']
+  },
+  {
+    id: 'geeks_carl_roles_audit',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'تدقيق أدوار ردود Carl-bot',
+    description_ar: 'مراجعة ردود Carl-bot والتأكد من أن الأدوار الممنوحة صحيحة وآمنة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'تقرير قصير يوضح كيف تُمنح الأدوار عبر Carl-bot، وما هي الثغرات أو الأخطاء المكتشفة، وما التعديلات التي تم تنفيذها.',
+
+    defaultOwnerRole: 'security_reviewer',
+    defaultChannelKey: 'geeks.security',
+    defaultDueDays: 5,
+
+    tags: ['Carl-bot', 'أدوار', 'أمان']
+  },
+  {
+    id: 'geeks_monthly_backup_routine',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'روتين نسخ احتياطي وتصدير شهري',
+    description_ar: 'إعداد وتنفيذ روتين شهري للنسخ الاحتياطي والتصدير للوسائط والبيانات المهمة.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'جدول زمني واضح للنسخ الاحتياطي، مع مجلد محدث على Drive وملف سجل يوضح آخر ثلاث عمليات نسخ احتياطي على الأقل.',
+
+    defaultOwnerRole: 'ops_engineer',
+    defaultChannelKey: 'geeks.backup',
+    defaultDueDays: 10,
+
+    tags: ['نسخ احتياطي', 'Drive', 'أمان']
+  },
+  {
+    id: 'geeks_drive_delivery_automation',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'نموذج «تسليم» إلى Drive تلقائي',
+    description_ar: 'إنشاء نموذج أو سكربت يرسل تسليمات الوسائط إلى Drive مع تسمية منضبطة.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'نموذج أو سكربت يعمل يرسل الملفات تلقائياً إلى مجلدات مناسبة على Drive بأسماء قياسية، مع مثالين صحيح/خطأ موثقين.',
+
+    defaultOwnerRole: 'automation_dev',
+    defaultChannelKey: 'geeks.integrations',
+    defaultDueDays: 10,
+
+    tags: ['Drive', 'أتمتة', 'تسليم']
+  },
+  {
+    id: 'geeks_filename_alert_bot',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'روبوت تنبيه أسماء ملفات غير منضبطة',
+    description_ar: 'برمجة روبوت ينبه عند رفع ملفات بأسماء غير منضبطة في قنوات معينة.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'بوت يعمل في قناة التصدير أو قنوات الإعلام، يرسل تنبيهاً مع مثال لاسم صحيح عندما يكون الاسم غير منضبط، مع توثيق للاستخدام.',
+
+    defaultOwnerRole: 'automation_dev',
+    defaultChannelKey: 'geeks.integrations',
+    defaultDueDays: 7,
+
+    tags: ['أسماء ملفات', 'بوت', 'تدقيق']
+  },
+  {
+    id: 'geeks_wp_webhook_bridge',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'جسر ووردبريس Webhook إلى ديسكورد',
+    description_ar: 'ربط ووردبريس بديسكورد عبر Webhook لإرسال تحديثات محددة إلى قنوات معينة.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'Webhook واحد على الأقل يعمل يرسل إشعارات عند حدث محدد (نشر مقال، تحديث صفحة)، مع ضبط القناة والرسالة بصورة نظيفة.',
+
+    defaultOwnerRole: 'web_engineer',
+    defaultChannelKey: 'geeks.integrations',
+    defaultDueDays: 7,
+
+    tags: ['ووردبريس', 'Webhook', 'Discord']
+  },
+  {
+    id: 'geeks_pins_update_script',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'سكربت تحديث الرسائل المثبتة',
+    description_ar: 'كتابة سكربت يساعد على تحديث الرسائل المثبتة في قنوات محددة من مصدر موحد.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'سكربت أو أداة يمكن تشغيلها لتحديث محتوى الرسائل المثبتة في قناتين على الأقل، مع توثيق كيفية التشغيل والقيود.',
+
+    defaultOwnerRole: 'automation_dev',
+    defaultChannelKey: 'geeks.tools',
+    defaultDueDays: 5,
+
+    tags: ['مثبت', 'سكربت', 'أتمتة']
+  },
+  {
+    id: 'geeks_permissions_audit_script',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'سكربت مراجعة الصلاحيات «من يرى ماذا»',
+    description_ar: 'سكربت أو أداة لتوليد تقرير بالصلاحيات على القنوات والأدوار.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'تقرير CSV أو مستند يوضح من يرى ماذا في ديسكورد، مع قائمة مقترحة بتعديلات الصلاحيات، لمرة واحدة على الأقل.',
+
+    defaultOwnerRole: 'security_reviewer',
+    defaultChannelKey: 'geeks.security',
+    defaultDueDays: 7,
+
+    tags: ['صلاحيات', 'أمان', 'تدقيق']
+  },
+  {
+    id: 'geeks_transcription_toolchain',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'سلسلة أدوات تفريغ صوتي مفتوحة المصدر',
+    description_ar: 'تجميع وإعداد سلسلة أدوات لتفريغ الصوت إلى نص بطريقة قابلة للاستخدام في حبق.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'README واضح يشرح كيفية استخدام أدوات التفريغ، مثال تجربة واحدة على مادة حقيقية، وتقدير بسيط لدقة التفريغ.',
+
+    defaultOwnerRole: 'geeks_dev',
+    defaultChannelKey: 'geeks.tools',
+    defaultDueDays: 10,
+
+    tags: ['تفريغ صوتي', 'أدوات', 'مفتوح المصدر']
+  },
+  {
+    id: 'geeks_media_compression_presets',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'إعدادات ضغط وسائط',
+    description_ar: 'إعداد ملفات presets لضغط الوسائط بطريقة مناسبة للنشر والأرشفة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ملفات .ffpreset أو ما يعادلها، مع دليل استخدام بسيط يشرح متى نستخدم كل إعداد، محفوظ في مرجع التقنيين.',
+
+    defaultOwnerRole: 'ops_engineer',
+    defaultChannelKey: 'geeks.tools',
+    defaultDueDays: 7,
+
+    tags: ['ضغط', 'وسائط', 'إعدادات']
+  },
+  {
+    id: 'geeks_security_audit_tokens',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'تدقيق أمان رموز وصلاحيات',
+    description_ar: 'مراجعة الرموز (tokens) والصلاحيات المستخدمة في البوتات والتكاملات والتأكد من سلامتها.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'قائمة محدثة بالرموز المستخدمة ومكان تخزينها، مع ملاحظات حول المخاطر والإجراءات التصحيحية التي تم تنفيذها على الأقل في مشروع أو تكامل واحد.',
+
+    defaultOwnerRole: 'security_reviewer',
+    defaultChannelKey: 'geeks.security',
+    defaultDueDays: 7,
+
+    tags: ['أمان', 'Tokens', 'تدقيق']
+  },
+  {
+    id: 'geeks_filename_naming_bot',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'روبوت تسمية الملفات',
+    description_ar: 'برمجة روبوت يقترح أسماء قياسية للملفات عند رفعها أو عند الطلب.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'بوت يعمل يمكنه اقتراح اسم قياسي لملف واحد على الأقل عند رفعه أو عند مناداته، مع مثالين صحيح/خطأ موثقين في خيط داخلي.',
+
+    defaultOwnerRole: 'automation_dev',
+    defaultChannelKey: 'geeks.integrations',
+    defaultDueDays: 10,
+
+    tags: ['أسماء ملفات', 'بوت', 'معايير']
+  },
+  {
+    id: 'geeks_wp_to_announcements_webhook',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'Webhook ووردبريس → #announcements-org (مراجعة فقط)',
+    description_ar:
+      'إعداد Webhook يرسل إشعاراً إلى قناة الإعلانات التنظيمية عند نشر أو تعديل مواد محددة في ووردبريس.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'Webhook يعمل يرسل إشعاراً منظماً في #announcements-org عند حدث محدد، مع حقل واضح للمسؤول التحريري لمراجعة المحتوى قبل إعادة النشر الخارجي.',
+
+    defaultOwnerRole: 'web_engineer',
+    defaultChannelKey: 'geeks.integrations',
+    defaultDueDays: 7,
+
+    tags: ['ووردبريس', 'إعلانات', 'Webhook']
+  },
+  {
+    id: 'geeks_attachments_backup',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'نسخ احتياطي تلقائي للمرفقات',
+    description_ar: 'إعداد نظام لنسخ المرفقات تلقائياً إلى مجلد أرشيف على Drive أو تخزين آخر.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'نظام يعمل ينسخ المرفقات الجديدة من قناة أو قناتين على الأقل إلى مجلد أرشيف، مع سجل أسبوعي بسيط يوضح ما تمت أرشفته.',
+
+    defaultOwnerRole: 'ops_engineer',
+    defaultChannelKey: 'geeks.backup',
+    defaultDueDays: 10,
+
+    tags: ['مرفقات', 'نسخ احتياطي', 'Drive']
+  },
+  // Legacy/simple templates kept for compatibility
+  {
     id: 'geeks_brief',
     type: 'task',
     unit: 'geeks',
@@ -1334,8 +1786,6 @@ const geeksTaskTemplates = [
     defaultOwnerRole: 'tech_lead',
     defaultChannelKey: null,
     defaultDueDays: 2,
-
-    pipelineKey: 'geeks.site_basic',
 
     tags: ['تقني', 'خطة']
   },
@@ -1354,8 +1804,6 @@ const geeksTaskTemplates = [
     defaultChannelKey: null,
     defaultDueDays: 3,
 
-    pipelineKey: 'geeks.site_basic',
-
     tags: ['محتوى', 'موقع']
   },
   {
@@ -1372,8 +1820,6 @@ const geeksTaskTemplates = [
     defaultOwnerRole: 'product',
     defaultChannelKey: null,
     defaultDueDays: 3,
-
-    pipelineKey: 'geeks.app_small',
 
     tags: ['مواصفات', 'تطوير']
   },
@@ -1392,8 +1838,6 @@ const geeksTaskTemplates = [
     defaultChannelKey: null,
     defaultDueDays: 7,
 
-    pipelineKey: 'geeks.site_basic',
-
     tags: ['تطوير', 'تنفيذ']
   },
   {
@@ -1410,8 +1854,6 @@ const geeksTaskTemplates = [
     defaultOwnerRole: 'product',
     defaultChannelKey: null,
     defaultDueDays: 3,
-
-    pipelineKey: 'geeks.site_basic',
 
     tags: ['مراجعة', 'تحسين']
   },
@@ -1430,8 +1872,6 @@ const geeksTaskTemplates = [
     defaultChannelKey: null,
     defaultDueDays: 3,
 
-    pipelineKey: 'geeks.app_small',
-
     tags: ['اختبار', 'جودة']
   },
   {
@@ -1448,8 +1888,6 @@ const geeksTaskTemplates = [
     defaultOwnerRole: 'engineer',
     defaultChannelKey: null,
     defaultDueDays: 2,
-
-    pipelineKey: 'geeks.site_basic',
 
     tags: ['إطلاق', 'توثيق']
   }

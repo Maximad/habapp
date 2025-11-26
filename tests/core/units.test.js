@@ -24,6 +24,8 @@ test('pipelines are linked to units and retrievable by key', () => {
   const pipelineKeys = pipelines.map(p => p.key);
   assert.ok(pipelineKeys.includes('production.video_basic'));
   assert.ok(pipelineKeys.includes('geeks.app_small'));
+  assert.ok(pipelineKeys.includes('geeks.automation_stack'));
+  assert.ok(pipelineKeys.includes('geeks.discord_infra'));
   assert.ok(pipelineKeys.includes('media.translation_adapt'));
   assert.ok(pipelineKeys.includes('people.volunteer_onboarding'));
 
@@ -40,6 +42,11 @@ test('pipelines are linked to units and retrievable by key', () => {
   assert.strictEqual(peoplePipeline.unitKey, 'people');
   assert.ok(Array.isArray(peoplePipeline.stages_ar));
   assert.ok(Array.isArray(peoplePipeline.defaultTaskTemplateIds));
+
+  const geeksPipeline = getPipelineByKey('geeks.site_basic');
+  assert.strictEqual(geeksPipeline.unitKey, 'geeks');
+  assert.ok(Array.isArray(geeksPipeline.stages_ar));
+  assert.ok(Array.isArray(geeksPipeline.defaultTaskTemplateIds));
 });
 
 test('listPipelinesByUnit filters by unit key', () => {

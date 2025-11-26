@@ -1,7 +1,8 @@
 // src/core/tasks.js
-const { ensureProject, saveProjects } = require('./projects');
+const { ensureProject, saveProjects, loadProjects } = require('./projects');
 const { getTaskTemplateById } = require('./templates/task-templates');
 const { getPipelineByKey } = require('./units');
+const { defaultStore } = require('./store');
 
 function getNextTaskId(project) {
   if (!Array.isArray(project.tasks) || project.tasks.length === 0) return 1;
@@ -34,7 +35,9 @@ function addTaskToProject(project, fields) {
     status: 'open',
     createdAt: now,
     completedAt: null,
-    templateId: fields.templateId || null
+    templateId: fields.templateId || null,
+    quality: fields.quality || null,
+    ethics: fields.ethics || null
   };
 
   project.tasks.push(task);
@@ -88,6 +91,60 @@ function deleteTask(slug, taskId, store) {
   saveProjects(projects, store);
 
   return true;
+}
+
+function getTaskById(taskId, store = defaultStore) {
+  const projects = loadProjects(store);
+  const tid = Number(taskId);
+  for (let pIndex = 0; pIndex < projects.length; pIndex += 1) {
+    const project = projects[pIndex];
+    if (!Array.isArray(project.tasks)) continue;
+    const tIndex = project.tasks.findIndex(t => t && Number(t.id) === tid);
+    if (tIndex !== -1) {
+      return { project, task: project.tasks[tIndex], projects, projectIndex: pIndex, taskIndex: tIndex };
+    }
+  }
+  throw new Error('Task not found');
+}
+
+function setTaskQuality(taskId, { score = null, tags, notes = null, reviewerId = null }, store = defaultStore) {
+  const { projects, project, projectIndex, task, taskIndex } = getTaskById(taskId, store);
+  const now = new Date().toISOString();
+  const existing = task.quality || { score: null, tags: [], notes: null, reviewerId: null, updatedAt: null };
+
+  const next = {
+    ...existing,
+    score: score === null || typeof score === 'undefined' ? existing.score : score,
+    tags: Array.isArray(tags) ? tags : existing.tags || [],
+    notes,
+    reviewerId,
+    updatedAt: now
+  };
+
+  project.tasks[taskIndex] = { ...task, quality: next };
+  projects[projectIndex] = project;
+  saveProjects(projects, store);
+  return project.tasks[taskIndex];
+}
+
+function setTaskEthics(taskId, { status = null, tags, notes = null, reviewerId = null }, store = defaultStore) {
+  const { projects, project, projectIndex, task, taskIndex } = getTaskById(taskId, store);
+  const now = new Date().toISOString();
+  const existing = task.ethics || { status: null, tags: [], notes: null, reviewerId: null, updatedAt: null };
+
+  const next = {
+    ...existing,
+    status: typeof status === 'undefined' ? existing.status : status,
+    tags: Array.isArray(tags) ? tags : existing.tags || [],
+    notes,
+    reviewerId,
+    updatedAt: now
+  };
+
+  project.tasks[taskIndex] = { ...task, ethics: next };
+  projects[projectIndex] = project;
+  saveProjects(projects, store);
+  return project.tasks[taskIndex];
 }
 
 function listTasks(slug, status, store) {
@@ -190,5 +247,8 @@ module.exports = {
   completeTask,
   deleteTask,
   listTasks,
+  getTaskById,
+  setTaskQuality,
+  setTaskEthics,
   createTasksFromTemplates
 };
