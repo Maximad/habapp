@@ -22,6 +22,9 @@ const {
   handleStatusInfo,
   handleStatusRewards
 } = require('./discord/adapters/status');
+const { handleTaskReviewQuality, handleTaskReviewEthics } = require('./discord/adapters/task-review');
+const { handleWorkBackfillAdd, handleWorkBackfillVerify } = require('./discord/adapters/work-backfill');
+const { handleProfileSkills, handleProfileLearning } = require('./discord/adapters/profile');
 
 // ───────── client ─────────
 const client = new Client({
@@ -148,6 +151,27 @@ client.on(Events.InteractionCreate, async interaction => {
       const sub = interaction.options.getSubcommand();
       if (sub === 'info') return handleStatusInfo(interaction);
       if (sub === 'rewards') return handleStatusRewards(interaction);
+    }
+
+    // ───── task_review ─────
+    if (name === 'task_review') {
+      const sub = interaction.options.getSubcommand();
+      if (sub === 'quality') return handleTaskReviewQuality(interaction);
+      if (sub === 'ethics') return handleTaskReviewEthics(interaction);
+    }
+
+    // ───── work_backfill ─────
+    if (name === 'work_backfill') {
+      const sub = interaction.options.getSubcommand();
+      if (sub === 'add') return handleWorkBackfillAdd(interaction);
+      if (sub === 'verify') return handleWorkBackfillVerify(interaction);
+    }
+
+    // ───── profile ─────
+    if (name === 'profile') {
+      const sub = interaction.options.getSubcommand();
+      if (sub === 'skills') return handleProfileSkills(interaction);
+      if (sub === 'learning') return handleProfileLearning(interaction);
     }
   } catch (err) {
     console.error(err);
