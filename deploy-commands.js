@@ -33,6 +33,7 @@ const commands = [
         description: 'إنشاء مشروع جديد',
         options: [
           { type: 3, name: 'name', description: 'اسم المشروع', required: true },
+          { type: 3, name: 'due', description: 'تاريخ التسليم (YYYY-MM-DD)', required: true },
           { type: 3, name: 'slug', description: 'رمز قصير للمشروع (اختياري)', required: false },
           {
             type: 3,
@@ -59,7 +60,6 @@ const commands = [
             description: 'وحدات المشروع (مفصولة بفواصل مثل production,media)',
             required: false
           },
-          { type: 3, name: 'due', description: 'تاريخ التسليم (YYYY-MM-DD)', required: true },
           {
             type: 3,
             name: 'template',
