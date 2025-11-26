@@ -13,11 +13,11 @@ HabApp is a Discord bot for the Habaq Collective that turns slash commands into 
   - call core services
   - format replies such as forum threads, task lists and Arabic summaries
 
-- `src/core/`  
-  Core logic and JSON-backed storage for:
-  - projects and pipelines
-  - tasks and templates
-  - loyalty/status rules and copy
+- `src/core/`
+  Core logic and JSON-backed storage split by domain:
+  - `src/core/work/` for projects, tasks, pipelines and templates
+  - `src/core/people/` for members, work logs and status/loyalty
+  - `src/core/ethics/` for task reviews, corrections and risk logic
 
 - `src/commands/`  
   Slash command definitions consumed by `deploy-commands.js`. Includes project flows such as creating and scaffolding project forums.
@@ -43,7 +43,8 @@ HabApp is moving toward a clear split between core and adapters:
 
 Planned service layout:
 
-- `src/core/services/` for project, task, template, status and member services.
+- `src/core/work/services/` for project and task services.
+- `src/core/people/services/` for member, work-log and status services.
 - `src/discord/adapters/` for command and event handlers.
 
 ## Tests and operations
@@ -58,9 +59,9 @@ Planned service layout:
 
 - Finalize Arabic facing text for all user-visible replies.
 - Lock in production template families (A, B, C and internal vs external variants).
-- Build out the loyalty and status system in `src/core/status.js` and connect it to project creation and task completion.
+- Build out the loyalty and status system in `src/core/people/status.js` and connect it to project creation and task completion.
 - Continue the architecture transition:
-  - core services under `src/core/services/`
+  - core services under `src/core/work/services/` and `src/core/people/services/`
   - Discord adapters under `src/discord/adapters/`
   - unified `createStore` abstraction with injectable data paths
   - stronger unit tests around storage and status behavior.

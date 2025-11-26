@@ -1,5 +1,6 @@
 // src/discord/adapters/task-review.js
-const { setTaskQuality, setTaskEthics } = require('../../core/tasks');
+const { setTaskQuality, setTaskEthics } = require('../../core/ethics/taskReview');
+const { refreshMemberStatusAndRoles } = require('./status-roles');
 
 function parseTags(raw) {
   if (!raw) return [];
@@ -29,6 +30,7 @@ async function handleTaskReviewQuality(interaction) {
       notes,
       reviewerId: interaction.user.id
     });
+    await refreshMemberStatusAndRoles(interaction.guild, interaction.user.id);
   } catch (err) {
     return interaction.reply({
       content: 'تعذّر العثور على هذه المهمة. تأكد من المعرّف.',
@@ -52,6 +54,7 @@ async function handleTaskReviewEthics(interaction) {
       notes,
       reviewerId: interaction.user.id
     });
+    await refreshMemberStatusAndRoles(interaction.guild, interaction.user.id);
   } catch (err) {
     return interaction.reply({
       content: 'تعذّر العثور على هذه المهمة. تأكد من المعرّف.',

@@ -1,5 +1,5 @@
-// src/core/projects.js
-const { defaultStore } = require('./store');
+// src/core/work/projects.js
+const { defaultStore } = require('../store');
 
 const PROJECTS_KEY = 'projects';
 

@@ -1,9 +1,9 @@
 const test = require('node:test');
 const assert = require('assert');
 
-const { getTemplatesByUnit, getTemplateById } = require('../../src/core/templates');
-const { getProductionTemplateByCode } = require('../../src/core/templates/templates.production');
-const { getStatusInfoArabic, getStatusRewardsArabic } = require('../../src/core/status');
+const { getTemplatesByUnit, getTemplateById } = require('../../src/core/work/templates');
+const { getProductionTemplateByCode } = require('../../src/core/work/templates/templates.production');
+const { getStatusInfoArabic, getStatusRewardsArabic } = require('../../src/core/people/status');
 
 test('template helpers filter by unit and lookup by id regardless of case', () => {
   const productionTemplates = getTemplatesByUnit('production');

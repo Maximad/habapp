@@ -7,7 +7,7 @@ const {
   getUnitByKey,
   getPipelineByKey,
   listPipelinesByUnit
-} = require('../../src/core/units');
+} = require('../../src/core/work/units');
 
 test('units expose expected keys and Arabic metadata', () => {
   const unitKeys = units.map(u => u.key);

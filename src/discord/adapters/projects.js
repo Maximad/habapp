@@ -10,9 +10,9 @@ const {
   getProductionTemplate,
   ensureProjectExists,
   resolveProjectSlug
-} = require('../../core/services/projectsService');
-const { createTasksFromTemplates } = require('../../core/services/tasksService');
-const { getPipelineByKey, getUnitByKey } = require('../../core/units');
+} = require('../../core/work/services/projectsService');
+const { createTasksFromTemplates } = require('../../core/work/services/tasksService');
+const { getPipelineByKey, getUnitByKey } = require('../../core/work/units');
 const { stageToArabic, unitToArabic, statusToArabic } = require('../utils/formatters');
 const { createForumPost, applyStageTag } = require('../utils/forum');
 const { postToChannel, getChannelIdByKey } = require('../utils/channels');
@@ -194,8 +194,12 @@ async function handleProjectScaffold(interaction) {
   await interaction.deferReply({ ephemeral: true });
 
   const effectivePipelineKey = pipeline ? pipeline.key : project.pipelineKey;
-  const resolvedPipeline = effectivePipelineKey ? getPipelineByKey(effectivePipelineKey) : null;
-  if (effectivePipelineKey && !resolvedPipeline) {
+  if (!effectivePipelineKey) {
+    return interaction.editReply('⚠️ لا يوجد مسار محدد لهذا المشروع. استخدم خيار pipeline لتحديد المسار.');
+  }
+
+  const resolvedPipeline = getPipelineByKey(effectivePipelineKey);
+  if (!resolvedPipeline) {
     return interaction.editReply('❌ لم يتم العثور على مسار بهذا المفتاح.');
   }
 
@@ -218,7 +222,12 @@ async function handleProjectScaffold(interaction) {
   }
 
   const pipelineLabel = resolvedPipeline?.name_ar || 'مسار غير محدد';
-  return interaction.editReply(`✅ تم إنشاء ${created.length} مهمة افتراضية وفق المسار ${pipelineLabel}.`);
+  const previewLines = created.slice(0, 5).map(t => `• ${t.title_ar || t.title}`);
+  const previewText = previewLines.length ? `\n\nالمهام المنشأة:\n${previewLines.join('\n')}` : '';
+
+  return interaction.editReply(
+    `✅ تم إنشاء ${created.length} مهمة افتراضية وفق المسار ${pipelineLabel}.${previewText}`
+  );
 }
 
 async function handleProjectStage(interaction) {

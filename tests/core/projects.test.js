@@ -11,7 +11,7 @@ const {
   deleteProject,
   ensureProject,
   listProjects
-} = require('../../src/core/projects');
+} = require('../../src/core/work/projects');
 
 function createTempStore() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'habapp-store-'));

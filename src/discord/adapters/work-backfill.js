@@ -1,5 +1,6 @@
 // src/discord/adapters/work-backfill.js
-const { addBackfillEntry, verifyBackfillEntry } = require('../../core/work-log');
+const { addBackfillEntry, verifyBackfillEntry } = require('../../core/people/work-log');
+const { refreshMemberStatusAndRoles } = require('./status-roles');
 
 function parseList(raw) {
   if (!raw) return [];
@@ -26,6 +27,8 @@ async function handleWorkBackfillAdd(interaction) {
     links: parseList(linksRaw)
   });
 
+  await refreshMemberStatusAndRoles(interaction.guild, interaction.user.id);
+
   return interaction.reply({
     content:
       '✅ تم حفظ هذه المهمة السابقة في سجل أعمالك. يمكن لأعضاء القيادة مراجعتها وتأكيدها لاحقاً.',
@@ -38,7 +41,8 @@ async function handleWorkBackfillVerify(interaction) {
   const verified = interaction.options.getBoolean('verified', true);
 
   try {
-    verifyBackfillEntry(entryId, interaction.user.id, verified);
+    const updated = verifyBackfillEntry(entryId, interaction.user.id, verified);
+    await refreshMemberStatusAndRoles(interaction.guild, updated.userId);
   } catch (err) {
     return interaction.reply({ content: 'تعذّر العثور على السجل المطلوب.', ephemeral: true });
   }

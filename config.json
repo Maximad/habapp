@@ -24,5 +24,16 @@
       "soundId": "1441833856897519627",
       "exportsId": "1441833855219794091"
     }
+  },
+  "roles": {
+    "state": {
+      "lead": "",
+      "core": "",
+      "active": "",
+      "casual": "",
+      "trial": "",
+      "guest": "",
+      "suspended": ""
+    }
   }
 }

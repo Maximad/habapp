@@ -42,6 +42,7 @@ const units = [
     pipelines: [
       'geeks.site_basic',
       'geeks.app_small',
+      'geeks.app_accessibility',
       'geeks.automation_stack',
       'geeks.discord_infra'
     ]
@@ -670,6 +671,53 @@ const pipelines = [
       'geeks_app_launch_note',
       'geeks_app_maintenance_log'
     ]
+  },
+  {
+    key: 'geeks.app_accessibility',
+    unitKey: 'geeks',
+    unit: 'geeks',
+    name_ar: 'تحسين وصول تطبيق أو أداة قائمة',
+    description_ar:
+      'مسار تدقيق وتحسين وصول لتطبيق أو أداة موجودة، مع خطة إصلاح واختبارات قارئ الشاشة وإطلاق آمن.',
+    stages_ar: [
+      'تقييم وصول',
+      'خطة إصلاح',
+      'تنفيذ وتوثيق',
+      'اختبار مستخدمين/قارئ شاشة',
+      'إطلاق وتحذيرات',
+      'مراقبة وتعلّم'
+    ],
+    suggestedStages: ['audit', 'plan', 'fix', 'user_test', 'rollout', 'monitor'],
+    profile: 'app_accessibility',
+    defaultTemplates: [
+      'geeks_accessibility_audit',
+      'geeks_accessibility_fix_plan',
+      'geeks_accessibility_fix_round',
+      'geeks_accessibility_user_test',
+      'geeks_app_launch_note'
+    ],
+    defaultTaskTemplateIds: [
+      'geeks_accessibility_audit',
+      'geeks_accessibility_fix_plan',
+      'geeks_accessibility_fix_round',
+      'geeks_accessibility_user_test',
+      'geeks_app_launch_note'
+    ],
+    defaultTemplateIds: [
+      'geeks_accessibility_audit',
+      'geeks_accessibility_fix_plan',
+      'geeks_accessibility_fix_round',
+      'geeks_accessibility_user_test',
+      'geeks_app_launch_note'
+    ],
+    defaultChannels: {
+      audit: 'geeks.qa',
+      plan: 'geeks.apps',
+      fixes: 'geeks.apps',
+      testing: 'geeks.qa',
+      feedback: 'people.feedback',
+      docs: 'admin.docs'
+    }
   },
   {
     key: 'geeks.automation_stack',

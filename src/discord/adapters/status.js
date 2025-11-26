@@ -1,4 +1,4 @@
-const { getOverview, getRewards } = require('../../core/services/statusService');
+const { getOverview, getRewards } = require('../../core/people/services/statusService');
 
 async function handleStatusInfo(interaction) {
   const text = getOverview();

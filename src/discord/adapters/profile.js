@@ -1,5 +1,5 @@
 // src/discord/adapters/profile.js
-const { addSkill, updateSkill, addLearningInterest, getMemberProfile } = require('../../core/members');
+const { addSkill, updateSkill, addLearningInterest, getMemberProfile } = require('../../core/people/members');
 
 function parseExamples(raw) {
   if (!raw) return [];

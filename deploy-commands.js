@@ -2,7 +2,7 @@
 require('dotenv').config();
 const { REST, Routes } = require('discord.js');
 const cfg = require('./config.json');
-const { pipelines } = require('./src/core/units');
+const { pipelines } = require('./src/core/work/units');
 
 const pipelineChoices = pipelines
   .filter(p => !p.hidden)

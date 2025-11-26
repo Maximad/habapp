@@ -3,7 +3,7 @@ const { Client, GatewayIntentBits, Events } = require('discord.js');
 require('dotenv').config();
 
 const cfg = require('../config.json');
-const { getTemplatesByUnit, getTemplateById } = require('./core/templates');
+const { getTemplatesByUnit, getTemplateById } = require('./core/work/templates');
 const { unitToArabic } = require('./discord/utils/formatters');
 const {
   handleProjectCreate,

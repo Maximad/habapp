@@ -1,5 +1,5 @@
-// src/core/work-log.js
-const { defaultStore } = require('./store');
+// src/core/people/work-log.js
+const { defaultStore } = require('../store');
 
 const WORK_LOG_KEY = 'work-log';
 

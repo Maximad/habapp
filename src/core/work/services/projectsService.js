@@ -8,7 +8,7 @@ const {
 const { listTasks } = require('../tasks');
 const { getProductionTemplateByCode } = require('../templates/templates.production');
 const { getPipelineByKey, getUnitByKey } = require('../units');
-const { resolveSlug, validateSlugFormat } = require('../utils/slug');
+const { resolveSlug, validateSlugFormat } = require('../../utils/slug');
 
 const ALLOWED_STAGES = ['planning', 'shooting', 'editing', 'review', 'archived'];
 
