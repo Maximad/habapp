@@ -16,6 +16,12 @@ const commands = [
     type: 1
   },
   {
+    name: 'habapp_start',
+    description: 'إرسال رسالة الترحيب التفاعلية في هذه القناة',
+    dm_permission: false,
+    type: 1
+  },
+  {
     name: 'project',
     description: 'إنشاء أو إدارة مشروع إنتاج',
     dm_permission: false,
@@ -27,6 +33,7 @@ const commands = [
         description: 'إنشاء مشروع جديد',
         options: [
           { type: 3, name: 'name', description: 'اسم المشروع', required: true },
+          { type: 3, name: 'due', description: 'تاريخ التسليم (YYYY-MM-DD)', required: true },
           { type: 3, name: 'slug', description: 'رمز قصير للمشروع (اختياري)', required: false },
           {
             type: 3,
@@ -53,7 +60,6 @@ const commands = [
             description: 'وحدات المشروع (مفصولة بفواصل مثل production,media)',
             required: false
           },
-          { type: 3, name: 'due', description: 'تاريخ التسليم (YYYY-MM-DD)', required: true },
           {
             type: 3,
             name: 'template',
