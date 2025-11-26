@@ -1371,6 +1371,210 @@ const peopleTaskTemplates = [
     defaultDueDays: 3,
 
     tags: ['وصول', 'فعاليات', 'سلامة']
+  },
+  {
+    id: 'people.shihan.curatorial_brief',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'ورقة مفهوم مهرجان شيحان / Black HALL',
+    description_ar: 'تثبيت مفهوم المهرجان، ما نريده وما لا نريده، وخطوط عدم التنازل للسلامة والأصالة.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'ورقة واضحة تتضمن الموضوعات، الجمهور، أنواع العروض المسموحة والمرفوضة، وحدود السلامة والقيم، منشورة في قناة المهرجان.',
+
+    defaultOwnerRole: 'func.event_host',
+    defaultChannelKey: 'people.shihan_black_hall',
+
+    tags: ['مفهوم', 'مهرجان', 'برمجة']
+  },
+  {
+    id: 'people.shihan.partner_matrix',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'مصفوفة الشركاء والدعم',
+    description_ar: 'توثيق الجهات الرسمية وغير الرسمية، أنواع الدعم العيني والمالي، وما يقابله من التزامات.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'جدول واحد يضم الشركاء المحتملين والمؤكدين، نوع الدعم، حالة التصاريح/الموافقات، ومسؤول المتابعة وتاريخ التواصل الأخير.',
+
+    defaultOwnerRole: 'func.producer',
+    defaultChannelKey: 'production.shihan_ops',
+
+    tags: ['شركاء', 'دعم', 'تصاريح']
+  },
+  {
+    id: 'people.shihan.artist_contracts',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'عقود الفنانين والفرق',
+    description_ar: 'تجميع كل عروض الفنانين مع الأجور، النقل، الإقامة، وشروط السلامة وخطط الإلغاء.',
+
+    size: 'L',
+    definitionOfDone_ar:
+      'ملف واحد لكل فنان/فرقة يتضمن الأجر المتفق عليه، تذاكر السفر أو النقل، الإقامة، الشرط الفني، والتوقيع أو الموافقة البريدية.',
+
+    defaultOwnerRole: 'func.producer',
+    defaultChannelKey: 'production.shihan_ops',
+
+    tags: ['عقود', 'فنانين', 'لوجستيات']
+  },
+  {
+    id: 'people.shihan.site_plan_quarry',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'مخطط موقع مقلع شيحان',
+    description_ar: 'رسم توزيع المسرح، الجمهور، نقاط الدخول والطوارئ في المقلع مع مراعاة العتمة والتضاريس.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'خريطة أو مخطط واضح يحدد المسرح، الكواليس، مسارات الجمهور، المخارج، ونقاط الإسعاف والإضاءة، مع صور مرجعية وحدود الصوت.',
+
+    defaultOwnerRole: 'func.field_ops',
+    defaultChannelKey: 'people.shihan_black_hall',
+
+    tags: ['موقع', 'سلامة', 'مسار']
+  },
+  {
+    id: 'people.shihan.site_plan_hall',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'مخطط موقع Black HALL',
+    description_ar: 'تخطيط قاعة بلاك هول: المسرح، المقاعد، مسارات الوصول، وخطة الإخلاء.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'مخطط مبسّط للقاعة يبين المنصة، أماكن الجمهور، ممرات الكراسي المتحركة، مخارج الطوارئ، ونقاط الإطفاء، مثبت في خيط المهرجان.',
+
+    defaultOwnerRole: 'func.field_ops',
+    defaultChannelKey: 'people.shihan_black_hall',
+
+    tags: ['قاعة', 'سلامة', 'موقع']
+  },
+  {
+    id: 'people.shihan.safety_plan',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'خطة سلامة وإخلاء للمهرجان',
+    description_ar: 'تقييم المخاطر في المقلع والقاعة، تحديد نقاط التجمع، أرقام الطوارئ، وخطة طقس سيئ.',
+
+    size: 'L',
+    definitionOfDone_ar:
+      'وثيقة مختصرة تغطي المخاطر الرئيسية، أرقام الطوارئ، فرق المناوبة، مسارات الإخلاء، خطة طقس سيئ، وموافقة مسؤول السلامة.',
+
+    defaultOwnerRole: 'func.field_ops',
+    defaultChannelKey: 'production.shihan_ops',
+
+    tags: ['سلامة', 'طوارئ', 'خطة']
+  },
+  {
+    id: 'people.shihan.tech_rider_master',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'ماستر رايدر تقني للمهرجان',
+    description_ar: 'تجميع كل متطلبات الصوت والإضاءة والكهرباء للفرق وربطها بمسار التنفيذ.',
+
+    size: 'L',
+    definitionOfDone_ar:
+      'جدول موحد للرودرات التقنية يشمل القنوات الصوتية، الإضاءة، الكهرباء الاحتياطية، مسؤول كل شيفت، وتوافقه مع موقع المقلع والقاعة.',
+
+    defaultOwnerRole: 'func.developer',
+    defaultChannelKey: 'geeks.shihan_acoustics',
+
+    tags: ['تقني', 'صوت', 'إضاءة']
+  },
+  {
+    id: 'people.shihan.schedule_run_sheet',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'جدول تشغيل وأوقات النداء',
+    description_ar: 'تفصيل البرنامج اليومي لكل يوم مهرجان مع أوقات النداء والمسؤولين.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'شيت تشغيل لكل يوم يذكر مواعيد الإعداد، الساوند تشيك، الصعود على المسرح، الإطفاء، ومسؤول كل خانة، منشور في قناة التشغيل.',
+
+    defaultOwnerRole: 'func.producer',
+    defaultChannelKey: 'production.shihan_ops',
+
+    tags: ['جدول', 'تشغيل', 'مهرجان']
+  },
+  {
+    id: 'people.shihan.comms_campaign',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'حملة تواصل المهرجان',
+    description_ar: 'خطة نشر، رسائل أساسية، لغات، ومواعيد فيديوهات أو مواد بصرية.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'تقويم نشر أسبوعي مع الرسائل الرئيسية، اللغات المستخدمة، روابط المواد البصرية، ومسؤول الردود والتذاكر.',
+
+    defaultOwnerRole: 'func.designer',
+    defaultChannelKey: 'people.shihan_black_hall',
+
+    tags: ['تواصل', 'حملة', 'مهرجان']
+  },
+  {
+    id: 'people.shihan.ticketing_and_entry',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'تذاكر ودخول المهرجان',
+    description_ar: 'تحديد أسعار التذاكر، نقاط البيع، سياسات التذاكر المجانية، وتدفق الدخول.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'سياسة تذاكر مكتوبة تشمل الأسعار، الشرائح المجانية/الداعمة، آلية التحقق على الباب، فريق الدخول، وخطة الطوابير والنقدي/الدفع الرقمي.',
+
+    defaultOwnerRole: 'func.event_host',
+    defaultChannelKey: 'people.shihan_black_hall',
+
+    tags: ['تذاكر', 'دخول', 'تنظيم']
+  },
+  {
+    id: 'people.shihan.documentation_plan',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'خطة التوثيق (صوت/صورة)',
+    description_ar: 'توزيع المصورين، خطة التسجيل الصوتي، وترخيص استخدام المواد بعد المهرجان.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'جدول واضح لتغطية كل يوم مع توزيع المصورين/مسجلي الصوت، نقاط تسليم الملفات يومياً، وسياسة الاستخدام والموافقة بعد المهرجان.',
+
+    defaultOwnerRole: 'func.researcher',
+    defaultChannelKey: 'media.shihan_docs',
+
+    tags: ['توثيق', 'صوت', 'صورة']
+  },
+  {
+    id: 'people.shihan.post_report',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'تقرير ما بعد مهرجان شيحان / Black HALL',
+    description_ar: 'تلخيص الأرقام، ما نجح وما تعثر، وتوصيات الدورة القادمة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'تقرير مختصر من ١٠ نقاط على الأقل يتضمن الحضور، التذاكر، الداعمين، أبرز المخاطر وما تعلمناه، مع توصيات واضحة للدورة التالية.',
+
+    defaultOwnerRole: 'func.event_host',
+    defaultChannelKey: 'people.shihan_black_hall',
+
+    tags: ['تقرير', 'دروس', 'مهرجان']
   }
 ];
 
