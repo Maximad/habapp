@@ -32,7 +32,8 @@ const units = [
       'people.event_small',
       'people.event_music',
       'people.event_forum',
-      'people.training_mini'
+      'people.training_mini',
+      'people.event_shihan_black_hall'
     ]
   },
   {
@@ -605,6 +606,95 @@ const pipelines = [
       'people_event_feedback_form',
       'people_event_debrief'
     ]
+  },
+  {
+    key: 'people.event_shihan_black_hall',
+    unitKey: 'people',
+    unit: 'people',
+    name_ar: 'مهرجان شيحان / Black HALL',
+    description_ar:
+      'مهرجان موسيقي وفنون تجريبية في مقلع تل شيحان وقاعة بلاك هول مع برنامج حواري وتوثيقي.',
+    stages: [
+      'curatorial_concept',
+      'partners_and_support',
+      'artist_booking',
+      'site_and_safety',
+      'tech_and_logistics',
+      'comms_and_ticketing',
+      'festival_days',
+      'documentation',
+      'report_and_debrief'
+    ],
+    stages_ar: [
+      'مفهوم وبرمجة',
+      'شركاء ودعم',
+      'حجوزات وفِرق',
+      'الموقع والسلامة',
+      'تقني ولوجستيات',
+      'تواصل وتذاكر',
+      'أيام المهرجان',
+      'توثيق',
+      'تقرير وخاتمة'
+    ],
+    suggestedStages: [
+      'curatorial_concept',
+      'partners_and_support',
+      'artist_booking',
+      'site_and_safety',
+      'tech_and_logistics',
+      'comms_and_ticketing',
+      'festival_days',
+      'documentation',
+      'report_and_debrief'
+    ],
+    defaultTemplates: [
+      'people.shihan.curatorial_brief',
+      'people.shihan.partner_matrix',
+      'people.shihan.artist_contracts',
+      'people.shihan.site_plan_quarry',
+      'people.shihan.site_plan_hall',
+      'people.shihan.safety_plan',
+      'people.shihan.tech_rider_master',
+      'people.shihan.schedule_run_sheet',
+      'people.shihan.comms_campaign',
+      'people.shihan.ticketing_and_entry',
+      'people.shihan.documentation_plan',
+      'people.shihan.post_report'
+    ],
+    defaultTaskTemplateIds: [
+      'people.shihan.curatorial_brief',
+      'people.shihan.partner_matrix',
+      'people.shihan.artist_contracts',
+      'people.shihan.site_plan_quarry',
+      'people.shihan.site_plan_hall',
+      'people.shihan.safety_plan',
+      'people.shihan.tech_rider_master',
+      'people.shihan.schedule_run_sheet',
+      'people.shihan.comms_campaign',
+      'people.shihan.ticketing_and_entry',
+      'people.shihan.documentation_plan',
+      'people.shihan.post_report'
+    ],
+    defaultTemplateIds: [
+      'people.shihan.curatorial_brief',
+      'people.shihan.partner_matrix',
+      'people.shihan.artist_contracts',
+      'people.shihan.site_plan_quarry',
+      'people.shihan.site_plan_hall',
+      'people.shihan.safety_plan',
+      'people.shihan.tech_rider_master',
+      'people.shihan.schedule_run_sheet',
+      'people.shihan.comms_campaign',
+      'people.shihan.ticketing_and_entry',
+      'people.shihan.documentation_plan',
+      'people.shihan.post_report'
+    ],
+    defaultChannels: {
+      main: 'people.shihan_black_hall',
+      ops: 'production.shihan_ops',
+      media: 'media.shihan_docs',
+      geeks: 'geeks.shihan_acoustics'
+    }
   },
   {
     key: 'geeks.site_basic',
