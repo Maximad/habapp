@@ -16,6 +16,12 @@ const commands = [
     type: 1
   },
   {
+    name: 'habapp_start',
+    description: 'إرسال رسالة الترحيب التفاعلية في هذه القناة',
+    dm_permission: false,
+    type: 1
+  },
+  {
     name: 'project',
     description: 'إنشاء أو إدارة مشروع إنتاج',
     dm_permission: false,

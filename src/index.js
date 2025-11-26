@@ -25,6 +25,12 @@ const {
 const { handleTaskReviewQuality, handleTaskReviewEthics } = require('./discord/adapters/task-review');
 const { handleWorkBackfillAdd, handleWorkBackfillVerify } = require('./discord/adapters/work-backfill');
 const { handleProfileSkills, handleProfileLearning } = require('./discord/adapters/profile');
+const {
+  sendOnboardingMessage,
+  handleOnboardingButton,
+  handleOnboardingSelect,
+  handleOnboardingModal
+} = require('./discord/ui/onboarding');
 
 // ───────── client ─────────
 const client = new Client({
@@ -42,17 +48,33 @@ client.once(Events.ClientReady, async c => {
 
 // ───────── interaction handling ─────────
 client.on(Events.InteractionCreate, async interaction => {
-  if (!interaction.isChatInputCommand()) return;
-
-  const guild = interaction.guild;
-  if (!guild) return;
-
   try {
+    if (interaction.isButton() && interaction.customId?.startsWith('onboard_')) {
+      return handleOnboardingButton(interaction);
+    }
+
+    if (interaction.isStringSelectMenu() && interaction.customId?.startsWith('onboard_')) {
+      return handleOnboardingSelect(interaction);
+    }
+
+    if (interaction.isModalSubmit() && interaction.customId?.startsWith('onboard_')) {
+      return handleOnboardingModal(interaction);
+    }
+
+    if (!interaction.isChatInputCommand()) return;
+
+    const guild = interaction.guild;
+    if (!guild) return;
+
     const name = interaction.commandName;
 
     // ping
     if (name === 'ping') {
       return interaction.reply({ content: 'HabApp حيّ ويعمل ✅', ephemeral: true });
+    }
+
+    if (name === 'habapp_start') {
+      return sendOnboardingMessage(interaction);
     }
 
     // ───── project ─────
