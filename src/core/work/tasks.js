@@ -1,8 +1,8 @@
-// src/core/tasks.js
+// src/core/work/tasks.js
 const { ensureProject, saveProjects, loadProjects } = require('./projects');
 const { getTaskTemplateById } = require('./templates/task-templates');
 const { getPipelineByKey } = require('./units');
-const { defaultStore } = require('./store');
+const { defaultStore } = require('../store');
 
 function getNextTaskId(project) {
   if (!Array.isArray(project.tasks) || project.tasks.length === 0) return 1;
@@ -107,46 +107,6 @@ function getTaskById(taskId, store = defaultStore) {
   throw new Error('Task not found');
 }
 
-function setTaskQuality(taskId, { score = null, tags, notes = null, reviewerId = null }, store = defaultStore) {
-  const { projects, project, projectIndex, task, taskIndex } = getTaskById(taskId, store);
-  const now = new Date().toISOString();
-  const existing = task.quality || { score: null, tags: [], notes: null, reviewerId: null, updatedAt: null };
-
-  const next = {
-    ...existing,
-    score: score === null || typeof score === 'undefined' ? existing.score : score,
-    tags: Array.isArray(tags) ? tags : existing.tags || [],
-    notes,
-    reviewerId,
-    updatedAt: now
-  };
-
-  project.tasks[taskIndex] = { ...task, quality: next };
-  projects[projectIndex] = project;
-  saveProjects(projects, store);
-  return project.tasks[taskIndex];
-}
-
-function setTaskEthics(taskId, { status = null, tags, notes = null, reviewerId = null }, store = defaultStore) {
-  const { projects, project, projectIndex, task, taskIndex } = getTaskById(taskId, store);
-  const now = new Date().toISOString();
-  const existing = task.ethics || { status: null, tags: [], notes: null, reviewerId: null, updatedAt: null };
-
-  const next = {
-    ...existing,
-    status: typeof status === 'undefined' ? existing.status : status,
-    tags: Array.isArray(tags) ? tags : existing.tags || [],
-    notes,
-    reviewerId,
-    updatedAt: now
-  };
-
-  project.tasks[taskIndex] = { ...task, ethics: next };
-  projects[projectIndex] = project;
-  saveProjects(projects, store);
-  return project.tasks[taskIndex];
-}
-
 function listTasks(slug, status, store) {
   const { project } = ensureProject(slug, store);
   const tasks = Array.isArray(project.tasks) ? project.tasks : [];
@@ -248,7 +208,5 @@ module.exports = {
   deleteTask,
   listTasks,
   getTaskById,
-  setTaskQuality,
-  setTaskEthics,
   createTasksFromTemplates
 };

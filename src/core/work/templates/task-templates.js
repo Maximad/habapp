@@ -50,7 +50,6 @@ const productionTaskTemplates = [
 
     tags: ['طاقم', 'تنسيق', 'تصوير', 'إنتاج']
   },
-
   {
     id: 'prod_call_sheet',
     type: 'task',
@@ -1170,6 +1169,66 @@ const peopleTaskTemplates = [
     tags: ['وصول', 'فعالية', 'سلامة']
   },
   {
+    id: 'people_live_notes_brief',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'تحضير خيط ملاحظات مباشرة',
+    description_ar: 'فتح خيط/مستند للملاحظات المباشرة مع تقسيم الأدوار، الأسئلة، والرموز المستخدمة أثناء الفعالية.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'رابط خيط أو مستند مهيأ للملاحظات مع جدول زمني مختصر، قائمة المتحدثين، منسق الملاحظات، ومشارَك مع الفريق قبل الفعالية.',
+
+    defaultOwnerRole: 'events_lead',
+    defaultChannelKey: 'people.events',
+    defaultDueDays: 2,
+
+    pipelineKey: 'people.event_live_notes',
+
+    tags: ['فعاليات', 'توثيق', 'ملاحظات']
+  },
+  {
+    id: 'people_live_notes_capture',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'تسجيل الملاحظات أثناء الفعالية',
+    description_ar: 'كتابة المداخلات الرئيسية والأسئلة والإشارات اللوجستية أثناء الحدث مع ذكر المتحدث والوقت.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'ملاحظات مباشرة تغطي كل المتحدثين والأسئلة، مع طوابع زمنية تقريبية ووسوم للمواضيع، محفوظة في الخيط أو المستند المتفق عليه.',
+
+    defaultOwnerRole: 'reporter',
+    defaultChannelKey: 'people.events',
+    defaultDueDays: 0,
+
+    pipelineKey: 'people.event_live_notes',
+
+    tags: ['فعاليات', 'توثيق', 'ملاحظات']
+  },
+  {
+    id: 'people_live_notes_summary',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'تنظيف ونشر ملخص ما بعد الفعالية',
+    description_ar: 'تنظيف الملاحظات، إضافة روابط/شرائح، وإرسال ملخص واضح للحضور والفريق الداخلي.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ملخص من فقرتين إلى ثلاث فقرات يتضمن أهم الأفكار، الروابط، والمهام اللاحقة، منشور في قناة الفعالية ومرفق بالخيط الأصلي.',
+
+    defaultOwnerRole: 'community_coordinator',
+    defaultChannelKey: 'people.announcements_org',
+    defaultDueDays: 2,
+
+    pipelineKey: 'people.event_live_notes',
+
+    tags: ['فعاليات', 'ملخص', 'ملاحظات']
+  },
+  {
     id: 'people_event_feedback_form',
     type: 'task',
     unit: 'people',
@@ -1517,6 +1576,87 @@ const geeksTaskTemplates = [
     defaultDueDays: 10,
 
     tags: ['صيانة', 'تطبيق', 'سجل']
+  },
+  {
+    id: 'geeks_accessibility_audit',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'تقييم وصول لتطبيق/أداة قائمة',
+    description_ar:
+      'تشغيل فحص وصول أساسي (لوحة مفاتيح، تباين، تسميات، قارئ شاشة) مع تلخيص النقاط الحرجة بخطوات إصلاح مقترحة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'قائمة فحص مبنية على WCAG تشمل: (١) صور/مقاطع قصيرة لثلاث مشكلات حرجة على الأقل، (٢) توصيات مختصرة لكل مشكلة، (٣) نشر الخلاصة في خيط المشروع.',
+
+    defaultOwnerRole: 'qa_tester',
+    defaultChannelKey: 'geeks.qa',
+    defaultDueDays: 4,
+
+    pipelineKey: 'geeks.app_accessibility',
+
+    tags: ['وصول', 'اختبار', 'جودة']
+  },
+  {
+    id: 'geeks_accessibility_fix_plan',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'خطة إصلاح وصول وقياس أثر',
+    description_ar: 'تجميع مشكلات الوصول حسب الأولوية مع حلول سريعة ومؤشرات واضحة لقياس التحسّن.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'جدول إصلاح مرتب حسب الأولوية يوضح: (١) مالك كل إصلاح، (٢) موعده المتوقع، (٣) أداة أو طريقة إعادة الفحص بعد التنفيذ، منشور في خيط المشروع ومثبت في قناة العمل.',
+
+    defaultOwnerRole: 'geeks_lead',
+    defaultChannelKey: 'geeks.apps',
+    defaultDueDays: 3,
+
+    pipelineKey: 'geeks.app_accessibility',
+
+    tags: ['وصول', 'تخطيط', 'منتج']
+  },
+  {
+    id: 'geeks_accessibility_fix_round',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'جولة إصلاح وصول موثّقة',
+    description_ar: 'تنفيذ الإصلاحات ذات الأولوية مع توثيق قبل/بعد والتأكد من سلامة المسار الأساسي.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'تنفيذ ٥ إصلاحات وصول على الأقل مع: (١) صور قبل/بعد أو روابط PR لكل إصلاح، (٢) فحص يدوي سريع يؤكد أن المسار الأساسي يعمل، (٣) ملاحظة موجزة في خيط المشروع.',
+
+    defaultOwnerRole: 'geeks_dev',
+    defaultChannelKey: 'geeks.apps',
+    defaultDueDays: 7,
+
+    pipelineKey: 'geeks.app_accessibility',
+
+    tags: ['وصول', 'تطوير', 'تحسين']
+  },
+  {
+    id: 'geeks_accessibility_user_test',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'اختبار مستخدمين/قارئ شاشة بعد الإصلاح',
+    description_ar: 'تنظيم اختبار وصول سريع مع مستخدم حقيقي أو تشغيل قارئ شاشة وتوثيق الملاحظات بوضوح.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ملاحظات اختبار تشمل: (١) توثيق ٣ سيناريوهات على الأقل (لوحة مفاتيح + قارئ شاشة)، (٢) ما تم حله وما تبقى، (٣) رسالة مختصرة للقناة تشرح الثغرات والخطوة التالية.',
+
+    defaultOwnerRole: 'qa_tester',
+    defaultChannelKey: 'people.feedback',
+    defaultDueDays: 5,
+
+    pipelineKey: 'geeks.app_accessibility',
+
+    tags: ['وصول', 'اختبار', 'مستخدمون']
   },
   {
     id: 'geeks_formsbot_to_onboarding',

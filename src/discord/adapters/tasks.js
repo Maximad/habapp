@@ -1,5 +1,5 @@
 const cfg = require('../../../config.json');
-const { addTaskToProject, completeTask, removeTask, listProjectTasks } = require('../../core/services/tasksService');
+const { addTaskToProject, completeTask, removeTask, listProjectTasks } = require('../../core/work/services/tasksService');
 const { unitToArabic, statusToArabic } = require('../utils/formatters');
 const { postToChannel } = require('../utils/channels');
 

@@ -6,7 +6,7 @@ const fs = require('fs');
 const path = require('path');
 
 const cfg = require('../../config.json');
-const { taskTemplates, getTaskTemplateById } = require('../core/templates');
+const { taskTemplates, getTaskTemplateById } = require('../core/work/templates');
 
 // ------------------------
 // Project store helpers

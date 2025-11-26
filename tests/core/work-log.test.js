@@ -5,7 +5,7 @@ const os = require('os');
 const path = require('path');
 
 const { createStore } = require('../../src/core/store');
-const { addBackfillEntry, verifyBackfillEntry, listBackfillEntries } = require('../../src/core/work-log');
+const { addBackfillEntry, verifyBackfillEntry, listBackfillEntries } = require('../../src/core/people/work-log');
 
 test('backfill work log add and verify', t => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'habapp-worklog-'));

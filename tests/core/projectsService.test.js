@@ -5,8 +5,8 @@ const os = require('os');
 const path = require('path');
 
 const { createStore } = require('../../src/core/store');
-const { createProject } = require('../../src/core/services/projectsService');
-const { getPipelineByKey } = require('../../src/core/units');
+const { createProject } = require('../../src/core/work/services/projectsService');
+const { getPipelineByKey } = require('../../src/core/work/units');
 
 function createTempStore() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'habapp-service-store-'));

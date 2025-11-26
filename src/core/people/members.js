@@ -1,5 +1,5 @@
-// src/core/members.js
-const { defaultStore } = require('./store');
+// src/core/people/members.js
+const { defaultStore } = require('../store');
 
 const MEMBERS_KEY = 'members';
 

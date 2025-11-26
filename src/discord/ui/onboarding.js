@@ -13,13 +13,13 @@ const {
   getMemberProfile,
   upsertMemberProfile,
   addLearningInterest
-} = require('../../core/members');
+} = require('../../core/people/members');
 
 function createOnboardingEmbed() {
   return new EmbedBuilder()
     .setColor(0x1abc9c)
     .setTitle('👋 أهلاً بك في حبق')
-    .setDescription('اختر المجال الأقرب لك للبدء:');
+    .setDescription('اختر المسار الأقرب لك لنربطك بسرعة بالعمل المناسب:');
 }
 
 function createUnitButtons() {
@@ -102,7 +102,7 @@ function buildModal(unit, selections) {
 
   const learningInput = new TextInputBuilder()
     .setCustomId('learning')
-    .setLabel('ما الذي تود أن تتعلمه أو تجربه مع حبق؟')
+    .setLabel('ما الذي تود أن تتعلمه أو تجربه معنا؟')
     .setStyle(TextInputStyle.Paragraph)
     .setRequired(false);
 
@@ -244,7 +244,7 @@ async function handleOnboardingModal(interaction) {
   }
 
   return interaction.reply({
-    content: '✅ تم تحديث ملفك في حبق. سنستخدم هذه المعلومات عند توزيع المهام.',
+    content: '✅ تم تحديث ملفك في حبق. سنستخدم هذه المعلومات لتوصيلك بالمهام والتجارب المناسبة.',
     ephemeral: true
   });
 }

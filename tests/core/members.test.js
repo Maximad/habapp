@@ -13,7 +13,7 @@ const {
   addLearningInterest,
   removeLearningInterest,
   listMembers
-} = require('../../src/core/members');
+} = require('../../src/core/people/members');
 
 test('member profile upsert, skills, and learning interests', t => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'habapp-members-'));

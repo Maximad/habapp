@@ -3,10 +3,10 @@
 
 const path = require('path');
 const { createStore } = require('./store');
-const projects = require('./projects');
-const tasks = require('./tasks');
-const templates = require('./templates');
-const status = require('./status');
+const projects = require('./work/projects');
+const tasks = require('./work/tasks');
+const templates = require('./work/templates');
+const status = require('./people/status');
 
 function createCoreContext(options = {}) {
   const dataDir = options.dataDir || path.join(__dirname, '..', 'data');
