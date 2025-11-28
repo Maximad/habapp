@@ -12,9 +12,13 @@ const commandModules = [
   require('./src/commands/remind')
 ];
 
-const builtCommands = commandModules.map(c => c.data.toJSON());
-
-const extraCommands = [
+const commands = [
+  {
+    name: 'ping',
+    description: 'اختبار استجابة HabApp',
+    dm_permission: false,
+    type: 1
+  },
   {
     name: 'habapp_start',
     description: 'إرسال رسالة الترحيب التفاعلية في هذه القناة',
@@ -121,6 +125,11 @@ const extraCommands = [
     dm_permission: false,
     type: 1,
     options: [
+      {
+        type: 1,
+        name: 'summary',
+        description: 'عرض ملفك في حبق بناءً على الأدوار الحالية في ديسكورد'
+      },
       {
         type: 1,
         name: 'skills',
