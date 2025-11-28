@@ -17,16 +17,9 @@ const commands = [
   },
   {
     name: 'profile',
-    description: 'إدارة ملفك الشخصي في حبق',
+    description: 'عرض ملفك في حبق بناءً على الأدوار الحالية في ديسكورد',
     dm_permission: false,
-    type: 1,
-    options: [
-      {
-        type: 1,
-        name: 'sync',
-        description: 'مزامنة ملفك تلقائياً من أدوار ديسكورد'
-      }
-    ]
+    type: 1
   },
   {
     name: 'habapp_start',
