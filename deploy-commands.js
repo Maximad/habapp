@@ -436,11 +436,7 @@ async function main() {
     console.log(
       `[HabApp] نشر ${commands.length} أمراً من أوامر HabApp إلى الخادم ${guildId} ...`
     );
-    console.log('[DEBUG] Commands being deployed:');
-    commands.forEach((cmd, index) => {
-      console.log(index, '-', cmd.name, 'type:', cmd.type ?? 'CHAT_INPUT');
-    });
-
+    
     await rest.put(
       Routes.applicationGuildCommands(appId, guildId),
       { body: commands }
