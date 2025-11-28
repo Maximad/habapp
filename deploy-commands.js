@@ -16,6 +16,19 @@ const commands = [
     type: 1
   },
   {
+    name: 'profile',
+    description: 'إدارة ملفك الشخصي في حبق',
+    dm_permission: false,
+    type: 1,
+    options: [
+      {
+        type: 1,
+        name: 'sync',
+        description: 'مزامنة ملفك تلقائياً من أدوار ديسكورد'
+      }
+    ]
+  },
+  {
     name: 'habapp_start',
     description: 'إرسال رسالة الترحيب التفاعلية في هذه القناة',
     dm_permission: false,
