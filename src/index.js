@@ -24,6 +24,7 @@ const {
 } = require('./discord/adapters/status');
 const { handleTaskReviewQuality, handleTaskReviewEthics } = require('./discord/adapters/task-review');
 const { handleWorkBackfillAdd, handleWorkBackfillVerify } = require('./discord/adapters/work-backfill');
+const handleProfile = require('./discord/commands/profile');
 const { handleProfileSkills, handleProfileLearning } = require('./discord/adapters/profile');
 const {
   sendOnboardingMessage,
@@ -191,7 +192,8 @@ client.on(Events.InteractionCreate, async interaction => {
 
     // ───── profile ─────
     if (name === 'profile') {
-      const sub = interaction.options.getSubcommand();
+      const sub = interaction.options.getSubcommand(false);
+      if (!sub) return handleProfile(interaction);
       if (sub === 'skills') return handleProfileSkills(interaction);
       if (sub === 'learning') return handleProfileLearning(interaction);
     }

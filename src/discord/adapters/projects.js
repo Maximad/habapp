@@ -19,7 +19,6 @@ const { postToChannel, getChannelIdByKey } = require('../utils/channels');
 
 async function handleProjectCreate(interaction) {
   const projName = interaction.options.getString('name', true);
-  const slugInput = interaction.options.getString('slug');
   const pipelineRaw = interaction.options.getString('pipeline');
   const due = interaction.options.getString('due', true);
   const templateRaw = interaction.options.getString('template');
@@ -77,7 +76,7 @@ async function handleProjectCreate(interaction) {
 
   const units = chosenUnit ? [chosenUnit] : requestedUnits.length > 0 ? requestedUnits : ['production'];
 
-  const finalSlug = resolveProjectSlug({ name: projName, slug: slugInput });
+  const finalSlug = resolveProjectSlug({ name: projName });
 
   try {
     ensureProjectAvailable(finalSlug);

@@ -31,12 +31,6 @@ const data = new SlashCommandBuilder()
           .setDescription('تاريخ التسليم (YYYY-MM-DD)')
           .setRequired(true)
       )
-      .addStringOption(o =>
-        o
-          .setName('slug')
-          .setDescription('رمز قصير بالإنكليزية (يُولّد تلقائياً إذا تُرك فارغاً)')
-          .setRequired(false)
-      )
       .addStringOption(o => {
         o
           .setName('pipeline')
@@ -82,12 +76,6 @@ const data = new SlashCommandBuilder()
     sub
       .setName('scaffold')
       .setDescription('توليد المهام الافتراضية لمسار العمل')
-      .addStringOption(o =>
-        o
-          .setName('slug')
-          .setDescription('رمز المشروع')
-          .setRequired(true)
-      )
       .addStringOption(o => {
         o
           .setName('pipeline')
@@ -103,12 +91,6 @@ const data = new SlashCommandBuilder()
     sub
       .setName('stage')
       .setDescription('تحديث مرحلة المشروع')
-      .addStringOption(o =>
-        o
-          .setName('slug')
-          .setDescription('رمز المشروع')
-          .setRequired(true)
-      )
       .addStringOption(o =>
         o
           .setName('stage')
@@ -127,12 +109,6 @@ const data = new SlashCommandBuilder()
     sub
       .setName('delete')
       .setDescription('حذف مشروع بالكامل من النظام')
-      .addStringOption(o =>
-        o
-          .setName('slug')
-          .setDescription('رمز المشروع')
-          .setRequired(true)
-      )
       .addBooleanOption(o =>
         o
           .setName('confirm')
@@ -144,12 +120,6 @@ const data = new SlashCommandBuilder()
     sub
       .setName('tasks')
       .setDescription('عرض مهام المشروع مع فلترة')
-      .addStringOption(o =>
-        o
-          .setName('slug')
-          .setDescription('رمز المشروع')
-          .setRequired(true)
-      )
       .addStringOption(o =>
         o
           .setName('status')
@@ -166,10 +136,30 @@ const data = new SlashCommandBuilder()
 async function execute(interaction) {
   const sub = interaction.options.getSubcommand();
   if (sub === 'create') return handleProjectCreate(interaction);
-  if (sub === 'scaffold') return handleProjectScaffold(interaction);
-  if (sub === 'stage') return handleProjectStage(interaction);
-  if (sub === 'delete') return handleProjectDelete(interaction);
-  if (sub === 'tasks') return handleProjectTasks(interaction);
+  if (sub === 'scaffold') {
+    return interaction.reply({
+      content: 'هذه الوظيفة قيد التطوير، سيتم إتاحتها لاحقاً بدون الحاجة لإدخال slug.',
+      ephemeral: true
+    });
+  }
+  if (sub === 'stage') {
+    return interaction.reply({
+      content: 'تحديث المرحلة سيعود قريباً مع اختيار المشروع من القائمة بدون إدخال slug.',
+      ephemeral: true
+    });
+  }
+  if (sub === 'delete') {
+    return interaction.reply({
+      content: 'حذف المشاريع من الأمر /project سيُفعّل لاحقاً بعد إلغاء الحاجة للـ slug.',
+      ephemeral: true
+    });
+  }
+  if (sub === 'tasks') {
+    return interaction.reply({
+      content: 'عرض مهام المشروع عبر /project tasks سيعود بعد تفعيل اختيار المشروع بدون slug.',
+      ephemeral: true
+    });
+  }
   return interaction.reply({ content: 'هذا الأمر غير مدعوم حالياً.', ephemeral: true });
 }
 

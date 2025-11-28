@@ -1,0 +1,92 @@
+// src/discord/commands/profile.js
+const membersStore = require('../../core/people/membersStore');
+const memberSyncService = require('../../core/people/memberSyncService');
+const { syncStateRolesForMember } = require('../adapters/stateRolesAdapter');
+const {
+  unitKeyToArabic,
+  functionKeyToArabic,
+  stateKeyToArabic,
+  identityModeToArabic
+} = require('../i18n/profileLabels');
+
+function resolveDisplayName(interaction) {
+  return (
+    interaction.member?.displayName ||
+    interaction.member?.nickname ||
+    interaction.user.globalName ||
+    interaction.user.username
+  );
+}
+
+function getRoleNames(interaction) {
+  const cache = interaction.member?.roles?.cache;
+  return Array.from(cache?.values?.() || [])
+    .map(r => r?.name)
+    .filter(Boolean);
+}
+
+function formatList(values = [], mapper = x => x) {
+  const labels = (values || [])
+    .map(mapper)
+    .filter(Boolean);
+  if (!labels.length) return '- —';
+  return labels.map(label => `- ${label}`).join('\n');
+}
+
+function formatProfileSummary(member) {
+  const notes = member.notes || member.bio || null;
+  const parts = [
+    'ملفك في حبق 🧩',
+    '',
+    'الوحدات:',
+    formatList(member.units, unitKeyToArabic),
+    '',
+    'المهام:',
+    formatList(member.functions, functionKeyToArabic),
+    '',
+    'الحالة:',
+    `- ${stateKeyToArabic(member.state) || '—'}`,
+    '',
+    'وضع الهوية:',
+    `- ${identityModeToArabic(member.identityMode) || '—'}`
+  ];
+
+  if (notes) {
+    parts.push('', 'ملاحظات:', `- ${notes}`);
+  }
+
+  return parts.join('\n');
+}
+
+async function handleProfile(interaction) {
+  const discordId = interaction.user.id;
+  const username = interaction.user.username;
+  const displayName = resolveDisplayName(interaction);
+  const roles = getRoleNames(interaction);
+
+  await memberSyncService.syncMemberFromRoles({
+    discordId,
+    username,
+    displayName,
+    roles
+  });
+
+  const member = await membersStore.getMemberByDiscordId(discordId);
+  if (!member) {
+    return interaction.reply({
+      content: 'ما قدرنا نلاقي ملفك في النظام. جرّب أمر /profile-sync أو تواصل مع فريق الإدارة.',
+      ephemeral: true
+    });
+  }
+
+  await syncStateRolesForMember({ guildMember: interaction.member, memberState: member.state });
+
+  const summary = formatProfileSummary(member);
+
+  return interaction.reply({
+    content: summary,
+    ephemeral: true
+  });
+}
+
+module.exports = handleProfile;
