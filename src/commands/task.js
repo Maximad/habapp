@@ -23,12 +23,6 @@ function loadProjects() {
   }
 }
 
-function getProject(slug) {
-  const list = loadProjects();
-  return list.find(
-    p => p.slug && p.slug.toLowerCase() === slug.toLowerCase()
-  ) || null;
-}
 
 // ------------------------
 // Template choices (Production only for now)

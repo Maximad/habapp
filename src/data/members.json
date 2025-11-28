@@ -1,0 +1,43 @@
+[
+  {
+    "userId": "886172468870541353",
+    "units": [
+      "media",
+      "geeks"
+    ],
+    "roles": [
+      "writing",
+      "web_dev",
+      "automation",
+      "data"
+    ],
+    "skills": [
+      {
+        "key": "writing",
+        "level": null,
+        "examples": []
+      },
+      {
+        "key": "web_dev",
+        "level": null,
+        "examples": []
+      },
+      {
+        "key": "automation",
+        "level": null,
+        "examples": []
+      },
+      {
+        "key": "data",
+        "level": null,
+        "examples": []
+      }
+    ],
+    "learningInterests": [
+      {
+        "key": "1",
+        "notes": null
+      }
+    ]
+  }
+]
