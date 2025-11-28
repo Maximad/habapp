@@ -55,12 +55,6 @@ const data = new SlashCommandBuilder()
       .setDescription('إضافة مهمة جديدة لمشروع')
       .addStringOption(opt =>
         opt
-          .setName('slug')
-          .setDescription('الـ slug الخاص بالمشروع (مثال shahba01)')
-          .setRequired(true)
-      )
-      .addStringOption(opt =>
-        opt
           .setName('title')
           .setDescription('عنوان المهمة (اختياري إذا اخترت قالب)')
           .setRequired(false)
@@ -99,97 +93,10 @@ async function execute(interaction) {
   if (!interaction.isChatInputCommand()) return;
   if (interaction.options.getSubcommand() !== 'add') return;
 
-  const slug = interaction.options.getString('slug', true);
-  const titleInput = interaction.options.getString('title');
-  const owner = interaction.options.getUser('owner');
-  const due = interaction.options.getString('due') || 'غير محدد';
-  const templateId = interaction.options.getString('template');
-
-  const project = getProject(slug);
-  if (!project) {
-    return interaction.reply({
-      content: 'المشروع غير موجود. تأكّد من الـ slug.',
-      ephemeral: true
-    });
-  }
-
-  // نحاول جلب القالب إذا تم اختياره
-  const template = templateId ? getTaskTemplateById(templateId) : null;
-
-  // عنوان المهمة النهائي
-  let finalTitle;
-  if (template && titleInput) {
-    // دمج: اسم القالب + العنوان الحر
-    finalTitle = `${template.label_ar} — ${titleInput}`;
-  } else if (template && !titleInput) {
-    finalTitle = template.label_ar;
-  } else if (!template && titleInput) {
-    finalTitle = titleInput;
-  } else {
-    finalTitle = 'مهمة بدون عنوان';
-  }
-
-  const ownerMention = owner ? `<@${owner.id}>` : 'غير معيّن';
-
-  // نص تعريف الإنجاز من القالب (إن وجد)
-  let doneBlock = '';
-  if (template && template.definitionOfDone_ar) {
-    doneBlock = `\n\n**تعريف الإنجاز (مقترح):**\n${template.definitionOfDone_ar}`;
-  }
-
-  await interaction.deferReply({ ephemeral: true });
-
-  // نرسل إلى قناة المهمات (#المهمات) كما هو سابقاً
-  const guild = await interaction.client.guilds.fetch(interaction.guildId);
-  const assignmentsChannelId = cfg.media?.assignmentsId;
-
-  if (!assignmentsChannelId) {
-    await interaction.editReply('خطأ في الإعدادات: لم يتم تعريف قناة المهمات في config.json.');
-    return;
-  }
-
-  const assignmentsChannel = await guild.channels.fetch(assignmentsChannelId).catch(() => null);
-  if (!assignmentsChannel) {
-    await interaction.editReply('تعذّر الوصول إلى قناة المهمات. تأكّد من صلاحيات البوت.');
-    return;
-  }
-
-  const content =
-    `**${slug}** – مهمة: ${finalTitle}\n` +
-    `المالك: ${ownerMention}\n` +
-    `تاريخ الاستحقاق: ${due}` +
-    doneBlock;
-
-  const assignMsg = await assignmentsChannel.send({ content });
-
-  // مرآة في خيط المشروع إن كان موجوداً
-  if (project.threadId) {
-    try {
-      const thread = await guild.channels.fetch(project.threadId);
-      if (thread && thread.isThread?.()) {
-        const linkLine = assignMsg?.url
-          ? `\nرابط المهمة في #المهمات: ${assignMsg.url}`
-          : '';
-
-        await thread.send(
-          `تم إنشاء مهمة جديدة:\n` +
-          `**${finalTitle}**\n` +
-          `المالك: ${ownerMention}\n` +
-          `تاريخ الاستحقاق: ${due}` +
-          linkLine +
-          doneBlock
-        );
-      }
-    } catch {
-      // نتجاهل أي خطأ في الخيط، لكن لا نُسقط الأمر كله
-    }
-  }
-
-  await interaction.editReply(
-    template
-      ? `تم إنشاء المهمة باستخدام القالب «${template.label_ar}» على المشروع ${slug}.`
-      : `تم إنشاء المهمة على المشروع ${slug}.`
-  );
+  return interaction.reply({
+    content: 'إضافة مهمات جديدة مباشرة من أمر /task سيتم تفعيلها بعد تحديث نظام اختيار المشاريع.',
+    ephemeral: true
+  });
 }
 
 module.exports = {
