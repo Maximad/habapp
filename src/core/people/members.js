@@ -1,156 +1,82 @@
 // src/core/people/members.js
-const { defaultStore } = require('../store');
+// واجهة متوافقة مع الإصدارات السابقة لإدارة ملفات الأعضاء
 
-const MEMBERS_KEY = 'members';
+const { loadMembers, upsertMember, findMemberByDiscordId, listMembers: listAll } = require('./memberStore');
 
-function getStore(store = defaultStore) {
-  return store || defaultStore;
+function ensureArray(value) {
+  return Array.isArray(value) ? value : [];
 }
 
-function baseProfile(userId) {
-  return {
-    userId: String(userId),
-    units: [],
-    roles: [],
-    skills: [],
-    learningInterests: []
-  };
+function getMemberProfile(userId, store) {
+  return findMemberByDiscordId(userId, store);
 }
 
-function loadMembers(store = defaultStore) {
-  const members = getStore(store).read(MEMBERS_KEY, []);
-  return Array.isArray(members) ? members : [];
+function upsertMemberProfile(userId, patch = {}, store) {
+  return upsertMember(
+    {
+      ...patch,
+      discordId: userId,
+      id: patch.id || patch.discordId || userId
+    },
+    store
+  );
 }
 
-function saveMembers(list, store = defaultStore) {
-  const normalized = Array.isArray(list) ? list : [];
-  getStore(store).write(MEMBERS_KEY, normalized);
-}
-
-function getMemberProfile(userId, store = defaultStore) {
-  const members = loadMembers(store);
-  const profile = members.find(m => String(m.userId) === String(userId));
-  return profile || null;
-}
-
-function upsertMemberProfile(userId, patch = {}, store = defaultStore) {
-  const members = loadMembers(store);
-  const idx = members.findIndex(m => String(m.userId) === String(userId));
-  const existing = idx >= 0 ? members[idx] : baseProfile(userId);
-  const next = {
-    ...existing,
-    ...patch,
-    userId: String(userId),
-    units: Array.isArray(patch.units) ? patch.units : existing.units || [],
-    roles: Array.isArray(patch.roles) ? patch.roles : existing.roles || [],
-    skills: Array.isArray(patch.skills) ? patch.skills : existing.skills || [],
-    learningInterests: Array.isArray(patch.learningInterests)
-      ? patch.learningInterests
-      : existing.learningInterests || []
-  };
-
-  if (idx >= 0) {
-    members[idx] = next;
-  } else {
-    members.push(next);
-  }
-
-  saveMembers(members, store);
-  return next;
-}
-
-function addSkill(userId, { key, level, examples = [] }, store = defaultStore) {
+function addSkill(userId, { key, level, examples = [] }, store) {
   if (!key) throw new Error('Skill key is required');
-  const members = loadMembers(store);
-  const idx = members.findIndex(m => String(m.userId) === String(userId));
-  const profile = idx >= 0 ? members[idx] : baseProfile(userId);
+  const member = getMemberProfile(userId, store) || upsertMemberProfile(userId, {}, store);
+  const skills = ensureArray(member.skills);
+  if (skills.find(s => s && s.key === key)) throw new Error('Skill already exists');
 
-  const exists = Array.isArray(profile.skills)
-    ? profile.skills.find(s => s && s.key === key)
-    : null;
-  if (exists) throw new Error('Skill already exists');
-
-  const nextSkill = { key, level, examples: Array.isArray(examples) ? examples : [] };
-  const nextProfile = {
-    ...profile,
-    skills: [...(profile.skills || []), nextSkill]
-  };
-
-  if (idx >= 0) {
-    members[idx] = nextProfile;
-  } else {
-    members.push(nextProfile);
-  }
-
-  saveMembers(members, store);
+  const nextSkill = { key, level, examples: ensureArray(examples) };
+  upsertMemberProfile(userId, { skills: [...skills, nextSkill] }, store);
   return nextSkill;
 }
 
-function updateSkill(userId, { key, level, examples = [] }, store = defaultStore) {
-  const members = loadMembers(store);
-  const idx = members.findIndex(m => String(m.userId) === String(userId));
-  if (idx === -1) throw new Error('Member not found');
-  const profile = members[idx];
-  const skills = Array.isArray(profile.skills) ? profile.skills : [];
-  const sIdx = skills.findIndex(s => s && s.key === key);
-  if (sIdx === -1) throw new Error('Skill not found');
+function updateSkill(userId, { key, level, examples = [] }, store) {
+  const member = getMemberProfile(userId, store);
+  if (!member) throw new Error('Member not found');
+  const skills = ensureArray(member.skills);
+  const idx = skills.findIndex(s => s && s.key === key);
+  if (idx === -1) throw new Error('Skill not found');
 
   const nextSkills = [...skills];
-  nextSkills[sIdx] = { key, level, examples: Array.isArray(examples) ? examples : [] };
-
-  members[idx] = { ...profile, skills: nextSkills };
-  saveMembers(members, store);
-  return members[idx];
+  nextSkills[idx] = { key, level, examples: ensureArray(examples) };
+  const updated = upsertMemberProfile(userId, { skills: nextSkills }, store);
+  return updated;
 }
 
-function addLearningInterest(userId, { key, notes = null }, store = defaultStore) {
+function addLearningInterest(userId, { key, notes = null }, store) {
   if (!key) throw new Error('Learning interest key is required');
-  const members = loadMembers(store);
-  const idx = members.findIndex(m => String(m.userId) === String(userId));
-  const profile = idx >= 0 ? members[idx] : baseProfile(userId);
-
-  const interests = Array.isArray(profile.learningInterests) ? profile.learningInterests : [];
-  const existingIdx = interests.findIndex(li => li && li.key === key);
+  const member = getMemberProfile(userId, store) || upsertMemberProfile(userId, {}, store);
+  const interests = ensureArray(member.learningInterests);
+  const idx = interests.findIndex(li => li && li.key === key);
   const nextInterest = { key, notes: notes || null };
 
-  const nextInterests = [...interests];
-  if (existingIdx >= 0) {
-    nextInterests[existingIdx] = nextInterest;
-  } else {
-    nextInterests.push(nextInterest);
-  }
-
-  const nextProfile = { ...profile, learningInterests: nextInterests };
   if (idx >= 0) {
-    members[idx] = nextProfile;
+    interests[idx] = nextInterest;
   } else {
-    members.push(nextProfile);
+    interests.push(nextInterest);
   }
 
-  saveMembers(members, store);
+  upsertMemberProfile(userId, { learningInterests: interests }, store);
   return nextInterest;
 }
 
-function removeLearningInterest(userId, key, store = defaultStore) {
-  const members = loadMembers(store);
-  const idx = members.findIndex(m => String(m.userId) === String(userId));
-  if (idx === -1) throw new Error('Member not found');
-
-  const profile = members[idx];
-  const interests = Array.isArray(profile.learningInterests) ? profile.learningInterests : [];
+function removeLearningInterest(userId, key, store) {
+  const member = getMemberProfile(userId, store);
+  if (!member) throw new Error('Member not found');
+  const interests = ensureArray(member.learningInterests);
   const filtered = interests.filter(li => li && li.key !== key);
-
-  members[idx] = { ...profile, learningInterests: filtered };
-  saveMembers(members, store);
-  return members[idx];
+  return upsertMemberProfile(userId, { learningInterests: filtered }, store);
 }
 
-function listMembers(filter = {}, store = defaultStore) {
-  const members = loadMembers(store);
+function listMembers(filter = {}, store) {
+  const members = listAll(store);
   if (!filter) return members;
 
   return members.filter(profile => {
-    if (filter.userId && String(profile.userId) !== String(filter.userId)) return false;
+    if (filter.userId && String(profile.discordId) !== String(filter.userId)) return false;
     if (filter.unit && !(Array.isArray(profile.units) && profile.units.includes(filter.unit))) return false;
     if (filter.role && !(Array.isArray(profile.roles) && profile.roles.includes(filter.role))) return false;
     return true;
@@ -164,5 +90,6 @@ module.exports = {
   updateSkill,
   addLearningInterest,
   removeLearningInterest,
-  listMembers
+  listMembers,
+  loadMembers
 };
