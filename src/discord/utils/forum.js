@@ -18,7 +18,7 @@ async function createForumPost(guild, forumId, { name, slug, due, templateSummar
 
   const baseLines = [
     `**مشروع:** ${name}`,
-    `**الرمز (slug):** ${slug}`,
+    `**المعرّف:** ${slug}`,
     `**تاريخ التسليم:** ${due || 'غير محدّد'}`,
     `**المراحل:** التخطيط → التصوير → المونتاج → المراجعة → مؤرشف`,
     '',

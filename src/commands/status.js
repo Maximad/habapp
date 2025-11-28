@@ -18,7 +18,7 @@ module.exports = {
             .setDescription('معرف الحالة (lead/core/active/friend/on_call/founding/trial/guest/suspended)')
             .setRequired(true)
         )
-    ),
+  ),
   async execute(interaction, ctx) {
     const { status } = ctx;
     const sub = interaction.options.getSubcommand();
@@ -36,7 +36,7 @@ module.exports = {
       const st = status.getState(id);
       if (!st) {
         return interaction.reply({
-          content: 'لم يتم العثور على حالة بهذا المعرف.',
+          content: require('../discord/i18n/messages').errorMessage('status_not_found'),
           ephemeral: true
         });
       }
