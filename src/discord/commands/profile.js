@@ -8,6 +8,7 @@ const {
   stateKeyToArabic,
   identityModeToArabic
 } = require('../i18n/profileLabels');
+const { buildErrorMessage, buildSuccessMessage } = require('../i18n/messages');
 
 function resolveDisplayName(interaction) {
   return (
@@ -74,7 +75,7 @@ async function handleProfile(interaction) {
   const member = await membersStore.getMemberByDiscordId(discordId);
   if (!member) {
     return interaction.reply({
-      content: 'ما قدرنا نلاقي ملفك في النظام. جرّب أمر /profile-sync أو تواصل مع فريق الإدارة.',
+      content: buildErrorMessage('profile_missing'),
       ephemeral: true
     });
   }
@@ -84,7 +85,7 @@ async function handleProfile(interaction) {
   const summary = formatProfileSummary(member);
 
   return interaction.reply({
-    content: summary,
+    content: `${buildSuccessMessage('profile_synced')}\n\n${summary}`,
     ephemeral: true
   });
 }

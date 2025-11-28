@@ -3,15 +3,8 @@ const { Client, GatewayIntentBits, Events } = require('discord.js');
 require('dotenv').config();
 
 const cfg = require('../config.json');
-const { getTemplatesByUnit, getTemplateById } = require('./core/work/templates');
-const { unitToArabic } = require('./discord/utils/formatters');
-const {
-  handleProjectCreate,
-  handleProjectStage,
-  handleProjectDelete,
-  handleProjectTasks,
-  handleProjectScaffold
-} = require('./discord/adapters/projects');
+const handleProject = require('./discord/commands/project');
+const handleRemind = require('./discord/commands/remind');
 const {
   handleTaskAdd,
   handleTaskComplete,
@@ -32,6 +25,7 @@ const {
   handleOnboardingSelect,
   handleOnboardingModal
 } = require('./discord/ui/onboarding');
+const { handleInteraction } = require('./discord/utils/interactionWrapper');
 
 // ───────── client ─────────
 const client = new Client({
@@ -48,8 +42,8 @@ client.once(Events.ClientReady, async c => {
 });
 
 // ───────── interaction handling ─────────
-client.on(Events.InteractionCreate, async interaction => {
-  try {
+client.on(Events.InteractionCreate, interaction =>
+  handleInteraction(interaction, async () => {
     if (interaction.isButton() && interaction.customId?.startsWith('onboard_')) {
       return handleOnboardingButton(interaction);
     }
@@ -69,7 +63,6 @@ client.on(Events.InteractionCreate, async interaction => {
 
     const name = interaction.commandName;
 
-    // ping
     if (name === 'ping') {
       return interaction.reply({ content: 'HabApp حيّ ويعمل ✅', ephemeral: true });
     }
@@ -80,13 +73,12 @@ client.on(Events.InteractionCreate, async interaction => {
 
     // ───── project ─────
     if (name === 'project') {
-      const sub = interaction.options.getSubcommand();
+      return handleProject(interaction);
+    }
 
-      if (sub === 'create') return handleProjectCreate(interaction);
-      if (sub === 'stage') return handleProjectStage(interaction);
-      if (sub === 'delete') return handleProjectDelete(interaction);
-      if (sub === 'scaffold') return handleProjectScaffold(interaction);
-      if (sub === 'tasks') return handleProjectTasks(interaction);
+    if (name === 'remind') {
+      const sub = interaction.options.getSubcommand();
+      if (sub === 'tasks') return handleRemind(interaction);
     }
 
     // ───── task ─────
@@ -99,81 +91,11 @@ client.on(Events.InteractionCreate, async interaction => {
       if (sub === 'list') return handleTaskList(interaction);
     }
 
-    // ───── template ─────
-    if (name === 'template') {
-      const sub = interaction.options.getSubcommand();
-
-      if (sub === 'task-list') {
-        const unit = interaction.options.getString('unit') || 'all';
-        const list = getTemplatesByUnit(unit);
-
-        if (!list || list.length === 0) {
-          return interaction.reply({
-            content: 'لا توجد قوالب مطابقة للفلتر الحالي.',
-            ephemeral: true
-          });
-        }
-
-        const lines = list.map(t => {
-          return `• \`${t.id}\` – [${unitToArabic(t.unit)}][${t.size}] – ${t.titleAr}`;
-        });
-
-        const header =
-          '📚 قوالب المهام المتاحة (حسب الوحدة والحجم):\n' +
-          'استخدم `/template task-spawn` مع معرّف القالب لاستنساخ مهمة جاهزة.\n\n';
-
-        return interaction.reply({
-          content: (header + lines.join('\n')).slice(0, 1900),
-          ephemeral: true
-        });
-      }
-
-      if (sub === 'task-spawn') {
-        const slug = interaction.options.getString('slug', true);
-        const templateId = interaction.options.getString('template_id', true);
-        const owner = interaction.options.getUser('owner');
-        const due = interaction.options.getString('due') || 'غير محدّد';
-
-        const tpl = getTemplateById(templateId);
-        if (!tpl) {
-          return interaction.reply({
-            content: '❌ لم يتم العثور على قالب بهذا المعرّف.',
-            ephemeral: true
-          });
-        }
-
-        await interaction.deferReply({ ephemeral: true });
-
-        let result;
-        try {
-          result = await handleTaskAdd(
-            Object.assign(Object.create(Object.getPrototypeOf(interaction)), interaction, {
-              options: {
-                getString: (key, required) => {
-                  if (key === 'slug') return slug;
-                  if (key === 'title') return tpl.titleAr;
-                  if (key === 'unit') return tpl.unit;
-                  if (key === 'template_id') return tpl.id;
-                  if (key === 'due') return due;
-                  return interaction.options.getString(key, required);
-                },
-                getUser: key => (key === 'owner' ? owner : interaction.options.getUser(key))
-              }
-            })
-          );
-        } catch (err) {
-          return interaction.editReply('❌ حدث خطأ أثناء إنشاء المهمة من القالب.');
-        }
-
-        return result;
-      }
-    }
-
     // ───── status ─────
     if (name === 'status') {
       const sub = interaction.options.getSubcommand();
-      if (sub === 'info') return handleStatusInfo(interaction);
-      if (sub === 'rewards') return handleStatusRewards(interaction);
+      if (sub === 'overview') return handleStatusInfo(interaction);
+      if (sub === 'detail') return handleStatusRewards(interaction);
     }
 
     // ───── task_review ─────
@@ -197,21 +119,7 @@ client.on(Events.InteractionCreate, async interaction => {
       if (sub === 'skills') return handleProfileSkills(interaction);
       if (sub === 'learning') return handleProfileLearning(interaction);
     }
-  } catch (err) {
-    console.error(err);
-    try {
-      if (interaction.deferred || interaction.replied) {
-        await interaction.editReply('❌ حدث خطأ: ' + (err.message || 'خطأ غير معروف'));
-      } else {
-        await interaction.reply({
-          content: '❌ حدث خطأ: ' + (err.message || 'خطأ غير معروف'),
-          ephemeral: true
-        });
-      }
-    } catch (e2) {
-      console.error('Error while sending error reply', e2);
-    }
-  }
-});
+  })
+);
 
 client.login(process.env.DISCORD_TOKEN);
