@@ -193,7 +193,7 @@ client.on(Events.InteractionCreate, async interaction => {
     // ───── profile ─────
     if (name === 'profile') {
       const sub = interaction.options.getSubcommand(false);
-      if (!sub) return handleProfile(interaction);
+      if (!sub || sub === 'summary') return handleProfile(interaction);
       if (sub === 'skills') return handleProfileSkills(interaction);
       if (sub === 'learning') return handleProfileLearning(interaction);
     }

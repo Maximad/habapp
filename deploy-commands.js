@@ -16,12 +16,6 @@ const commands = [
     type: 1
   },
   {
-    name: 'profile',
-    description: 'عرض ملفك في حبق بناءً على الأدوار الحالية في ديسكورد',
-    dm_permission: false,
-    type: 1
-  },
-  {
     name: 'habapp_start',
     description: 'إرسال رسالة الترحيب التفاعلية في هذه القناة',
     dm_permission: false,
@@ -257,6 +251,11 @@ const commands = [
     dm_permission: false,
     type: 1,
     options: [
+      {
+        type: 1,
+        name: 'summary',
+        description: 'عرض ملفك في حبق بناءً على الأدوار الحالية في ديسكورد'
+      },
       {
         type: 1,
         name: 'skills',
