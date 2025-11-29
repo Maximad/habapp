@@ -1,6 +1,7 @@
 // src/discord/commands/profile.js
 const membersStore = require('../../core/people/membersStore');
 const memberSyncService = require('../../core/people/memberSyncService');
+const { computeRecommendedState } = require('../../core/people/memberState');
 const { syncStateRolesForMember } = require('../adapters/stateRolesAdapter');
 const {
   unitKeyToArabic,
@@ -36,6 +37,7 @@ function formatList(values = [], mapper = x => x) {
 
 function formatProfileSummary(member) {
   const notes = member.notes || member.bio || null;
+  const recommended = computeRecommendedState(member.stats || {});
   const parts = [
     'ملفك في حبق 🧩',
     '',
@@ -46,7 +48,8 @@ function formatProfileSummary(member) {
     formatList(member.functions, functionKeyToArabic),
     '',
     'الحالة:',
-    `- ${stateKeyToArabic(member.state) || '—'}`,
+    `- الحالية (حسب الرتب): ${stateKeyToArabic(member.state) || '—'}`,
+    `- المقترحة (حسب العمل وجودته): ${stateKeyToArabic(recommended) || '—'}`,
     '',
     'وضع الهوية:',
     `- ${identityModeToArabic(member.identityMode) || '—'}`
