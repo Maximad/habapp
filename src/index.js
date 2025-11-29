@@ -11,6 +11,7 @@ const {
   handleTaskDelete,
   handleTaskList
 } = require('./discord/adapters/tasks');
+const handlePipelineAutocomplete = require('./discord/autocomplete/pipeline');
 const {
   handleStatusInfo,
   handleStatusRewards
@@ -47,6 +48,17 @@ client.once(Events.ClientReady, async c => {
 // ───────── interaction handling ─────────
 client.on(Events.InteractionCreate, interaction =>
   handleInteraction(interaction, async () => {
+    if (interaction.isAutocomplete()) {
+      const { commandName } = interaction;
+      if (commandName === 'project') {
+        const focused = interaction.options.getFocused(true);
+        if (focused.name === 'pipeline') {
+          return handlePipelineAutocomplete(interaction);
+        }
+      }
+      return;
+    }
+
     if (interaction.isButton() && interaction.customId?.startsWith('onboard_')) {
       return handleOnboardingButton(interaction);
     }

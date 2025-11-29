@@ -41,6 +41,7 @@ const data = new SlashCommandBuilder()
           .setName('pipeline')
           .setDescription('مفتاح مسار العمل (مثلاً production.video_doc_interviews)')
           .setRequired(true)
+          .setAutocomplete(true)
       )
   )
 

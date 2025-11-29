@@ -9,7 +9,7 @@ const {
 } = require('../src/discord/i18n/profileLabels');
 
 test('unitKeyToArabic maps known units', () => {
-  assert.strictEqual(unitKeyToArabic('media'), 'الميديا');
+  assert.strictEqual(unitKeyToArabic('media'), 'الإعلام');
   assert.strictEqual(unitKeyToArabic('production'), 'الإنتاج');
 });
 

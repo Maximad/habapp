@@ -2,23 +2,35 @@ async function handleInteraction(interaction, handler) {
   try {
     await handler(interaction);
     console.log(
-      `[HabApp] Command /${interaction.commandName} by ${interaction.user?.id || 'unknown'} -> ok`
+      `[HabApp][interaction] /${interaction.commandName} by ${interaction.user?.id || 'unknown'} -> ok`
     );
   } catch (err) {
-    console.error('[HabApp] Command failed', {
+    console.error('[HabApp][interaction] Command failed', {
       command: interaction.commandName,
       user: interaction.user?.id,
       error: err
     });
-    if (!interaction.replied && !interaction.deferred) {
+
+    if (interaction?.isRepliable && !interaction.isRepliable()) return;
+    if (interaction?.replied || interaction?.deferred) {
       try {
-        await interaction.reply({
-          content: 'صار خطأ غير متوقع أثناء تنفيذ الأمر. إذا استمر الخطأ، تواصل/ي مع فريق الإدارة.',
-          ephemeral: true
-        });
+        await interaction.editReply(
+          'حدث خطأ غير متوقع أثناء تنفيذ الأمر. \nإذا استمر الخطأ، أخبر فريق HabApp مع تفاصيل الأمر.'
+        );
       } catch (replyErr) {
-        console.error('[HabApp] Failed to send error reply', replyErr);
+        console.error('[HabApp][interaction] Failed to send error reply', replyErr);
       }
+      return;
+    }
+
+    try {
+      await interaction.reply({
+        content:
+          'حدث خطأ غير متوقع أثناء تنفيذ الأمر. \nإذا استمر الخطأ، أخبر فريق HabApp مع تفاصيل الأمر.',
+        ephemeral: true
+      });
+    } catch (replyErr) {
+      console.error('[HabApp][interaction] Failed to send error reply', replyErr);
     }
   }
 }
