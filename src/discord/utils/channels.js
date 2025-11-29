@@ -1,4 +1,5 @@
 const cfg = require('../../../config.json');
+const channelKeyMap = require('../config/channelKeys');
 
 const channelMap = {
   'production.crew_roster': cfg.channels?.production?.crewRosterId,
@@ -17,7 +18,8 @@ const channelMap = {
   'media.graphics': cfg.channels?.media?.graphicsId,
   'media.sound': cfg.channels?.media?.soundId,
   'media.exports': cfg.channels?.media?.exportsId,
-  'admin.emergency': null
+  'admin.emergency': null,
+  ...channelKeyMap
 };
 
 function getChannelIdByKey(channelKey) {

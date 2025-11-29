@@ -12,13 +12,9 @@ const commandModules = [
   require('./src/commands/remind')
 ];
 
-const commands = [
-  {
-    name: 'ping',
-    description: 'اختبار استجابة HabApp',
-    dm_permission: false,
-    type: 1
-  },
+const builtCommands = commandModules.map(c => c.data.toJSON());
+
+const extraCommands = [
   {
     name: 'habapp_start',
     description: 'إرسال رسالة الترحيب التفاعلية في هذه القناة',
