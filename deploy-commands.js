@@ -3,7 +3,7 @@ require('dotenv').config();
 const { REST, Routes } = require('discord.js');
 const cfg = require('./config.json');
 
-// Slash-command builder modules (new style)
+// 1) Commands implemented via SlashCommandBuilder modules
 const commandModules = [
   require('./src/commands/ping'),
   require('./src/commands/profile'),
@@ -13,14 +13,10 @@ const commandModules = [
   require('./src/commands/remind')
 ];
 
-// Inline "extra" commands (previously named `commands`, renamed to avoid collision)
+const builtCommands = commandModules.map(m => m.data.toJSON());
+
+// 2) Extra raw commands that do NOT have modules
 const extraCommands = [
-  {
-    name: 'ping',
-    description: 'اختبار استجابة HabApp',
-    dm_permission: false,
-    type: 1
-  },
   {
     name: 'habapp_start',
     description: 'إرسال رسالة الترحيب التفاعلية في هذه القناة',
@@ -130,7 +126,7 @@ const extraCommands = [
       {
         type: 1,
         name: 'summary',
-        description: 'عرض ملفك في حبق بناء على الأدوار الحالية في ديسكورد'
+        description: 'عرض ملفك في حبق بناءً على الأدوار الحالية في ديسكورد'
       },
       {
         type: 1,
@@ -165,45 +161,15 @@ const extraCommands = [
   }
 ];
 
-// Build commands from modules (supports modules exposing `data` (SlashCommandBuilder) or raw objects)
-const builtCommands = commandModules.map(cmd => {
-  if (cmd && cmd.data && typeof cmd.data.toJSON === 'function') {
-    return cmd.data.toJSON();
-  }
-  // If module exported an object already suitable for registration, use it directly
-  return cmd;
-});
-
-// Final list sent to Discord
 const commands = [...builtCommands, ...extraCommands];
 
-// Resolve application and guild IDs from config.json or env
-const appId =
-  cfg.clientId ||
-  process.env.CLIENT_ID ||
-  process.env.DISCORD_CLIENT_ID;
-
-const guildId =
-  cfg.guildId ||
-  process.env.GUILD_ID ||
-  process.env.DISCORD_GUILD_ID;
-
-if (!appId) {
-  console.error('❌ Missing application id (clientId/CLIENT_ID). Check config.json or .env');
-  process.exit(1);
-}
-if (!guildId) {
-  console.error('❌ Missing guild id (guildId/GUILD_ID). Check config.json or .env');
-  process.exit(1);
-}
-
-const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN || cfg.token);
+const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
 async function main() {
   try {
     console.log('Deploying slash commands...');
     await rest.put(
-      Routes.applicationGuildCommands(appId, guildId),
+      Routes.applicationGuildCommands(cfg.clientId, cfg.guildId),
       { body: commands }
     );
     console.log(`Successfully reloaded ${commands.length} application (/) commands.`);

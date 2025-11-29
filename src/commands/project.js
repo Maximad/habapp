@@ -1,22 +1,22 @@
 const { SlashCommandBuilder } = require('discord.js');
 const handleProject = require('../discord/commands/project');
-const { units, pipelines } = require('../core/work/units');
+const { units } = require('../core/work/units');
 
+// وحدة الاختيار: عددها قليل فآمن نستخدمها كـ choices
 const unitChoices = units.map(u => ({ name: u.name_ar, value: u.key }));
-const pipelineChoices = pipelines
-  .filter(p => !p.hidden)
-  .map(p => ({ name: p.name_ar, value: p.key }));
 
 const data = new SlashCommandBuilder()
   .setName('project')
   .setDescription('أوامر إدارة المشاريع في حبق')
+
+  // /project create
   .addSubcommand(sub =>
     sub
       .setName('create')
       .setDescription('إنشاء مشروع وتوليد المهام الافتراضية')
       .addStringOption(o =>
         o
-          .setName('title')
+          .setName('name') // مهم أن تبقى name لتطابق الكود في الهاندلر/الكور
           .setDescription('عنوان المشروع')
           .setRequired(true)
       )
@@ -36,17 +36,15 @@ const data = new SlashCommandBuilder()
         }
         return o;
       })
-      .addStringOption(o => {
-        o
+      .addStringOption(option =>
+        option
           .setName('pipeline')
-          .setDescription('مسار العمل المناسب للمشروع')
-          .setRequired(true);
-        for (const choice of pipelineChoices) {
-          o.addChoices(choice);
-        }
-        return o;
-      })
+          .setDescription('مفتاح مسار العمل (مثلاً production.video_doc_interviews)')
+          .setRequired(true)
+      )
   )
+
+  // /project list
   .addSubcommand(sub =>
     sub
       .setName('list')
@@ -61,6 +59,8 @@ const data = new SlashCommandBuilder()
         return o;
       })
   )
+
+  // /project open
   .addSubcommand(sub =>
     sub
       .setName('open')
@@ -72,6 +72,8 @@ const data = new SlashCommandBuilder()
           .setRequired(true)
       )
   )
+
+  // /project tasks
   .addSubcommand(sub =>
     sub
       .setName('tasks')
