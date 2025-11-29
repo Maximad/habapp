@@ -15,7 +15,7 @@ const {
   handleStatusInfo,
   handleStatusRewards
 } = require('./discord/adapters/status');
-const { handleTaskReviewQuality, handleTaskReviewEthics } = require('./discord/adapters/task-review');
+const handleTaskReview = require('./discord/commands/taskReview');
 const { handleWorkBackfillAdd, handleWorkBackfillVerify } = require('./discord/adapters/work-backfill');
 const handleProfile = require('./discord/commands/profile');
 const { handleProfileSkills, handleProfileLearning } = require('./discord/adapters/profile');
@@ -107,9 +107,7 @@ client.on(Events.InteractionCreate, interaction =>
 
     // ───── task_review ─────
     if (name === 'task_review') {
-      const sub = interaction.options.getSubcommand();
-      if (sub === 'quality') return handleTaskReviewQuality(interaction);
-      if (sub === 'ethics') return handleTaskReviewEthics(interaction);
+      return handleTaskReview(interaction);
     }
 
     // ───── work_backfill ─────

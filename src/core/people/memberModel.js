@@ -1,6 +1,8 @@
 // src/core/people/memberModel.js
 // نموذج موحّد لأعضاء حبق مع قيم افتراضية واضحة
 
+const { computeRecommendedState } = require('./memberState');
+
 function isoTimestamp(now = new Date()) {
   if (typeof now === 'function') return isoTimestamp(now());
   if (now instanceof Date) return now.toISOString();
@@ -14,18 +16,50 @@ function uniqueList(list) {
 }
 
 function defaultStats(stats = {}) {
+  const qualityStats = stats.quality || {};
+  const ethicsStats = stats.ethics || {};
+
+  const tasksCompleted = Number.isFinite(stats.tasksCompleted)
+    ? stats.tasksCompleted
+    : Number.isFinite(stats.completedTasks)
+      ? stats.completedTasks
+      : 0;
+
+  const qualityReviews = Number.isFinite(qualityStats.reviews) ? qualityStats.reviews : 0;
+  const qualityAvgScore = Number.isFinite(qualityStats.avgScore)
+    ? qualityStats.avgScore
+    : Number.isFinite(stats.qualityAvg)
+      ? stats.qualityAvg
+      : 0;
+
+  const ethicsOk = Number.isFinite(ethicsStats.ok) ? ethicsStats.ok : 0;
+  const ethicsNeedsDiscussion = Number.isFinite(ethicsStats.needsDiscussion)
+    ? ethicsStats.needsDiscussion
+    : 0;
+  const ethicsViolation = Number.isFinite(ethicsStats.violation)
+    ? ethicsStats.violation
+    : Number.isFinite(stats.ethicsFlags)
+      ? stats.ethicsFlags
+      : 0;
+
   return {
-    completedTasks: Number.isFinite(stats.completedTasks) ? stats.completedTasks : 0,
-    qualityAvg: stats.qualityAvg ?? null,
-    ethicsFlags: Number.isFinite(stats.ethicsFlags) ? stats.ethicsFlags : 0,
-    points: Number.isFinite(stats.points) ? stats.points : 0,
-    lastActiveAt: stats.lastActiveAt || null
+    tasksCompleted,
+    quality: {
+      reviews: qualityReviews,
+      avgScore: qualityAvgScore
+    },
+    ethics: {
+      ok: ethicsOk,
+      needsDiscussion: ethicsNeedsDiscussion,
+      violation: ethicsViolation
+    }
   };
 }
 
 function createEmptyMember({ discordId, username, now } = {}) {
   const ts = isoTimestamp(now || new Date());
   const id = discordId ? String(discordId) : null;
+  const stats = defaultStats();
 
   return {
     id,
@@ -40,7 +74,8 @@ function createEmptyMember({ discordId, username, now } = {}) {
     languages: [],
     availability: null,
     bio: null,
-    stats: defaultStats(),
+    stats,
+    recommendedState: computeRecommendedState(stats),
     status: null,
     createdAt: ts,
     updatedAt: ts,
@@ -57,6 +92,8 @@ function normalizeMember(raw = {}) {
   const createdAt = raw.createdAt || isoTimestamp();
   const updatedAt = raw.updatedAt || createdAt;
 
+  const stats = defaultStats(raw.stats);
+
   return {
     id: raw.id || (raw.discordId ? String(raw.discordId) : null),
     discordId: raw.discordId ? String(raw.discordId) : '',
@@ -70,7 +107,8 @@ function normalizeMember(raw = {}) {
     languages: uniqueList(raw.languages),
     availability: raw.availability || null,
     bio: raw.bio || null,
-    stats: defaultStats(raw.stats),
+    stats,
+    recommendedState: computeRecommendedState(stats),
     status: raw.status || null,
     createdAt,
     updatedAt,

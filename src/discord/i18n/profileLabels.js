@@ -27,6 +27,7 @@ const functionLabels = {
 const stateLabels = {
   guest: 'ضيف',
   trial: 'تجريبي',
+  casual: 'مشارك',
   active: 'نشط',
   core: 'نواة',
   lead: 'قيادة',
