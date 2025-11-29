@@ -111,3 +111,51 @@ test('createProjectWithScaffold respects due offsets and defaultOwnerFunc', t =>
   assert.strictEqual(task.defaultChannelKey, customTemplate.defaultChannelKey);
   assert.strictEqual(task.definitionOfDone_ar, customTemplate.definitionOfDone_ar);
 });
+
+test('pickTaskOwner respects unit, function, and state priority', t => {
+  const { store, dir } = createTempStore();
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  const priorityTemplate = {
+    id: 'priority_owner_test',
+    type: 'task',
+    unit: 'production',
+    label_ar: 'تعيين مفضل للمالك',
+    description_ar: 'اختبار أولوية الحالة عند تعيين المالك.',
+    definitionOfDone_ar: 'يتم تعيين المهمة تلقائياً لأعلى حالة.',
+    size: 'S',
+    defaultOwnerFunc: 'editor',
+    defaultChannelKey: 'production.edit_pipeline'
+  };
+
+  const priorityPipeline = {
+    key: 'production.priority_owner',
+    unitKey: 'production',
+    unit: 'production',
+    name_ar: 'مسار أولوية المالك',
+    description_ar: 'يتحقق من اختيار المالك بحسب الحالة.',
+    templateKeys: [priorityTemplate.id]
+  };
+
+  taskTemplates.push(priorityTemplate);
+  pipelines.push(priorityPipeline);
+  t.after(() => {
+    taskTemplates.pop();
+    pipelines.pop();
+  });
+
+  upsertMember({ discordId: '111', units: ['production'], functions: ['editor'], state: 'trial' }, store);
+  upsertMember({ discordId: '222', units: ['production'], functions: ['editor'], state: 'core' }, store);
+  upsertMember({ discordId: '333', units: ['production'], functions: ['editor'], state: 'lead' }, store);
+
+  const { tasks } = createProjectWithScaffold({
+    title: 'مشروع أولوية',
+    pipelineKey: priorityPipeline.key,
+    unit: 'production',
+    dueDate: '2024-11-01'
+  }, store);
+
+  assert.strictEqual(tasks.length, 1);
+  assert.strictEqual(tasks[0].ownerId, '333');
+  assert.strictEqual(tasks[0].templateId, priorityTemplate.id);
+});

@@ -7,11 +7,24 @@ function getStore(store = defaultStore) {
   return store || defaultStore;
 }
 
+function applyTaskDefaults(task) {
+  if (!task) return task;
+  const reminders = task.reminders && typeof task.reminders === 'object' ? task.reminders : {};
+  return {
+    ...task,
+    reminders: {
+      mainSentAt: reminders.mainSentAt || null,
+      handoverSentAt: reminders.handoverSentAt || null
+    }
+  };
+}
+
 function applyProjectDefaults(project) {
   if (!project) return project;
   const units = Array.isArray(project.units) && project.units.length > 0 ? project.units : ['production'];
   const pipelineKey = typeof project.pipelineKey === 'string' && project.pipelineKey.length > 0 ? project.pipelineKey : null;
-  return { ...project, units, pipelineKey };
+  const tasks = Array.isArray(project.tasks) ? project.tasks.map(applyTaskDefaults) : project.tasks;
+  return { ...project, units, pipelineKey, tasks };
 }
 
 function loadProjects(store = defaultStore) {

@@ -26,6 +26,8 @@ const {
   handleOnboardingModal
 } = require('./discord/ui/onboarding');
 const { handleInteraction } = require('./discord/utils/interactionWrapper');
+const { startReminderScheduler } = require('./discord/scheduler/reminders');
+const { handleReminderButton } = require('./discord/handlers/reminderButtons');
 
 // ───────── client ─────────
 const client = new Client({
@@ -36,6 +38,7 @@ client.once(Events.ClientReady, async c => {
   try {
     const g = await client.guilds.fetch(cfg.guildId).then(x => x.fetch());
     console.log(`HabApp ready in ${g.name}`);
+    startReminderScheduler(client);
   } catch (e) {
     console.error('Startup error. Check cfg.guildId and bot permissions.', e);
   }
@@ -46,6 +49,10 @@ client.on(Events.InteractionCreate, interaction =>
   handleInteraction(interaction, async () => {
     if (interaction.isButton() && interaction.customId?.startsWith('onboard_')) {
       return handleOnboardingButton(interaction);
+    }
+
+    if (interaction.isButton() && interaction.customId?.startsWith('reminder:')) {
+      return handleReminderButton(interaction);
     }
 
     if (interaction.isStringSelectMenu() && interaction.customId?.startsWith('onboard_')) {
