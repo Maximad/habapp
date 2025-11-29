@@ -6,13 +6,28 @@ const units = [
     key: 'production',
     name_ar: 'وحدة الإنتاج',
     description_ar: 'مسؤولة عن الفيديوهات، الوثائقيات، والمشاريع المرئية.',
-    pipelines: ['production.video_basic', 'production.video_doc', 'production.video_premium']
+    pipelines: [
+      'production.video_basic',
+      'production.video_doc_interviews',
+      'production.video_premium'
+    ]
+  },
+  {
+    key: 'think',
+    name_ar: 'وحدة التفكير',
+    description_ar: 'مختبر الأبحاث والدعم المنهجي للوحدات الأخرى.',
+    pipelines: [
+      'think.research_brief',
+      'think.support_investigation',
+      'think.forum_design'
+    ]
   },
   {
     key: 'media',
     name_ar: 'وحدة الإعلام',
     description_ar: 'تكتب وتنشر المقالات والقصص المصوّرة والمحتوى الاجتماعي.',
     pipelines: [
+      'media.lab90_cycle',
       'media.article_short',
       'media.article_long',
       'media.photo_story',
@@ -33,7 +48,10 @@ const units = [
       'people.event_music',
       'people.event_forum',
       'people.training_mini',
-      'people.event_shihan_black_hall'
+      'people.event_shihan_black_hall',
+      'people.event_music_cycle',
+      'people.event_open_mic',
+      'people.exhibition_cycle'
     ]
   },
   {
@@ -76,29 +94,153 @@ const pipelines = [
     supportTemplateIds: ['prod_camera_tests', 'prod_sound_library', 'prod_export_presets', 'prod_emergency_plan']
   },
   {
-    key: 'production.video_doc',
+    key: 'production.video_doc_interviews',
     unitKey: 'production',
     unit: 'production',
     name_ar: 'فيديو مقابلات وثائقية',
-    description_ar: 'مقابلات وثائقية قياسية (قالب B) مع مسار مراجعة واضح.',
-    suggestedStages: ['idea', 'prep', 'execution', 'review', 'archive'],
-    profile: 'video_doc',
-    defaultTemplateIds: [
-      'prod_crew_list',
-      'prod_call_sheet',
-      'prod_location_package',
-      'prod_gear_log_thread',
-      'prod_edit_plan',
-      'prod_rough_cut_delivery',
-      'prod_subtitles',
-      'prod_color_grading',
-      'prod_sound_mix',
-      'prod_final_delivery',
-      'prod_archive_metadata',
-      'prod_post_shoot_report'
+    description_ar: 'إنتاج فيديو وثائقي مبني على مقابلات ميدانية.',
+    stages: [
+      { key: 'research', name_ar: 'بحث وتحرير' },
+      { key: 'prep', name_ar: 'تحضير وتصميم خطة التصوير' },
+      { key: 'shoot', name_ar: 'التصوير' },
+      { key: 'edit', name_ar: 'المونتاج' },
+      { key: 'post', name_ar: 'صوت ولون وترجمة' },
+      { key: 'delivery', name_ar: 'تسليم وأرشفة' }
     ],
-    inheritTemplatePipelineKeys: ['production.video_basic'],
-    supportTemplateIds: ['prod_camera_tests', 'prod_sound_library', 'prod_export_presets', 'prod_emergency_plan']
+    templateKeys: [
+      // research
+      'prod.research.editorial_brief',
+      'prod.research.risk_check',
+      // prep
+      'prod.prep.crew_list',
+      'prod.prep.call_sheet',
+      'prod.prep.location_permits',
+      'prod.prep.gear_thread',
+      'prod.prep.emergency_plan',
+      // shoot
+      'prod.shoot.camera_tests',
+      'prod.shoot.daily_log',
+      // edit
+      'prod.edit.plan',
+      'prod.edit.rough_cut',
+      // post
+      'prod.post.subtitles',
+      'prod.post.color_grade',
+      'prod.post.sound_mix',
+      // delivery
+      'prod.delivery.export_presets',
+      'prod.delivery.final_exports',
+      'prod.delivery.archive_metadata',
+      'prod.delivery.postmortem_report'
+    ]
+  },
+  {
+    key: 'think.research_brief',
+    unitKey: 'think',
+    unit: 'think',
+    name_ar: 'مذكرة بحثية لسؤال مدني',
+    description_ar:
+      'تحويل سؤال مدني او سياسي معقّد الى مذكرة بحثية قابلة للاستخدام من فريق التحرير او الانتاج.',
+    stages: [
+      { key: 'intake', name_ar: 'استقبال السؤال' },
+      { key: 'scoping', name_ar: 'تحديد نطاق البحث' },
+      { key: 'collection', name_ar: 'جمع البيانات والمصادر' },
+      { key: 'analysis', name_ar: 'تحليل وصياغة الفرضيات' },
+      { key: 'peer_review', name_ar: 'مراجعة أقران' },
+      { key: 'handoff', name_ar: 'تسليم وتوثيق' }
+    ],
+    templateKeys: [
+      'think.brief.intake_question',
+      'think.brief.scope_note',
+      'think.brief.sources_map',
+      'think.brief.data_collection',
+      'think.brief.analysis_memo',
+      'think.brief.peer_review',
+      'think.brief.methods_handoff'
+    ]
+  },
+  {
+    key: 'think.support_investigation',
+    unitKey: 'think',
+    unit: 'think',
+    name_ar: 'دعم بحثي لتحقيق او قصة كبرى',
+    description_ar: 'تقديم دعم بحثي وتدقيق معلومات ومنهجية لقصة تعمل عليها وحدة الميديا او الانتاج.',
+    stages: [
+      { key: 'brief_sync', name_ar: 'مواءمة مع التحرير' },
+      { key: 'research_sprint', name_ar: 'سباق بحث مكثف' },
+      { key: 'risk_bias_check', name_ar: 'مراجعة المخاطر والانحياز' },
+      { key: 'factcheck_round', name_ar: 'جولة تدقيق معلومات' },
+      { key: 'methods_note', name_ar: 'ملاحظة منهجية مرافقة' }
+    ],
+    templateKeys: [
+      'think.support.brief_sync',
+      'think.support.research_sprint',
+      'think.support.risk_bias_check',
+      'think.support.factcheck_round',
+      'think.support.methods_note'
+    ]
+  },
+  {
+    key: 'think.forum_design',
+    unitKey: 'think',
+    unit: 'think',
+    name_ar: 'تصميم منتدى مدني او سلسلة حوارات',
+    description_ar: 'تصميم الاسئلة والهيكل والمنهجية لسلسلة حوارات مدنية تنفذها وحدة الناس.',
+    stages: [
+      { key: 'question_map', name_ar: 'خريطة الاسئلة' },
+      { key: 'stakeholder_scan', name_ar: 'مسح الاطراف والجمهور' },
+      { key: 'format_design', name_ar: 'تصميم الشكل' },
+      { key: 'materials', name_ar: 'المواد والاسئلة الافتتاحية' },
+      { key: 'debrief_templates', name_ar: 'قوالب استخلاص التعلّم' }
+    ],
+    templateKeys: [
+      'think.forum.question_map',
+      'think.forum.stakeholder_scan',
+      'think.forum.format_design',
+      'think.forum.materials_pack',
+      'think.forum.debrief_templates'
+    ]
+  },
+  {
+    key: 'media.lab90_cycle',
+    unitKey: 'media',
+    unit: 'media',
+    name_ar: 'برنامج حبق لاب 90 للإعلام المدني',
+    description_ar: 'برنامج لمدة ٩٠ يوماً لتدريب المشاركين على الصحافة العامة التشاركية وتشغيل ثلاث ديسكات إنتاجية.',
+    stages: [
+      { key: 'recruit', name_ar: 'استقطاب واختيار' },
+      { key: 'train_clinics', name_ar: 'عيادات النزاهة والمهارات' },
+      { key: 'train_tools', name_ar: 'مختبرات الأدوات' },
+      { key: 'desks', name_ar: 'إنتاج عبر الديسكات' },
+      { key: 'forums', name_ar: 'حوارات مدنية' },
+      { key: 'methods_mel', name_ar: 'المنهجية والمتابعة والتعلّم' }
+    ],
+    templateKeys: [
+      // recruit and onboarding
+      'media.lab90.recruitment_cohort',
+      'media.lab90.onboarding_code_of_conduct',
+      'media.lab90.baseline_assessment',
+
+      // clinics and tools
+      'media.lab90.clinics_schedule',
+      'media.lab90.tool_labs_schedule',
+
+      // desks and publishing quotas
+      'media.lab90.daily_desk_quota',
+      'media.lab90.features_desk_quota',
+      'media.lab90.explainers_desk_quota',
+
+      // civic forums
+      'media.lab90.forums_plan',
+      'media.lab90.forums_delivery',
+
+      // methods and safeguards
+      'media.lab90.methods_and_corrections',
+      'media.lab90.visual_sensitivity_standard',
+
+      // MEL and final learning
+      'media.lab90.mel_cycle_report'
+    ]
   },
   {
     key: 'production.video_premium',
@@ -578,6 +720,76 @@ const pipelines = [
     ]
   },
   {
+    key: 'people.event_music_cycle',
+    unitKey: 'people',
+    unit: 'people',
+    name_ar: 'سلسلة أمسيات موسيقية (مثل Thursday Live Notes)',
+    description_ar:
+      'تخطيط وتنفيذ دورة من أمسيات موسيقية مدفوعة تخلق دورة اقتصادية وثقافية للفنانين والتقنيين.',
+    stages: [
+      { key: 'concept', name_ar: 'الفكرة والاتفاق مع المكان' },
+      { key: 'booking', name_ar: 'حجوزات الفنانين والطاقم' },
+      { key: 'logistics', name_ar: 'اللوجستيات والصوت والضيافة' },
+      { key: 'comms_ticketing', name_ar: 'الإعلان والتذاكر' },
+      { key: 'event_run', name_ar: 'تنفيذ الأمسيات' },
+      { key: 'settlement_report', name_ar: 'التسوية والتقرير' }
+    ],
+    templateKeys: [
+      'people.music.concept_and_venue',
+      'people.music.artist_booking',
+      'people.music.tech_and_safety_plan',
+      'people.music.comms_and_ticketing',
+      'people.music.run_sheet_cycle',
+      'people.music.revenue_split_report'
+    ]
+  },
+  {
+    key: 'people.event_open_mic',
+    unitKey: 'people',
+    unit: 'people',
+    name_ar: 'مواسم الأوبن مايك والاكتشاف',
+    description_ar:
+      'تنظيم مواسم أمسيات أوبن مايك مجانية لاحتضان وتجريب المواهب الجديدة وتغذيتها نحو أمسيات أكبر.',
+    stages: [
+      { key: 'frame', name_ar: 'الإطار والقواعد' },
+      { key: 'signup_system', name_ar: 'نظام المشاركة' },
+      { key: 'support_safety', name_ar: 'الدعم والسلامة' },
+      { key: 'event_run', name_ar: 'إدارة الأمسيات' },
+      { key: 'documentation', name_ar: 'التوثيق واختيار المواهب' }
+    ],
+    templateKeys: [
+      'people.openmic.guidelines',
+      'people.openmic.signup_system',
+      'people.openmic.safety_roles',
+      'people.openmic.event_log',
+      'people.openmic.talent_followup'
+    ]
+  },
+  {
+    key: 'people.exhibition_cycle',
+    unitKey: 'people',
+    unit: 'people',
+    name_ar: 'دورة معرض فني مع برنامج موازٍ',
+    description_ar:
+      'تنظيم معرض فني مع هوية كوريتورية وبرنامج حواري وموسيقي وطبقة رقمية بالتنسيق مع وحدة الجيكس.',
+    stages: [
+      { key: 'curation', name_ar: 'الاختيار والهوية' },
+      { key: 'works_intake', name_ar: 'استلام الأعمال والبيانات' },
+      { key: 'space_flow', name_ar: 'تصميم الفضاء ومسار الزائر' },
+      { key: 'programming', name_ar: 'البرنامج الموازي' },
+      { key: 'digital_layer', name_ar: 'الطبقة التفاعلية والبيع أونلاين' },
+      { key: 'wrap_report', name_ar: 'الإغلاق والتقرير' }
+    ],
+    templateKeys: [
+      'people.exhibit.curatorial_concept',
+      'people.exhibit.artist_intake',
+      'people.exhibit.space_and_flow',
+      'people.exhibit.program_schedule',
+      'people.exhibit.digital_coordination',
+      'people.exhibit.wrap_report'
+    ]
+  },
+  {
     key: 'people.training_mini',
     unitKey: 'people',
     unit: 'people',
@@ -732,34 +944,31 @@ const pipelines = [
     key: 'geeks.app_small',
     unitKey: 'geeks',
     unit: 'geeks',
-    name_ar: 'تطبيق أو أداة صغيرة',
-    description_ar:
-      'أداة صغيرة أو Bot أو سكربت أتمتة يخدم وحدة واحدة أو عملية محددة داخل حبق.',
-    stages_ar: [
-      'تعريف المشكلة والاحتياج',
-      'تصميم بسيط للحل',
-      'تنفيذ أولي',
-      'اختبار داخلي',
-      'إطلاق تجريبي',
-      'تحسين وصيانة'
+    name_ar: 'تطبيق صغير لكن جدي',
+    description_ar: 'تطوير تطبيقات صغيرة تخدم حبق او المجتمع مثل الألعاب البسيطة، أدوات الوصول، او لوحات التحكم.',
+    stages: [
+      { key: 'discovery', name_ar: 'فهم الحاجة' },
+      { key: 'design', name_ar: 'تصميم بسيط للتجربة' },
+      { key: 'build_mvp', name_ar: 'بناء نسخة أولى' },
+      { key: 'field_test', name_ar: 'اختبار ميداني' },
+      { key: 'deploy', name_ar: 'النشر الأولي' },
+      { key: 'handover_maintain', name_ar: 'التسليم او الصيانة' }
     ],
-    suggestedStages: ['problem', 'design', 'build', 'test', 'beta', 'improve'],
-    profile: 'app_small',
-    defaultTaskTemplateIds: [
-      'geeks_app_brief',
-      'geeks_app_architecture_note',
-      'geeks_app_prototype',
-      'geeks_app_internal_test',
-      'geeks_app_launch_note',
-      'geeks_app_maintenance_log'
+    templateKeys: [
+      'geeks.app.discovery',
+      'geeks.app.spec',
+      'geeks.app.milestone_mvp',
+      'geeks.app.field_test',
+      'geeks.app.deploy',
+      'geeks.app.handover_maintain'
     ],
     defaultTemplateIds: [
-      'geeks_app_brief',
-      'geeks_app_architecture_note',
-      'geeks_app_prototype',
-      'geeks_app_internal_test',
-      'geeks_app_launch_note',
-      'geeks_app_maintenance_log'
+      'geeks.app.discovery',
+      'geeks.app.spec',
+      'geeks.app.milestone_mvp',
+      'geeks.app.field_test',
+      'geeks.app.deploy',
+      'geeks.app.handover_maintain'
     ]
   },
   {
@@ -813,69 +1022,62 @@ const pipelines = [
     key: 'geeks.automation_stack',
     unitKey: 'geeks',
     unit: 'geeks',
-    name_ar: 'أتمتة وتكاملات داخلية',
-    description_ar:
-      'مشاريع أتمتة تربط ووردبريس وDiscord وDrive وأنظمة أخرى، مع نسخ احتياطي وتسمية ملفات منضبطة.',
-    stages_ar: [
-      'حصر الاحتياج ووصف التدفق',
-      'تصميم مسار الأتمتة',
-      'تنفيذ وربط الخدمات',
-      'اختبارات على بيانات حقيقية',
-      'توثيق وتدريب الفريق',
-      'مراقبة وصيانة'
+    name_ar: 'حزمة الأتمتة والبيانات',
+    description_ar: 'تصميم وبناء الأتمتة بين ديسكورد، ووردبريس، أدوات التحليل، وHabApp لتخفيف العمل اليدوي.',
+    stages: [
+      { key: 'intake_prioritize', name_ar: 'استقبال الطلب وترتيب الأولوية' },
+      { key: 'flow_design', name_ar: 'تصميم تدفق الأتمتة' },
+      { key: 'implementation', name_ar: 'التنفيذ' },
+      { key: 'sandbox_test', name_ar: 'اختبار في بيئة تجريبية' },
+      { key: 'rollout', name_ar: 'إطلاق تدريجي' },
+      { key: 'docs', name_ar: 'توثيق للمستخدمين' }
     ],
-    suggestedStages: ['intake', 'design', 'implement', 'test', 'document', 'maintain'],
-    profile: 'automation_stack',
-    defaultTaskTemplateIds: [
-      'geeks_formsbot_to_onboarding',
-      'geeks_wp_webhook_bridge',
-      'geeks_wp_to_announcements_webhook',
-      'geeks_filename_alert_bot',
-      'geeks_filename_naming_bot',
-      'geeks_monthly_backup_routine',
-      'geeks_attachments_backup',
-      'geeks_media_compression_presets'
+    templateKeys: [
+      'geeks.stack.intake_prioritize',
+      'geeks.stack.flow_design',
+      'geeks.stack.implementation',
+      'geeks.stack.sandbox_test',
+      'geeks.stack.rollout',
+      'geeks.stack.docs'
     ],
     defaultTemplateIds: [
-      'geeks_formsbot_to_onboarding',
-      'geeks_wp_webhook_bridge',
-      'geeks_wp_to_announcements_webhook',
-      'geeks_filename_alert_bot',
-      'geeks_filename_naming_bot',
-      'geeks_monthly_backup_routine',
-      'geeks_attachments_backup',
-      'geeks_media_compression_presets'
+      'geeks.stack.intake_prioritize',
+      'geeks.stack.flow_design',
+      'geeks.stack.implementation',
+      'geeks.stack.sandbox_test',
+      'geeks.stack.rollout',
+      'geeks.stack.docs'
     ]
   },
   {
     key: 'geeks.discord_infra',
     unitKey: 'geeks',
     unit: 'geeks',
-    name_ar: 'بنية ديسكورد والأمان الرقمي',
-    description_ar: 'مشاريع تضبط بنية ديسكورد، صلاحيات الأدوار، استجابات البوتات، وسلامة القنوات.',
-    stages_ar: [
-      'حصر الوضع الحالي والأخطار',
-      'تخطيط الأدوار والقنوات',
-      'تحديث إعدادات البوتات',
-      'اختبار صلاحيات ومنبهات',
-      'توثيق وتدريب مختصر',
-      'مراجعة دورية'
+    name_ar: 'بنية ديسكورد والبوتات',
+    description_ar: 'مراجعة وتصميم بنية الخادم، الصلاحيات، الأونبوردنغ، وربط HabApp وباقي البوتات.',
+    stages: [
+      { key: 'audit', name_ar: 'مراجعة الوضع الحالي' },
+      { key: 'design', name_ar: 'تصميم البنية الجديدة' },
+      { key: 'staging', name_ar: 'تطبيق تجريبي' },
+      { key: 'migration', name_ar: 'نقل التعديلات للسيرفر الأساسي' },
+      { key: 'habapp_integration', name_ar: 'دمج HabApp والأتمتة' },
+      { key: 'docs_training', name_ar: 'شرح وتدريب للفريق' }
     ],
-    suggestedStages: ['audit', 'plan_roles', 'update_bots', 'test', 'document', 'review'],
-    profile: 'discord_infra',
-    defaultTaskTemplateIds: [
-      'geeks_carl_roles_audit',
-      'geeks_pins_update_script',
-      'geeks_permissions_audit_script',
-      'geeks_security_audit_tokens',
-      'geeks_formsbot_to_onboarding'
+    templateKeys: [
+      'geeks.discord.audit_current',
+      'geeks.discord.new_structure_design',
+      'geeks.discord.staging_setup',
+      'geeks.discord.migration_plan',
+      'geeks.discord.habapp_integration',
+      'geeks.discord.moderator_guide'
     ],
     defaultTemplateIds: [
-      'geeks_carl_roles_audit',
-      'geeks_pins_update_script',
-      'geeks_permissions_audit_script',
-      'geeks_security_audit_tokens',
-      'geeks_formsbot_to_onboarding'
+      'geeks.discord.audit_current',
+      'geeks.discord.new_structure_design',
+      'geeks.discord.staging_setup',
+      'geeks.discord.migration_plan',
+      'geeks.discord.habapp_integration',
+      'geeks.discord.moderator_guide'
     ]
   }
 ];

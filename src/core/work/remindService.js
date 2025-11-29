@@ -31,7 +31,8 @@ function listTasksForMemberDueSoon({ memberDiscordId, days = 3 } = {}, store = d
     const tasks = Array.isArray(project.tasks) ? project.tasks : [];
     for (const task of tasks) {
       if (!task) continue;
-      if (String(task.ownerId) !== memberId) continue;
+    const assignee = task.assignedToDiscordId || task.ownerId;
+    if (String(assignee) !== memberId) continue;
       if ((task.status || 'open') === 'done') continue;
 
       const dueDate = parseDueDate(task.due || task.dueDate);

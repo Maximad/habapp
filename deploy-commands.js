@@ -13,16 +13,13 @@ const commandModules = [
   require('./src/commands/remind')
 ];
 
-// Build commands from SlashCommandBuilder exports
-const builtCommands = commandModules.map((mod) => {
-  if (mod && mod.data && typeof mod.data.toJSON === 'function') {
-    return mod.data.toJSON();
-  }
-  return mod.data || mod;
-});
-
-// Extra legacy/static commands
-const extraCommands = [
+const commands = [
+  {
+    name: 'ping',
+    description: 'اختبار استجابة HabApp',
+    dm_permission: false,
+    type: 1
+  },
   {
     name: 'habapp_start',
     description: 'إرسال رسالة الترحيب التفاعلية في هذه القناة',

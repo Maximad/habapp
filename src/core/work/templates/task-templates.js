@@ -31,6 +31,300 @@
 
 const productionTaskTemplates = [
   {
+    id: 'prod.research.editorial_brief',
+    key: 'prod.research.editorial_brief',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'ورقة تحريرية مختصرة للمشروع',
+    description_ar: 'تحديد الهدف والجمهور والنبرة والأسئلة الأساسية للفيلم أو سلسلة المقابلات.',
+    definitionOfDone_ar:
+      'مستند من صفحة واحدة على الأقل، متفق عليه بين التحرير والإنتاج، ومحفوظ في مكان مشترك.',
+
+    size: 'M',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'production.shot_plans',
+    dueOffsetDays: -20
+  },
+  {
+    id: 'prod.research.risk_check',
+    key: 'prod.research.risk_check',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'تقييم مخاطر وموافقات أساسية',
+    description_ar: 'تحديد الحساسية السياسية/الأمنية، نوع الموافقات المطلوبة، وأي خطوط حمراء أو شروط نشر.',
+    definitionOfDone_ar:
+      'قائمة مخاطر وأسئلة جاهزة، مع قرار واضح: نمشي/ما نمشي/نؤجل، وملاحظات للحماية.',
+
+    size: 'S',
+    defaultOwnerFunc: 'field_ops',
+    defaultChannelKey: 'production.shot_plans',
+    dueOffsetDays: -18
+  },
+
+  {
+    id: 'prod.prep.crew_list',
+    key: 'prod.prep.crew_list',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'بناء قائمة الطاقم للمشروع',
+    description_ar: 'تحديد الأدوار الأساسية والبديلة (منتج، تصوير، صوت، مساعدين، نقل...).',
+    definitionOfDone_ar:
+      'قائمة طاقم مؤكدة بالأسماء وأرقام التواصل، منشورة في قناة فرق العمل.',
+
+    size: 'S',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'production.crews',
+    dueOffsetDays: -15
+  },
+  {
+    id: 'prod.prep.call_sheet',
+    key: 'prod.prep.call_sheet',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'ورقة نداء لكل يوم تصوير',
+    description_ar: 'إعداد Call Sheet بأوقات التجمع، الموقع، الطاقم، الضيوف، وأرقام الطوارئ.',
+    definitionOfDone_ar:
+      'Call Sheet نهائي لكل يوم تصوير، مشارك في القناة ومتاح للطباعة أو المشاركة.',
+
+    size: 'S',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'production.shot_plans',
+    dueOffsetDays: -5
+  },
+  {
+    id: 'prod.prep.location_permits',
+    key: 'prod.prep.location_permits',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'حزمة الموقع والموافقات',
+    description_ar: 'تجميع عناوين المواقع، خرائط مختصرة، وموافقات خطية أو شفهية حسب الحاجة.',
+    definitionOfDone_ar:
+      'ملف واحد يحتوي تفاصيل المواقع ونسخ من أي موافقات أو رسائل مهمة.',
+
+    size: 'S',
+    defaultOwnerFunc: 'field_ops',
+    defaultChannelKey: 'production.shot_plans',
+    dueOffsetDays: -7
+  },
+  {
+    id: 'prod.prep.gear_thread',
+    key: 'prod.prep.gear_thread',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'خيط حجز المعدّات للمشروع',
+    description_ar: 'فتح خيط واضح في قناة سجل المعدات لحجز الكاميرات، الصوت، الإضاءة، والسيارات.',
+    definitionOfDone_ar:
+      'قائمة معدّات مؤرّخة، مع حالة كل قطعة (محجوز/متاح) وتواريخ الخروج والعودة.',
+
+    size: 'S',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'production.gear_log',
+    dueOffsetDays: -10
+  },
+  {
+    id: 'prod.prep.emergency_plan',
+    key: 'prod.prep.emergency_plan',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'خطة طوارئ للتصوير',
+    description_ar: 'تحديد سيناريوهات الخطر وخطوات الانسحاب أو تغيير الخطة أثناء التصوير.',
+    definitionOfDone_ar:
+      'نص بسيط يشرح ما العمل في حالة المشكلة الأمنية أو التقنية، مشارك مع الطاقم.',
+
+    size: 'S',
+    defaultOwnerFunc: 'field_ops',
+    defaultChannelKey: 'production.shot_plans',
+    dueOffsetDays: -5
+  },
+
+  {
+    id: 'prod.shoot.camera_tests',
+    key: 'prod.shoot.camera_tests',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'اختبارات كاميرا ومظهر وترميز',
+    description_ar: 'اختبار إعدادات الكاميرا، الكودك، المظهر اللوني، وصلاحية الكروت قبل اليوم الأول.',
+    definitionOfDone_ar:
+      'عدة لقطات تجريبية محفوظة، مع قرار نهائي حول الإعدادات، وملاحظات في القناة.',
+
+    size: 'S',
+    defaultOwnerFunc: 'video',
+    defaultChannelKey: 'production.shot_plans',
+    dueOffsetDays: -3
+  },
+  {
+    id: 'prod.shoot.daily_log',
+    key: 'prod.shoot.daily_log',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'سجل يومي للتصوير',
+    description_ar: 'توثيق ما تم تصويره، ما تم إلغاؤه، والملاحظات الميدانية لكل يوم تصوير.',
+    definitionOfDone_ar:
+      'ملف أو رسالة مجمّعة لكل يوم تصوير، مرتبطة بالمشروع، فيها أبرز اللقطات والملاحظات.',
+
+    size: 'S',
+    defaultOwnerFunc: 'field_ops',
+    defaultChannelKey: 'production.shot_plans',
+    dueOffsetDays: 0
+  },
+
+  {
+    id: 'prod.edit.plan',
+    key: 'prod.edit.plan',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'خطة المونتاج (أولي ونهائي)',
+    description_ar: 'رسم هيكل الفيلم: الفصول، الترتيب، المدة التقريبية، وأنواع المشاهد.',
+    definitionOfDone_ar:
+      'Outline واضح للمونتاج، متفق عليه بين المنتج والمونتير، ومشارَك في قناة مسار المونتاج.',
+
+    size: 'M',
+    defaultOwnerFunc: 'editor',
+    defaultChannelKey: 'production.edit_pipeline',
+    dueOffsetDays: -10
+  },
+  {
+    id: 'prod.edit.rough_cut',
+    key: 'prod.edit.rough_cut',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'تسليم مونتاج أولي (Rough Cut)',
+    description_ar: 'إنتاج نسخة أولى لمراجعة النبرة والهيكل والإيقاع.',
+    definitionOfDone_ar:
+      'رابط نسخة مونتاج أولي، مع ملاحظات مفتوحة واستعداد لجلسة مراجعة.',
+
+    size: 'M',
+    defaultOwnerFunc: 'editor',
+    defaultChannelKey: 'production.edit_pipeline',
+    dueOffsetDays: -7
+  },
+
+  {
+    id: 'prod.post.subtitles',
+    key: 'prod.post.subtitles',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'ترجمة وملف ترجمات مع تدقيق',
+    description_ar: 'إعداد ملف ترجمة (SRT أو غيره) مع تدقيق لغوي وصوتي.',
+    definitionOfDone_ar:
+      'ملف ترجمة متطابق مع النسخة النهائية، بدون أخطاء إملائية واضحة، ومرفوع مع المشروع.',
+
+    size: 'S',
+    defaultOwnerFunc: 'editor',
+    defaultChannelKey: 'production.edit_pipeline',
+    dueOffsetDays: -3
+  },
+  {
+    id: 'prod.post.color_grade',
+    key: 'prod.post.color_grade',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'تدرّج لوني',
+    description_ar: 'تصحيح الألوان وتوحيد المظهر البصري للفيلم.',
+    definitionOfDone_ar:
+      'نسخة ملوّنة مكتملة، بدون فريمات غير مصححة، ومراجَعة على شاشة واحدة موثوقة على الأقل.',
+
+    size: 'M',
+    defaultOwnerFunc: 'video',
+    defaultChannelKey: 'production.edit_pipeline',
+    dueOffsetDays: -2
+  },
+  {
+    id: 'prod.post.sound_mix',
+    key: 'prod.post.sound_mix',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'تنظيف صوت ومكس',
+    description_ar: 'إزالة التشويش، موازنة الأصوات، وضبط المستويات للعرض والنشر.',
+    definitionOfDone_ar:
+      'ميكس نهائي بمستوى ثابت وواضح، بدون قطع مفاجئ أو تشويش مزعج.',
+
+    size: 'M',
+    defaultOwnerFunc: 'sound',
+    defaultChannelKey: 'production.edit_pipeline',
+    dueOffsetDays: -2
+  },
+
+  {
+    id: 'prod.delivery.export_presets',
+    key: 'prod.delivery.export_presets',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'Preset تصدير قياسي للمشروع',
+    description_ar: 'اختيار وحفظ إعدادات التصدير (دقة، كودك، بيت ريت) للاستخدام المتكرر.',
+    definitionOfDone_ar:
+      'Preset محفوظ في برنامج المونتاج ومكتوب في رسالة واضحة مع تاريخ المشروع.',
+
+    size: 'S',
+    defaultOwnerFunc: 'post_supervisor',
+    defaultChannelKey: 'production.edit_pipeline',
+    dueOffsetDays: -3
+  },
+  {
+    id: 'prod.delivery.final_exports',
+    key: 'prod.delivery.final_exports',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'تسليم نهائي بصيغ متعددة',
+    description_ar: 'تصدير نسخة Master ونسخ للأرشيف والسوشيال والمنصات.',
+    definitionOfDone_ar:
+      'روابط أو ملفات مرفوعة للنسخة الرئيسية ونسخ النشر، موثقة في قناة التصدير.',
+
+    size: 'S',
+    defaultOwnerFunc: 'post_supervisor',
+    defaultChannelKey: 'production.exports',
+    dueOffsetDays: 0
+  },
+  {
+    id: 'prod.delivery.archive_metadata',
+    key: 'prod.delivery.archive_metadata',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'أرشفة وبيانات وصفية',
+    description_ar: 'تسجيل كل ما يخص المشروع في الأرشيف (تاريخ، أماكن، أسماء، حقوق، روابط).',
+    definitionOfDone_ar:
+      'ملف أرشيف شامل أو بطاقة بيانات مكتملة، مرتبطة برابط الفيلم والنسخة النهائية.',
+
+    size: 'S',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'production.edit_pipeline',
+    dueOffsetDays: 1
+  },
+  {
+    id: 'prod.delivery.postmortem_report',
+    key: 'prod.delivery.postmortem_report',
+    type: 'task',
+    unit: 'production',
+
+    label_ar: 'تقرير ما بعد التصوير',
+    description_ar: 'تلخيص ما نجح وما لم ينجح، والدروس المستفادة للمشاريع القادمة.',
+    definitionOfDone_ar:
+      'تقرير قصير (نقاط) منشور في قناة فرق العمل، مع اقتراحات عملية للمرة القادمة.',
+
+    size: 'S',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'production.crews',
+    dueOffsetDays: 3
+  },
+
+  {
     id: 'prod_crew_list',
     type: 'task',
     unit: 'production',
@@ -367,10 +661,506 @@ const productionTaskTemplates = [
 ];
 
 // ==========================
+// Think unit templates
+// ==========================
+
+const thinkTaskTemplates = [
+  {
+    id: 'think.brief.intake_question',
+    key: 'think.brief.intake_question',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'استقبال وصياغة السؤال البحثي',
+    description_ar:
+      'تسجل السؤال كما جاء من الواقع او من وحدة اخرى، وتعيد صياغته بصيغة بحثية واضحة مع الجمهور المستهدف.',
+    definitionOfDone_ar:
+      'سؤال مكتوب بصيغة واحدة واضحة، مع جملة عن الجمهور المقصود ولماذا يهمه هذا السؤال.',
+
+    size: 'S',
+    defaultOwnerFunc: 'researcher',
+    defaultChannelKey: 'think.topics',
+    dueOffsetDays: -20
+  },
+  {
+    id: 'think.brief.scope_note',
+    key: 'think.brief.scope_note',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'مذكرة نطاق البحث (ما يشمله وما لا يشمله)',
+    description_ar: 'تحدد حدود السؤال، الزمن والجغرافيا وما الذي لن يغطيه البحث بوضوح.',
+    definitionOfDone_ar:
+      'مذكرة قصيرة تضبط النطاق وحدود المسألة لتفادي الوقوع في الاستنتاجات المبالغ فيها.',
+
+    size: 'S',
+    defaultOwnerFunc: 'researcher',
+    defaultChannelKey: 'think.research_queue',
+    dueOffsetDays: -18
+  },
+  {
+    id: 'think.brief.sources_map',
+    key: 'think.brief.sources_map',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'خريطة المصادر والبيانات',
+    description_ar:
+      'قائمة بالمصادر المحتملة: بيانات، تقارير، شهود، خرائط، ارشيف، وما الذي سنحاول الوصول اليه.',
+    definitionOfDone_ar:
+      'جدول او قائمة مصنفة للمصادر مع ملاحظات عن درجة الثقة والمخاطر لكل مصدر.',
+
+    size: 'S',
+    defaultOwnerFunc: 'researcher',
+    defaultChannelKey: 'think.research_queue',
+    dueOffsetDays: -15
+  },
+  {
+    id: 'think.brief.data_collection',
+    key: 'think.brief.data_collection',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'جمع البيانات والملاحظات',
+    description_ar: 'جمع الروابط، الاقتباسات، الارقام، والملاحظات الخام المرتبطة بالسؤال ضمن مكان واحد.',
+    definitionOfDone_ar:
+      'ملف واحد او سلسلة رسائل منظمة تحتوي اهم ما تم جمعه، مرتبطة بالسؤال الاصلي.',
+
+    size: 'M',
+    defaultOwnerFunc: 'researcher',
+    defaultChannelKey: 'think.data_room',
+    dueOffsetDays: -10
+  },
+  {
+    id: 'think.brief.analysis_memo',
+    key: 'think.brief.analysis_memo',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'مذكرة تحليل وفرضيات',
+    description_ar: 'تلخيص ما تقوله البيانات فعلا، صياغة الفرضيات، والاشياء التي ما زالت غير معروفة.',
+    definitionOfDone_ar:
+      'مذكرة تحليلية من صفحة او صفحتين تلخص اهم ما فهمناه وما الذي لم نفهمه بعد.',
+
+    size: 'M',
+    defaultOwnerFunc: 'data_analyst',
+    defaultChannelKey: 'think.method_notes',
+    dueOffsetDays: -7
+  },
+  {
+    id: 'think.brief.peer_review',
+    key: 'think.brief.peer_review',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'جلسة مراجعة أقران',
+    description_ar:
+      'عرض المذكرة على ٢-٣ اشخاص من الفريق لطرح الاسئلة والتحديات قبل تسليمها للوحدة المنفذة.',
+    definitionOfDone_ar:
+      'ملاحظات مراجعة اقران مسجلة، مع قرارات واضحة حول التعديلات او التحفظات.',
+
+    size: 'S',
+    defaultOwnerFunc: 'desk_editor',
+    defaultChannelKey: 'think.peer_review',
+    dueOffsetDays: -5
+  },
+  {
+    id: 'think.brief.methods_handoff',
+    key: 'think.brief.methods_handoff',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'ملاحظة منهجية وتسليم للوحدة المنفذة',
+    description_ar:
+      'وثيقة قصيرة تشرح كيف تم جمع وتحليل المعلومات، وماذا يجب الانتباه له في النشر او التصوير.',
+    definitionOfDone_ar:
+      'ملاحظة منهجية مرفقة بالمذكرة، مرسلة الى وحدة الميديا او الانتاج، ومؤرشفة في method-notes.',
+
+    size: 'S',
+    defaultOwnerFunc: 'researcher',
+    defaultChannelKey: 'think.method_notes',
+    dueOffsetDays: -3
+  },
+  {
+    id: 'think.support.brief_sync',
+    key: 'think.support.brief_sync',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'مواءمة مع التحرير حول التحقيق',
+    description_ar: 'جلسة سريعة مع المحرر او المنتج لفهم احتياج القصة، زاويتها، وسقف المخاطر المقبول.',
+    definitionOfDone_ar:
+      'مذكرة داخلية قصيرة تلخص ما تحتاجه القصة من دعم بحثي وما ليس مطلوباً الآن.',
+
+    size: 'S',
+    defaultOwnerFunc: 'researcher',
+    defaultChannelKey: 'think.briefs_drafts',
+    dueOffsetDays: -15
+  },
+  {
+    id: 'think.support.research_sprint',
+    key: 'think.support.research_sprint',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'سباق جمع معلومات للقصة',
+    description_ar: 'جمع سريع ومركز للروابط والبيانات التي تدعم فرضية القصة او تتحداها.',
+    definitionOfDone_ar:
+      'مجموعة مصادر وملحوظات منظمة في data-room مرتبطة بعنوان القصة.',
+
+    size: 'M',
+    defaultOwnerFunc: 'researcher',
+    defaultChannelKey: 'think.data_room',
+    dueOffsetDays: -12
+  },
+  {
+    id: 'think.support.risk_bias_check',
+    key: 'think.support.risk_bias_check',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'مراجعة المخاطر والانحياز',
+    description_ar: 'تفحص النص او الخطة بحثاً عن مخاطر امنية او انحيازات غير مبررة او تعميمات.',
+    definitionOfDone_ar:
+      'ملاحظات مراجعة مكتوبة تشير الى المقاطع الحساسة واقتراحات تعديل او تعتيم.',
+
+    size: 'S',
+    defaultOwnerFunc: 'legal_ethics',
+    defaultChannelKey: 'think.method_notes',
+    dueOffsetDays: -8
+  },
+  {
+    id: 'think.support.factcheck_round',
+    key: 'think.support.factcheck_round',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'جولة تدقيق معلومات قبل النشر',
+    description_ar: 'تدقيق الاقتباسات والارقام والادعاءات الاساسية في المادة قبل نشرها.',
+    definitionOfDone_ar:
+      'قائمة ادعاءات مع حالة كل منها (موثق، متنازع عليه، بحاجة توضيح) ومصادرها.',
+
+    size: 'M',
+    defaultOwnerFunc: 'data_analyst',
+    defaultChannelKey: 'think.peer_review',
+    dueOffsetDays: -5
+  },
+  {
+    id: 'think.support.methods_note',
+    key: 'think.support.methods_note',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'ملاحظة منهجية مرافقة للتحقيق',
+    description_ar: 'توضيح مختصر للطريقة والقيود، ليدمج في transparency box او صفحة المنهجية.',
+    definitionOfDone_ar:
+      'فقرة او اثنتان يمكن استخدامها كما هي في صندوق الشفافية او صفحة المنهجية.',
+
+    size: 'S',
+    defaultOwnerFunc: 'researcher',
+    defaultChannelKey: 'think.method_notes',
+    dueOffsetDays: -3
+  },
+  {
+    id: 'think.forum.question_map',
+    key: 'think.forum.question_map',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'خريطة اسئلة المنتدى',
+    description_ar:
+      'تحديد السؤال الرئيسي وعدة اسئلة فرعية تساعد على فتح النقاش بدون توجيهه بشكل ايديولوجي.',
+    definitionOfDone_ar:
+      'خريطة اسئلة مكتوبة يمكن لوحدة الناس استخدامها اساساً لتصميم النقاش.',
+
+    size: 'S',
+    defaultOwnerFunc: 'researcher',
+    defaultChannelKey: 'think.topics',
+    dueOffsetDays: -20
+  },
+  {
+    id: 'think.forum.stakeholder_scan',
+    key: 'think.forum.stakeholder_scan',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'مسح الاطراف والجمهور المحتمل',
+    description_ar: 'تحديد من يجب ان يكون ممثلاً في الحوار، ومن يمكن ان يتأذى او يُقصى لو غاب.',
+    definitionOfDone_ar:
+      'قائمة قصيرة بالاطراف والجماهير المستهدفة، مع ملاحظات تمثيل وشمول.',
+
+    size: 'S',
+    defaultOwnerFunc: 'researcher',
+    defaultChannelKey: 'think.research_queue',
+    dueOffsetDays: -18
+  },
+  {
+    id: 'think.forum.format_design',
+    key: 'think.forum.format_design',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'تصميم شكل المنتدى',
+    description_ar:
+      'اختيار شكل النقاش (دائرة، مجموعات صغيرة، عروض قصيرة تليها نقاشات) بما يناسب السؤال والجمهور.',
+    definitionOfDone_ar:
+      'مخطط بسيط يشرح خطوات الجلسة من الدخول الى الخروج، مع زمن تقريبي لكل جزء.',
+
+    size: 'S',
+    defaultOwnerFunc: 'managing_editor',
+    defaultChannelKey: 'think.briefs_drafts',
+    dueOffsetDays: -15
+  },
+  {
+    id: 'think.forum.materials_pack',
+    key: 'think.forum.materials_pack',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'حزمة المواد والاسئلة الافتتاحية',
+    description_ar:
+      'تحضير ورقة واحدة للجمهور او للميسرين تتضمن خلفية بسيطة واسئلة افتتاحية ونقاط حساسة.',
+    definitionOfDone_ar:
+      'حزمة مواد جاهزة للطباعة او العرض، متاحة لوحدة الناس قبل تنفيذ المنتدى.',
+
+    size: 'S',
+    defaultOwnerFunc: 'desk_editor',
+    defaultChannelKey: 'think.method_notes',
+    dueOffsetDays: -10
+  },
+  {
+    id: 'think.forum.debrief_templates',
+    key: 'think.forum.debrief_templates',
+    type: 'task',
+    unit: 'think',
+
+    label_ar: 'قوالب استخلاص التعلّم من الجلسات',
+    description_ar:
+      'إنشاء نموذج او اسئلة ثابتة تستخدم بعد كل منتدى لاستخلاص ما تعلمناه وما يجب تعديله.',
+    definitionOfDone_ar:
+      'نموذج تعلّم قصير يمكن تطبيقه بعد كل جلسة، ومخزن في method-notes لاستخدامه المتكرر.',
+
+    size: 'S',
+    defaultOwnerFunc: 'data_analyst',
+    defaultChannelKey: 'think.method_notes',
+    dueOffsetDays: -5
+  }
+];
+
+// ==========================
 // Media unit templates
 // ==========================
 
 const mediaTaskTemplates = [
+  {
+    id: 'media.lab90.recruitment_cohort',
+    key: 'media.lab90.recruitment_cohort',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'استقطاب واختيار مجموعة لاب ٩٠',
+    description_ar: 'تصميم نموذج التقديم، الإعلان عن الدعوة، فرز الطلبات، واختيار المشاركين النهائيين.',
+    definitionOfDone_ar:
+      'قائمة نهائية بأسماء المشاركين المختارين مع بيانات التواصل، وملاحظات عن معايير الاختيار.',
+
+    size: 'M',
+    defaultOwnerFunc: 'managing_editor',
+    defaultChannelKey: 'media.tasks',
+    dueOffsetDays: -75
+  },
+  {
+    id: 'media.lab90.onboarding_code_of_conduct',
+    key: 'media.lab90.onboarding_code_of_conduct',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'جلسة تعريف وشرح مدونة السلوك',
+    description_ar: 'جلسة تعريفية للمشاركين، شرح قواعد السلامة، مدونة السلوك، وآليات حماية المشاركين والمصادر.',
+    definitionOfDone_ar:
+      'عقد جلسة تعارف وتوقيع المشاركين على مدونة السلوك، مع توثيق أي أسئلة أو ملاحظات.',
+
+    size: 'S',
+    defaultOwnerFunc: 'managing_editor',
+    defaultChannelKey: 'media.tasks',
+    dueOffsetDays: -70
+  },
+  {
+    id: 'media.lab90.baseline_assessment',
+    key: 'media.lab90.baseline_assessment',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'اختبار خط أساس للأخلاقيات والتحقق',
+    description_ar: 'إجراء اختبار أولي للمشاركين حول التحقق من المعلومات، الأخلاقيات، والصور الحساسة.',
+    definitionOfDone_ar:
+      'تخزين نتائج الاختبار لكل مشارك في ملف واحد، يمكن مقارنته باختبار نهاية البرنامج.',
+
+    size: 'S',
+    defaultOwnerFunc: 'data_analyst',
+    defaultChannelKey: 'media.tasks',
+    dueOffsetDays: -68
+  },
+  {
+    id: 'media.lab90.clinics_schedule',
+    key: 'media.lab90.clinics_schedule',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'خطة عيادات النزاهة والمهارات',
+    description_ar: 'وضع جدول ١٢ جلسة حول الأخلاقيات، التحقق، حق الرد، حماية المصادر، والصور الحساسة.',
+    definitionOfDone_ar:
+      'جدول واضح لكل جلسة مع الموضوع، المدرب، والمواد المرافقة، منشور للمشاركين.',
+
+    size: 'M',
+    defaultOwnerFunc: 'managing_editor',
+    defaultChannelKey: 'media.training',
+    dueOffsetDays: -65
+  },
+  {
+    id: 'media.lab90.tool_labs_schedule',
+    key: 'media.lab90.tool_labs_schedule',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'خطة مختبرات الأدوات',
+    description_ar: 'تخطيط مختبرات الصوت الميداني، الفيديو بالموبايل، تعديل الصور، والنشر على نظام إدارة المحتوى.',
+    definitionOfDone_ar:
+      'جدول مختبرات الأدوات مع أهداف واضحة لكل جلسة، وروابط للمواد التدريبية.',
+
+    size: 'M',
+    defaultOwnerFunc: 'desk_editor',
+    defaultChannelKey: 'media.training',
+    dueOffsetDays: -60
+  },
+  {
+    id: 'media.lab90.daily_desk_quota',
+    key: 'media.lab90.daily_desk_quota',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'تشغيل Desk اليوميات وتحديد الحصص',
+    description_ar: 'إعداد نظام عمل لليوميات (60-90 ثانية + موجز 120 كلمة)، وتقسيم الحصص بين المشاركين.',
+    definitionOfDone_ar:
+      'قائمة حصص واضحة توضح عدد اليوميات المطلوبة لكل مشارك، وآلية مراجعة سريعة قبل النشر.',
+
+    size: 'M',
+    defaultOwnerFunc: 'desk_editor',
+    defaultChannelKey: 'media.editing',
+    dueOffsetDays: -40
+  },
+  {
+    id: 'media.lab90.features_desk_quota',
+    key: 'media.lab90.features_desk_quota',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'تشغيل Desk التحقيقات والتقارير المطوّلة',
+    description_ar: 'تحديد عدد التحقيقات أو المقالات المطوّلة والـ photo essays مع تسلسل المراحل لكل قصة.',
+    definitionOfDone_ar:
+      'جدول قصص يوضح موضوع كل قصة، المسؤول الرئيسي، ومواعيد التسليم لكل مرحلة.',
+
+    size: 'L',
+    defaultOwnerFunc: 'desk_editor',
+    defaultChannelKey: 'media.editing',
+    dueOffsetDays: -40
+  },
+  {
+    id: 'media.lab90.explainers_desk_quota',
+    key: 'media.lab90.explainers_desk_quota',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'تشغيل Desk الشروحات والإنفوغرافيك',
+    description_ar: 'تصميم خط إنتاج للفيديوهات الشارحة أو بطاقات الكاروسيل مع توزيع المهام بين النص، التصميم، والمونتاج.',
+    definitionOfDone_ar:
+      'قائمة مواضيع الشروحات، مسؤول النص، مسؤول التصميم، ومسؤول المونتاج لكل قطعة.',
+
+    size: 'L',
+    defaultOwnerFunc: 'desk_editor',
+    defaultChannelKey: 'media.editing',
+    dueOffsetDays: -40
+  },
+  {
+    id: 'media.lab90.forums_plan',
+    key: 'media.lab90.forums_plan',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'خطة سلسلة الحوارات المدنية',
+    description_ar: 'تحديد أربعة لقاءات عامة لعرض المنتجات ومناقشة القضايا المطروحة مع الجمهور.',
+    definitionOfDone_ar:
+      'وثيقة تحدد عناوين الجلسات، الجمهور المستهدف، الشركاء المحليين، ومكان وزمن كل لقاء.',
+
+    size: 'M',
+    defaultOwnerFunc: 'managing_editor',
+    defaultChannelKey: 'media.forums',
+    dueOffsetDays: -35
+  },
+  {
+    id: 'media.lab90.forums_delivery',
+    key: 'media.lab90.forums_delivery',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'تنفيذ أربع جلسات حوارية مدنية',
+    description_ar: 'تنظيم وإدارة أربع جلسات حوارية باستخدام منتجات اللاب كنقطة انطلاق للنقاش.',
+    definitionOfDone_ar:
+      'تقرير قصير لكل جلسة يذكر الحضور التقريبي، الأفكار الرئيسية، وأي توصيات أو متابعة مطلوبة.',
+
+    size: 'L',
+    defaultOwnerFunc: 'event_host',
+    defaultChannelKey: 'media.forums',
+    dueOffsetDays: -10
+  },
+  {
+    id: 'media.lab90.methods_and_corrections',
+    key: 'media.lab90.methods_and_corrections',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'صفحة المنهجية وسجل التصحيحات',
+    description_ar: 'إعداد صفحة عامة تشرح طريقة العمل، مع سجل تصحيحات حي يرافق كافة المواد المنشورة.',
+    definitionOfDone_ar:
+      'صفحة منشورة تشرح المنهجية، وسجل تصحيحات مفعّل ومستخدم مع أول موجة من المواد.',
+
+    size: 'M',
+    defaultOwnerFunc: 'corrections_editor',
+    defaultChannelKey: 'media.corrections_log',
+    dueOffsetDays: -15
+  },
+  {
+    id: 'media.lab90.visual_sensitivity_standard',
+    key: 'media.lab90.visual_sensitivity_standard',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'معيار الصور الحساسة والضعفاء',
+    description_ar:
+      'صياغة معيار واضح لكيفية التعامل مع الصور الحساسة والضحايا والمجموعات الضعيفة وتطبيقه على المواد.',
+    definitionOfDone_ar:
+      'وثيقة معيارية مختصرة منشورة داخلياً، مع إشارة علنية في صفحة المنهجية، ويتم تطبيقها على كل المخرجات.',
+
+    size: 'S',
+    defaultOwnerFunc: 'legal_ethics',
+    defaultChannelKey: 'media.factcheck',
+    dueOffsetDays: -15
+  },
+  {
+    id: 'media.lab90.mel_cycle_report',
+    key: 'media.lab90.mel_cycle_report',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'تقرير التعلّم ونهاية الدورة',
+    description_ar: 'جمع نتائج الاختبارات، الملاحظات، وتحليلات الوصول في تقرير تعلّم قابل لإعادة الاستخدام.',
+    definitionOfDone_ar:
+      'تقرير تعلّم نهائي يتضمن ما نجح وما فشل، الدروس المستفادة، وروابط حزمة الأدوات التدريبية.',
+
+    size: 'M',
+    defaultOwnerFunc: 'data_analyst',
+    defaultChannelKey: 'media.tasks',
+    dueOffsetDays: 0
+  },
   {
     id: 'media_ideas_round',
     type: 'task',
@@ -1373,6 +2163,291 @@ const peopleTaskTemplates = [
     tags: ['وصول', 'فعاليات', 'سلامة']
   },
   {
+    id: 'people.music.concept_and_venue',
+    key: 'people.music.concept_and_venue',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'الفكرة والاتفاق مع المكان',
+    description_ar:
+      'تحديد هوية الدورة (الموسيقى، الجمهور، المزاج) والاتفاق الأساسي مع المكان على التواريخ والإيرادات.',
+    definitionOfDone_ar:
+      'نص قصير يصف هوية الدورة، والتواريخ المبدئية، واتفاق واضح مع المكان حول النسب والمسؤوليات.',
+
+    size: 'M',
+    defaultOwnerFunc: 'event_host',
+    defaultChannelKey: 'people.music_events',
+    dueOffsetDays: -60
+  },
+  {
+    id: 'people.music.artist_booking',
+    key: 'people.music.artist_booking',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'حجوزات الفنانين والطاقم',
+    description_ar:
+      'اختيار الفنانين والاتفاق على الأجور والبرمجة الزمنية، وتحديد الطاقم التقني الأساسي لكل أمسية.',
+    definitionOfDone_ar:
+      'قائمة بكل الفنانين والطاقم مع التواريخ، الأجور المتفق عليها، ووسائل التواصل.',
+
+    size: 'M',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'people.music_events',
+    dueOffsetDays: -55
+  },
+  {
+    id: 'people.music.tech_and_safety_plan',
+    key: 'people.music.tech_and_safety_plan',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'خطة الصوت والإضاءة والسلامة',
+    description_ar:
+      'تنسيق احتياجات الصوت والإضاءة والسعة القصوى وخطة الطوارئ بالتعاون مع المكان ووحدة الإنتاج/الجيكس عند الحاجة.',
+    definitionOfDone_ar:
+      'خطة مكتوبة تبين إعدادات الصوت والإضاءة، السعة، نقاط الخروج، وإجراءات التعامل مع أي طارئ.',
+
+    size: 'M',
+    defaultOwnerFunc: 'field_ops',
+    defaultChannelKey: 'people.music_events',
+    dueOffsetDays: -30
+  },
+  {
+    id: 'people.music.comms_and_ticketing',
+    key: 'people.music.comms_and_ticketing',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'الإعلان والتذاكر',
+    description_ar:
+      'إعداد نصوص ومواد الإعلان بالتعاون مع الميديا، وتحديد سعر التذكرة وطريقة الحجز أو الدفع على الباب.',
+    definitionOfDone_ar:
+      'خطة نشر بسيطة (متى وأين)، وسعر تذكرة واضح، وطريقة حجز أو دفع مفهومة للجمهور.',
+
+    size: 'M',
+    defaultOwnerFunc: 'managing_editor',
+    defaultChannelKey: 'people.music_events',
+    dueOffsetDays: -21
+  },
+  {
+    id: 'people.music.run_sheet_cycle',
+    key: 'people.music.run_sheet_cycle',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'ورقة تشغيل لكل أمسية في الدورة',
+    description_ar:
+      'إعداد Run Sheet يوضّح مواعيد الساوند تشِك، بداية الأمسية، الفواصل، ونهاية البرنامج لكل أمسية.',
+    definitionOfDone_ar:
+      'Run Sheet واحد على الأقل لكل أمسية، متفق عليه مع الفنانين والطاقم التقني ومتاح للجميع.',
+
+    size: 'S',
+    defaultOwnerFunc: 'event_host',
+    defaultChannelKey: 'people.music_events',
+    dueOffsetDays: -5
+  },
+  {
+    id: 'people.music.revenue_split_report',
+    key: 'people.music.revenue_split_report',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'تقرير التسوية وتوزيع الإيرادات',
+    description_ar:
+      'جمع أرقام الحضور والإيرادات، وتطبيق نموذج توزيع الدخل بين حبق والفنانين والتقنيين.',
+    definitionOfDone_ar:
+      'تقرير نهائي يوضح كم دخل، كيف توزّع المبلغ، وما هي الملاحظات للدورة القادمة.',
+
+    size: 'M',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'people.music_events',
+    dueOffsetDays: 3
+  },
+  {
+    id: 'people.openmic.guidelines',
+    key: 'people.openmic.guidelines',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'الإطار والقواعد لأمسية الأوبن مايك',
+    description_ar:
+      'صياغة قواعد بسيطة وواضحة لوقت المشاركة، نوع المحتوى المقبول، وكيفية التعامل مع الخطاب المؤذي أو الإقصائي.',
+    definitionOfDone_ar:
+      'نص قواعد مختصر منشور للجمهور والمشاركين، ويُذكَر في بداية كل أمسية.',
+
+    size: 'S',
+    defaultOwnerFunc: 'event_host',
+    defaultChannelKey: 'people.openmic_events',
+    dueOffsetDays: -30
+  },
+  {
+    id: 'people.openmic.signup_system',
+    key: 'people.openmic.signup_system',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'نظام التسجيل للمشاركة',
+    description_ar: 'اختيار طريقة التسجيل (نموذج، رسالة، ورقة في المكان)، وتحديد آلية ترتيب الدور.',
+    definitionOfDone_ar:
+      'نموذج أو آلية تسجيل تعمل بسلاسة، مع طريقة واضحة لترتيب المشاركات واحترام الوقت.',
+
+    size: 'S',
+    defaultOwnerFunc: 'field_ops',
+    defaultChannelKey: 'people.openmic_events',
+    dueOffsetDays: -25
+  },
+  {
+    id: 'people.openmic.safety_roles',
+    key: 'people.openmic.safety_roles',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'أدوار الدعم والسلامة في الأمسية',
+    description_ar: 'تعيين شخص أو اثنين ليكونوا نقطة رجوع في حال المضايقات أو المشاكل، وتوضيح حدودهم.',
+    definitionOfDone_ar:
+      'أسماء واضحة لأشخاص السلامة في كل أمسية، وشرح موجز لدورهم للفريق.',
+
+    size: 'S',
+    defaultOwnerFunc: 'field_ops',
+    defaultChannelKey: 'people.openmic_events',
+    dueOffsetDays: -20
+  },
+  {
+    id: 'people.openmic.event_log',
+    key: 'people.openmic.event_log',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'سجل الأمسيات والمشاركات',
+    description_ar:
+      'توثيق بسيط لكل أمسية: من شارك، نوع المشاركة، وأي ملاحظات مهمة.',
+    definitionOfDone_ar:
+      'سجل نصي أو جدولي لكل أمسية في الموسم، يمكن الرجوع إليه لاختيار مواهب لأمسيات أكبر.',
+
+    size: 'M',
+    defaultOwnerFunc: 'event_host',
+    defaultChannelKey: 'people.openmic_events',
+    dueOffsetDays: -5
+  },
+  {
+    id: 'people.openmic.talent_followup',
+    key: 'people.openmic.talent_followup',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'متابعة المواهب للترقي أو الدعم',
+    description_ar:
+      'اختيار بعض المشاركين الواعدين واقتراح خطوات دعمهم (دعوة لـ Thursday Live Notes، تسجيل، تدريب...).',
+    definitionOfDone_ar:
+      'قائمة صغيرة بالمواهب التي تستحق متابعة، مع أفكار عملية لدعمهم في دورات لاحقة.',
+
+    size: 'S',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'people.openmic_events',
+    dueOffsetDays: 5
+  },
+  {
+    id: 'people.exhibit.curatorial_concept',
+    key: 'people.exhibit.curatorial_concept',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'المفهوم الكوريتوري واختيار الفنانين',
+    description_ar: 'صياغة الثيمة العامة للمعرض، واختيار الفنانين المشاركين وحدود ما سيتم عرضه.',
+    definitionOfDone_ar:
+      'نص كوريتوري أولي، وقائمة الفنانين المدعوين، مع ملاحظات حول ما ينسجم وما لا ينسجم مع الثيمة.',
+
+    size: 'M',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'people.exhibitions',
+    dueOffsetDays: -60
+  },
+  {
+    id: 'people.exhibit.artist_intake',
+    key: 'people.exhibit.artist_intake',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'استلام الأعمال والبيانات من الفنانين',
+    description_ar: 'جمع صور الأعمال، القياسات، النصوص المرافقة، وسياسات البيع أو الطباعة لكل فنان.',
+    definitionOfDone_ar:
+      'ملف بيانات لكل فنان يضم الأعمال، النصوص، الأسعار (إن وجدت)، وملاحظات الحقوق.',
+
+    size: 'M',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'people.exhibitions',
+    dueOffsetDays: -50
+  },
+  {
+    id: 'people.exhibit.space_and_flow',
+    key: 'people.exhibit.space_and_flow',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'تصميم الفضاء ومسار الزائر',
+    description_ar:
+      'توزيع الأعمال في المكان بطريقة تخدم الثيمة، مع الانتباه لتدفق الزوار ونقاط التفاعل.',
+    definitionOfDone_ar:
+      'مخطط بسيط يوضح أماكن الأعمال، الاتجاه العام لحركة الزوار، وأي محطات تفاعلية.',
+
+    size: 'M',
+    defaultOwnerFunc: 'designer',
+    defaultChannelKey: 'people.exhibitions',
+    dueOffsetDays: -30
+  },
+  {
+    id: 'people.exhibit.program_schedule',
+    key: 'people.exhibit.program_schedule',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'البرنامج الموازي (ندوات، موسيقى، نقاشات)',
+    description_ar:
+      'تحديد جلسات النقاش أو العروض الموسيقية المرتبطة بالمعرض، ومن يدير أو يشارك فيها.',
+    definitionOfDone_ar:
+      'جدول بالجلسات الموازية مع التواريخ، المتحدثين أو الموسيقيين، وهدف كل جلسة.',
+
+    size: 'M',
+    defaultOwnerFunc: 'event_host',
+    defaultChannelKey: 'people.exhibitions',
+    dueOffsetDays: -20
+  },
+  {
+    id: 'people.exhibit.digital_coordination',
+    key: 'people.exhibit.digital_coordination',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'تنسيق الطبقة التفاعلية والبيع أونلاين',
+    description_ar:
+      'الاتفاق مع وحدة الجيكس على شكل المعرض التفاعلي على الويب، وآلية حجز أو شراء الأعمال.',
+    definitionOfDone_ar:
+      'مذكرة مشتركة بين People و Geeks تشرح شكل المعرض الرقمي، وكيفية إدخال البيانات، ومسار تجربة الزائر أونلاين.',
+
+    size: 'M',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'people.exhibitions',
+    dueOffsetDays: -15
+  },
+  {
+    id: 'people.exhibit.wrap_report',
+    key: 'people.exhibit.wrap_report',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'تقرير المعرض والتعلّم للدورات القادمة',
+    description_ar:
+      'تلخيص ما حدث في المعرض: الحضور، المبيعات، ردود فعل الفنانين والجمهور، وما يجب تحسينه.',
+    definitionOfDone_ar:
+      'تقرير مختصر يشمل أرقاماً أساسية، أبرز الملاحظات، وصوراً أو روابط توثيقية، محفوظ في أرشيف حبق.',
+
+    size: 'M',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'people.exhibitions',
+    dueOffsetDays: 7
+  },
+  {
     id: 'people.shihan.curatorial_brief',
     type: 'task',
     unit: 'people',
@@ -1672,6 +2747,311 @@ const geeksTaskTemplates = [
     defaultDueDays: 3,
 
     tags: ['توثيق', 'إطلاق', 'ويب']
+  },
+  {
+    id: 'geeks.app.discovery',
+    key: 'geeks.app.discovery',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'فهم الحاجة والتأكد منها',
+    description_ar:
+      'جلسة سريعة مع أصحاب المصلحة لفهم المشكلة التي يحاول التطبيق حلها، ومن سيستخدمه، وما البدائل الموجودة الآن.',
+    definitionOfDone_ar:
+      'مذكرة قصيرة تشرح المشكلة، المستخدمين الأساسيين، وسيناريوهات الاستخدام الثلاثة الأهم.',
+
+    size: 'S',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'geeks.automation',
+    dueOffsetDays: -30
+  },
+  {
+    id: 'geeks.app.spec',
+    key: 'geeks.app.spec',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'تصميم بسيط للتجربة والمواصفات',
+    description_ar:
+      'رسم شاشات تقريبية وكتابة قائمة بالوظائف الأساسية للتطبيق وما لن يقوم به في هذه النسخة.',
+    definitionOfDone_ar:
+      'مستند او صور تصميم توضح تدفق المستخدم، مع قائمة "يجب ان يفعل" و"لن يفعل الآن".',
+
+    size: 'M',
+    defaultOwnerFunc: 'developer',
+    defaultChannelKey: 'geeks.automation',
+    dueOffsetDays: -25
+  },
+  {
+    id: 'geeks.app.milestone_mvp',
+    key: 'geeks.app.milestone_mvp',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'بناء النسخة الأولى (MVP)',
+    description_ar:
+      'تنفيذ الحد الأدنى من الوظائف التي تثبت الفكرة وتسمح للاختبار مع مستخدمين حقيقيين.',
+    definitionOfDone_ar:
+      'نسخة عاملة يمكن الدخول اليها وتجربتها، حتى لو كانت خشنة بصرياً، مع تعليمات تسجيل الدخول او الاستخدام.',
+
+    size: 'L',
+    defaultOwnerFunc: 'developer',
+    defaultChannelKey: 'geeks.automation',
+    dueOffsetDays: -15
+  },
+  {
+    id: 'geeks.app.field_test',
+    key: 'geeks.app.field_test',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'اختبار ميداني مع مستخدمين حقيقيين',
+    description_ar:
+      'تجربة النسخة الأولى مع عدد صغير من المستخدمين وتسجيل الملاحظات والأخطاء والاقتراحات.',
+    definitionOfDone_ar:
+      'قائمة منظمة بالملاحظات والاخطاء من الاختبار، مقسمة الى "حرج"، "مهم"، "تحسين لاحق".',
+
+    size: 'M',
+    defaultOwnerFunc: 'field_ops',
+    defaultChannelKey: 'geeks.integrations',
+    dueOffsetDays: -10
+  },
+  {
+    id: 'geeks.app.deploy',
+    key: 'geeks.app.deploy',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'النشر الأولي للتطبيق',
+    description_ar:
+      'رفع التطبيق على بيئة استضافة مستقرة، وضبط الاعدادات الأساسية للأمان والنسخ الاحتياطي إن أمكن.',
+    definitionOfDone_ar:
+      'رابط تطبيق يعمل من بيئة الإنتاج، مع حسابات وصول أساسية، ووثيقة قصيرة تشرح الاعتماديات.',
+
+    size: 'M',
+    defaultOwnerFunc: 'developer',
+    defaultChannelKey: 'geeks.integrations',
+    dueOffsetDays: -5
+  },
+  {
+    id: 'geeks.app.handover_maintain',
+    key: 'geeks.app.handover_maintain',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'تسليم او ترتيب صيانة التطبيق',
+    description_ar:
+      'توضيح من سيهتم بالتطبيق بعد الإطلاق، وما الذي يجب فعله عند حدوث مشكلة او تغيير كبير.',
+    definitionOfDone_ar:
+      'مذكرة تسليم توضح المسؤول التقني، وكيفية الإبلاغ عن الأعطال، وما هو مستوى الدعم المتوقع.',
+
+    size: 'S',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'geeks.automation',
+    dueOffsetDays: 0
+  },
+  {
+    id: 'geeks.stack.intake_prioritize',
+    key: 'geeks.stack.intake_prioritize',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'استقبال طلب الأتمتة وتحديد الأولوية',
+    description_ar:
+      'فهم المشكلة التي يريد الفريق حلها بالأتمتة، وتقدير الوقت الذي ستوفره، وترتيبها مقابل طلبات أخرى.',
+    definitionOfDone_ar:
+      'وصف واضح للمشكلة، الادوات المعنية، وتقييم مبدئي للفائدة مقابل الجهد، مع قرار "نعمل الآن" او "نؤجل".',
+
+    size: 'S',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'geeks.automation',
+    dueOffsetDays: -30
+  },
+  {
+    id: 'geeks.stack.flow_design',
+    key: 'geeks.stack.flow_design',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'تصميم تدفق الأتمتة',
+    description_ar:
+      'رسم مخطط بسيط يوضح من أين تأتي البيانات، ما هي الأحداث، وما النتيجة المتوقعة في كل حالة.',
+    definitionOfDone_ar:
+      'رسم او مستند يوضح خطوات التدفق، الاخطار المحتملة، وكيفية ايقاف الأتمتة عند الحاجة.',
+
+    size: 'M',
+    defaultOwnerFunc: 'developer',
+    defaultChannelKey: 'geeks.automation',
+    dueOffsetDays: -25
+  },
+  {
+    id: 'geeks.stack.implementation',
+    key: 'geeks.stack.implementation',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'تنفيذ الأتمتة',
+    description_ar:
+      'بناء السكربتات او ربط أدوات الـ no-code حسب التصميم، مع تعليقات كافية في الكود.',
+    definitionOfDone_ar:
+      'كود او سيناريو أتمتة يعمل في بيئة تجريبية، مع شرح مختصر لما يفعله وأين تم نشره.',
+
+    size: 'L',
+    defaultOwnerFunc: 'developer',
+    defaultChannelKey: 'geeks.automation',
+    dueOffsetDays: -15
+  },
+  {
+    id: 'geeks.stack.sandbox_test',
+    key: 'geeks.stack.sandbox_test',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'اختبار في بيئة تجريبية',
+    description_ar:
+      'تشغيل الأتمتة على بيانات تجريبية او قناة اختبار في ديسكورد للتأكد من عدم إزعاج المستخدمين.',
+    definitionOfDone_ar:
+      'سيناريوهات اختبار مجرّبة مع نتيجة واضحة لكل واحدة، وتأكيد أن الأتمتة لا تكتب في اماكن خاطئة.',
+
+    size: 'M',
+    defaultOwnerFunc: 'data_analyst',
+    defaultChannelKey: 'geeks.bot_audit',
+    dueOffsetDays: -10
+  },
+  {
+    id: 'geeks.stack.rollout',
+    key: 'geeks.stack.rollout',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'إطلاق تدريجي للأتمتة',
+    description_ar:
+      'تشغيل الأتمتة مع مجموعة صغيرة من المستخدمين او في أوقات محدودة، ثم توسيعها بناء على ردود الفعل.',
+    definitionOfDone_ar:
+      'رسالة إعلان داخلية قصيرة تشرح الأتمتة، ومن يستفيد منها، وكيف يمكن إيقافها عند الضرورة.',
+
+    size: 'M',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'geeks.automation',
+    dueOffsetDays: -5
+  },
+  {
+    id: 'geeks.stack.docs',
+    key: 'geeks.stack.docs',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'توثيق الأتمتة للمستخدمين',
+    description_ar: 'كتابة دليل بسيط يشرح ماذا تفعل الأتمتة، وكيفية استخدامها، وما هي حدودها.',
+    definitionOfDone_ar:
+      'صفحة او رسالة مثبّتة تحتوي شرحاً مبسطاً للأتمتة ولمن صممت، وموجودة في مكان معروف للفريق.',
+
+    size: 'S',
+    defaultOwnerFunc: 'data_analyst',
+    defaultChannelKey: 'geeks.automation',
+    dueOffsetDays: 0
+  },
+  {
+    id: 'geeks.discord.audit_current',
+    key: 'geeks.discord.audit_current',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'مراجعة بنية ديسكورد الحالية',
+    description_ar:
+      'فحص القنوات، الرتب، الصلاحيات، والبوتات لمعرفة ما يعمل وما يربك الاعضاء.',
+    definitionOfDone_ar:
+      'قائمة ملاحظات تبين نقاط القوة والارباك في الخادم الحالي، مع بعض الاقتراحات السريعة.',
+
+    size: 'M',
+    defaultOwnerFunc: 'developer',
+    defaultChannelKey: 'geeks.bot_audit',
+    dueOffsetDays: -30
+  },
+  {
+    id: 'geeks.discord.new_structure_design',
+    key: 'geeks.discord.new_structure_design',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'تصميم البنية الجديدة للقنوات والرتب',
+    description_ar:
+      'اقتراح هيكل قنوات ووحدات وحالات يعكس طريقة عمل حبق، مع قواعد عامة لتسمية القنوات.',
+    definitionOfDone_ar:
+      'مخطط بنية جديد يوضح الفئات، القنوات، والرتب، ومشروح بلغة بسيطة يمكن مشاركتها مع الفريق.',
+
+    size: 'L',
+    defaultOwnerFunc: 'developer',
+    defaultChannelKey: 'geeks.bot_audit',
+    dueOffsetDays: -25
+  },
+  {
+    id: 'geeks.discord.staging_setup',
+    key: 'geeks.discord.staging_setup',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'تجهيز سيرفر تجريبي للتطبيق',
+    description_ar:
+      'إنشاء او تحديث سيرفر تجريبي يعكس البنية المقترحة لتجريب الصلاحيات والأونبوردنغ.',
+    definitionOfDone_ar:
+      'سيرفر تجريبي يحتوي على البنية الجديدة، مع صلاحيات مجربة لعدة أدوار مختلفة.',
+
+    size: 'M',
+    defaultOwnerFunc: 'field_ops',
+    defaultChannelKey: 'geeks.bot_audit',
+    dueOffsetDays: -20
+  },
+  {
+    id: 'geeks.discord.migration_plan',
+    key: 'geeks.discord.migration_plan',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'خطة نقل التعديلات للسيرفر الأساسي',
+    description_ar:
+      'تفصيل خطوات نقل القنوات، تحديث الصلاحيات، وضبط البوتات بدون تعطيل العمل.',
+    definitionOfDone_ar:
+      'خطة مكتوبة بخطوات مرقمة توضح ماذا سيتغير، متى، ومن المسؤول عن كل خطوة.',
+
+    size: 'M',
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'geeks.bot_audit',
+    dueOffsetDays: -15
+  },
+  {
+    id: 'geeks.discord.habapp_integration',
+    key: 'geeks.discord.habapp_integration',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'دمج HabApp وباقي البوتات في البنية الجديدة',
+    description_ar:
+      'تحديث اوامر HabApp وقنواته الافتراضية، وضبط صلاحيات البوتات الأخرى لتناسب البنية الجديدة.',
+    definitionOfDone_ar:
+      'قائمة بالقنوات التي يتفاعل فيها HabApp والبوتات الأخرى، مع تأكد من أن الصلاحيات سليمة وعدم وجود تضارب.',
+
+    size: 'M',
+    defaultOwnerFunc: 'developer',
+    defaultChannelKey: 'geeks.bot_audit',
+    dueOffsetDays: -10
+  },
+  {
+    id: 'geeks.discord.moderator_guide',
+    key: 'geeks.discord.moderator_guide',
+    type: 'task',
+    unit: 'geeks',
+
+    label_ar: 'دليل مبسط للمشرفين والفريق',
+    description_ar:
+      'كتابة دليل قصير يشرح البنية الجديدة، الأدوار، ومسؤوليات كل فئة من المشرفين.',
+    definitionOfDone_ar:
+      'دليل منشور في قناة داخلية يوضح كيف نستخدم الخادم، وكيف نتعامل مع الحالات الشائعة.',
+
+    size: 'S',
+    defaultOwnerFunc: 'field_ops',
+    defaultChannelKey: 'geeks.bot_audit',
+    dueOffsetDays: -5
   },
   {
     id: 'geeks_app_brief',
@@ -2242,8 +3622,8 @@ const geeksTaskTemplates = [
 // ==========================
 
 const taskTemplates = [
-  // حالياً: فقط قوالب الإنتاج
   ...productionTaskTemplates,
+  ...thinkTaskTemplates,
   ...mediaTaskTemplates,
   ...peopleTaskTemplates,
   ...geeksTaskTemplates
