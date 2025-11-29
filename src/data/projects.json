@@ -78,7 +78,11 @@
         "completedAt": null,
         "templateId": "prod_crew_list",
         "quality": null,
-        "ethics": null
+        "ethics": null,
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        }
       },
       {
         "id": 2,
@@ -100,7 +104,11 @@
         "completedAt": null,
         "templateId": "prod_call_sheet",
         "quality": null,
-        "ethics": null
+        "ethics": null,
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        }
       },
       {
         "id": 3,
@@ -122,7 +130,11 @@
         "completedAt": null,
         "templateId": "prod_location_package",
         "quality": null,
-        "ethics": null
+        "ethics": null,
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        }
       },
       {
         "id": 4,
@@ -144,7 +156,11 @@
         "completedAt": null,
         "templateId": "prod_gear_log_thread",
         "quality": null,
-        "ethics": null
+        "ethics": null,
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        }
       },
       {
         "id": 5,
@@ -166,7 +182,11 @@
         "completedAt": null,
         "templateId": "prod_edit_plan",
         "quality": null,
-        "ethics": null
+        "ethics": null,
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        }
       },
       {
         "id": 6,
@@ -188,7 +208,11 @@
         "completedAt": null,
         "templateId": "prod_rough_cut_delivery",
         "quality": null,
-        "ethics": null
+        "ethics": null,
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        }
       },
       {
         "id": 7,
@@ -210,7 +234,11 @@
         "completedAt": null,
         "templateId": "prod_subtitles",
         "quality": null,
-        "ethics": null
+        "ethics": null,
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        }
       },
       {
         "id": 8,
@@ -232,7 +260,11 @@
         "completedAt": null,
         "templateId": "prod_color_grading",
         "quality": null,
-        "ethics": null
+        "ethics": null,
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        }
       },
       {
         "id": 9,
@@ -254,7 +286,11 @@
         "completedAt": null,
         "templateId": "prod_sound_mix",
         "quality": null,
-        "ethics": null
+        "ethics": null,
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        }
       },
       {
         "id": 10,
@@ -276,7 +312,11 @@
         "completedAt": null,
         "templateId": "prod_final_delivery",
         "quality": null,
-        "ethics": null
+        "ethics": null,
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        }
       },
       {
         "id": 11,
@@ -298,7 +338,11 @@
         "completedAt": null,
         "templateId": "prod_archive_metadata",
         "quality": null,
-        "ethics": null
+        "ethics": null,
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        }
       },
       {
         "id": 12,
@@ -320,7 +364,11 @@
         "completedAt": null,
         "templateId": "prod_post_shoot_report",
         "quality": null,
-        "ethics": null
+        "ethics": null,
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        }
       },
       {
         "id": 13,
@@ -342,7 +390,11 @@
         "completedAt": null,
         "templateId": "prod_camera_tests",
         "quality": null,
-        "ethics": null
+        "ethics": null,
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        }
       },
       {
         "id": 14,
@@ -364,7 +416,11 @@
         "completedAt": null,
         "templateId": "prod_sound_library",
         "quality": null,
-        "ethics": null
+        "ethics": null,
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        }
       },
       {
         "id": 15,
@@ -386,7 +442,11 @@
         "completedAt": null,
         "templateId": "prod_export_presets",
         "quality": null,
-        "ethics": null
+        "ethics": null,
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        }
       },
       {
         "id": 16,
@@ -408,12 +468,418 @@
         "completedAt": null,
         "templateId": "prod_emergency_plan",
         "quality": null,
-        "ethics": null
+        "ethics": null,
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        }
       }
     ],
     "units": [
       "production"
     ],
     "pipelineKey": "production.video_doc"
+  },
+  {
+    "slug": "test",
+    "name": "test",
+    "due": "2025-12-20",
+    "dueDate": "2025-12-20",
+    "stage": "planning",
+    "threadId": null,
+    "createdAt": "2025-11-29T01:56:09.811Z",
+    "createdBy": "886172468870541353",
+    "templateCode": null,
+    "tasks": [
+      {
+        "id": 1,
+        "title": "جولة أفكار نشر ١٠ أفكار واعتماد ٣",
+        "title_ar": "جولة أفكار نشر ١٠ أفكار واعتماد ٣",
+        "description": "جلسة سريعة لجمع ١٠ أفكار ونقاشها واعتماد ٣ منها كبدايات مشاريع.",
+        "description_ar": "جلسة سريعة لجمع ١٠ أفكار ونقاشها واعتماد ٣ منها كبدايات مشاريع.",
+        "definitionOfDone": "جدول في قناة أفكار النشر يحتوي على ١٠ أفكار مختصرة، مع تحديد ٣ أفكار معتمدة ومذكور اسم المالك المبدئي لكل فكرة.",
+        "definitionOfDone_ar": "جدول في قناة أفكار النشر يحتوي على ١٠ أفكار مختصرة، مع تحديد ٣ أفكار معتمدة ومذكور اسم المالك المبدئي لكل فكرة.",
+        "unit": "media",
+        "ownerId": null,
+        "defaultOwnerFunc": "editor",
+        "defaultOwnerRole": "editor",
+        "defaultChannelKey": "media.ideas",
+        "size": "S",
+        "due": "2025-12-20",
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        },
+        "status": "open",
+        "createdAt": "2025-11-29T01:56:09.814Z",
+        "completedAt": null,
+        "templateId": "media_ideas_round",
+        "quality": null,
+        "ethics": null
+      },
+      {
+        "id": 2,
+        "title": "مذكرة تكليف لمادة محددة",
+        "title_ar": "مذكرة تكليف لمادة محددة",
+        "description": "كتابة مذكرة تكليف واضحة لمادة واحدة مع تعريف الإنجاز والموعد والمالك.",
+        "description_ar": "كتابة مذكرة تكليف واضحة لمادة واحدة مع تعريف الإنجاز والموعد والمالك.",
+        "definitionOfDone": "خيط واحد في #assignment-desk يضم ملخص الفكرة، تعريف الإنجاز، المالك، الموعد، ورابط مشروع HabApp إن وجد.",
+        "definitionOfDone_ar": "خيط واحد في #assignment-desk يضم ملخص الفكرة، تعريف الإنجاز، المالك، الموعد، ورابط مشروع HabApp إن وجد.",
+        "unit": "media",
+        "ownerId": null,
+        "defaultOwnerFunc": "editor",
+        "defaultOwnerRole": "editor",
+        "defaultChannelKey": "media.assignment_desk",
+        "size": "S",
+        "due": "2025-12-20",
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        },
+        "status": "open",
+        "createdAt": "2025-11-29T01:56:09.815Z",
+        "completedAt": null,
+        "templateId": "media_assignment_memo",
+        "quality": null,
+        "ethics": null
+      },
+      {
+        "id": 3,
+        "title": "مقابلة سريعة سؤال وجواب",
+        "title_ar": "مقابلة سريعة سؤال وجواب",
+        "description": "مقابلة من ٨٠٠ إلى ١٢٠٠ كلمة مع شخص واحد وصورة مرافقة.",
+        "description_ar": "مقابلة من ٨٠٠ إلى ١٢٠٠ كلمة مع شخص واحد وصورة مرافقة.",
+        "definitionOfDone": "نص من ٨٠٠ إلى ١٢٠٠ كلمة منظم كسؤال وجواب، مع صورة واحدة على الأقل، وملاحظات تدقيق أساسية، جاهز للتحرير.",
+        "definitionOfDone_ar": "نص من ٨٠٠ إلى ١٢٠٠ كلمة منظم كسؤال وجواب، مع صورة واحدة على الأقل، وملاحظات تدقيق أساسية، جاهز للتحرير.",
+        "unit": "media",
+        "ownerId": "886172468870541353",
+        "defaultOwnerFunc": "reporter",
+        "defaultOwnerRole": "reporter",
+        "defaultChannelKey": "media.drafts",
+        "size": "M",
+        "due": "2025-12-20",
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        },
+        "status": "open",
+        "createdAt": "2025-11-29T01:56:09.816Z",
+        "completedAt": null,
+        "templateId": "media_quick_interview",
+        "quality": null,
+        "ethics": null
+      },
+      {
+        "id": 4,
+        "title": "كتابة مقال قصير",
+        "title_ar": "كتابة مقال قصير",
+        "description": "صياغة مادة من ٨٠٠ إلى ١٢٠٠ كلمة بناء على التكليف والمصادر المتاحة.",
+        "description_ar": "صياغة مادة من ٨٠٠ إلى ١٢٠٠ كلمة بناء على التكليف والمصادر المتاحة.",
+        "definitionOfDone": "مسودة كاملة في خيط المادة، ضمن الطول المطلوب، مع عناوين فرعية مقترحة، واقتباس رئيسي واحد على الأقل.",
+        "definitionOfDone_ar": "مسودة كاملة في خيط المادة، ضمن الطول المطلوب، مع عناوين فرعية مقترحة، واقتباس رئيسي واحد على الأقل.",
+        "unit": "media",
+        "ownerId": "886172468870541353",
+        "defaultOwnerFunc": "reporter",
+        "defaultOwnerRole": "reporter",
+        "defaultChannelKey": "media.drafts",
+        "size": "M",
+        "due": "2025-12-20",
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        },
+        "status": "open",
+        "createdAt": "2025-11-29T01:56:09.817Z",
+        "completedAt": null,
+        "templateId": "media_short_article_write",
+        "quality": null,
+        "ethics": null
+      },
+      {
+        "id": 5,
+        "title": "حزمة تدقيق حقائق لمادة محددة",
+        "title_ar": "حزمة تدقيق حقائق لمادة محددة",
+        "description": "إعداد قائمة ادعاءات ومصادر ونتائج التحقق لمادة واحدة.",
+        "description_ar": "إعداد قائمة ادعاءات ومصادر ونتائج التحقق لمادة واحدة.",
+        "definitionOfDone": "وثيقة أو تعليق واحد يحتوي على قائمة الادعاءات الرئيسة، المصادر المستخدمة، ونتيجة التحقق لكل ادعاء، مثبتة في خيط المادة.",
+        "definitionOfDone_ar": "وثيقة أو تعليق واحد يحتوي على قائمة الادعاءات الرئيسة، المصادر المستخدمة، ونتيجة التحقق لكل ادعاء، مثبتة في خيط المادة.",
+        "unit": "media",
+        "ownerId": null,
+        "defaultOwnerFunc": "fact_checker",
+        "defaultOwnerRole": "fact_checker",
+        "defaultChannelKey": "media.fact_check",
+        "size": "S",
+        "due": "2025-12-20",
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        },
+        "status": "open",
+        "createdAt": "2025-11-29T01:56:09.818Z",
+        "completedAt": null,
+        "templateId": "media_factcheck_bundle",
+        "quality": null,
+        "ethics": null
+      },
+      {
+        "id": 6,
+        "title": "مراجعة الوصول الرقمي",
+        "title_ar": "مراجعة الوصول الرقمي",
+        "description": "فحص Alt للنصوص البديلة، تباين الألوان، والترجمات قبل النشر.",
+        "description_ar": "فحص Alt للنصوص البديلة، تباين الألوان، والترجمات قبل النشر.",
+        "definitionOfDone": "بطاقة فحص منجزة للمادة تحتوي على حالة النص البديل، تباين الألوان، والترجمات، مع علامة واضحة بأن المادة جاهزة من ناحية الوصول.",
+        "definitionOfDone_ar": "بطاقة فحص منجزة للمادة تحتوي على حالة النص البديل، تباين الألوان، والترجمات، مع علامة واضحة بأن المادة جاهزة من ناحية الوصول.",
+        "unit": "media",
+        "ownerId": null,
+        "defaultOwnerFunc": "accessibility_editor",
+        "defaultOwnerRole": "accessibility_editor",
+        "defaultChannelKey": "media.accessibility",
+        "size": "S",
+        "due": "2025-12-20",
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        },
+        "status": "open",
+        "createdAt": "2025-11-29T01:56:09.819Z",
+        "completedAt": null,
+        "templateId": "media_accessibility_check",
+        "quality": null,
+        "ethics": null
+      },
+      {
+        "id": 7,
+        "title": "تقطيع اجتماعي ٣ نسخ",
+        "title_ar": "تقطيع اجتماعي ٣ نسخ",
+        "description": "إعداد نسخ ٩:١٦ و١:١ و١٦:٩ مع ترجمة مدمجة.",
+        "description_ar": "إعداد نسخ ٩:١٦ و١:١ و١٦:٩ مع ترجمة مدمجة.",
+        "definitionOfDone": "ثلاثة ملفات فيديو جاهزة (٩:١٦، ١:١، ١٦:٩) مع ترجمة إذا لزم، وعناوين ووصف مناسب لكل منصة.",
+        "definitionOfDone_ar": "ثلاثة ملفات فيديو جاهزة (٩:١٦، ١:١، ١٦:٩) مع ترجمة إذا لزم، وعناوين ووصف مناسب لكل منصة.",
+        "unit": "media",
+        "ownerId": null,
+        "defaultOwnerFunc": "social_editor",
+        "defaultOwnerRole": "social_editor",
+        "defaultChannelKey": "media.social",
+        "size": "S",
+        "due": "2025-12-20",
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        },
+        "status": "open",
+        "createdAt": "2025-11-29T01:56:09.821Z",
+        "completedAt": null,
+        "templateId": "media_social_cut_3x",
+        "quality": null,
+        "ethics": null
+      },
+      {
+        "id": 8,
+        "title": "إدخالات تصحيح خلفية",
+        "title_ar": "إدخالات تصحيح خلفية",
+        "description": "توثيق ٣ إلى ٥ عناصر خلفية أو تصحيحية في سجلّ مستقل.",
+        "description_ar": "توثيق ٣ إلى ٥ عناصر خلفية أو تصحيحية في سجلّ مستقل.",
+        "definitionOfDone": "٣ إلى ٥ إدخالات جديدة في سجلّ التصحيحات أو سجل الخلفية، مع التاريخ، رابط المادة، وسبب التعديل أو التوضيح.",
+        "definitionOfDone_ar": "٣ إلى ٥ إدخالات جديدة في سجلّ التصحيحات أو سجل الخلفية، مع التاريخ، رابط المادة، وسبب التعديل أو التوضيح.",
+        "unit": "media",
+        "ownerId": null,
+        "defaultOwnerFunc": "corrections_editor",
+        "defaultOwnerRole": "corrections_editor",
+        "defaultChannelKey": "media.corrections_log",
+        "size": "S",
+        "due": "2025-12-20",
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        },
+        "status": "open",
+        "createdAt": "2025-11-29T01:56:09.822Z",
+        "completedAt": null,
+        "templateId": "media_corrections_log_entry",
+        "quality": null,
+        "ethics": null
+      }
+    ],
+    "unit": "media",
+    "units": [
+      "media",
+      "production"
+    ],
+    "pipelineKey": "media.article_short"
+  },
+  {
+    "slug": "mn-yaysh-hna-alan",
+    "name": "من يعيش هنا الآن",
+    "due": "2025-12-06",
+    "dueDate": "2025-12-06",
+    "stage": "planning",
+    "threadId": null,
+    "createdAt": "2025-11-29T01:59:58.266Z",
+    "createdBy": "886172468870541353",
+    "templateCode": null,
+    "tasks": [
+      {
+        "id": 1,
+        "title": "المفهوم الكوريتوري واختيار الفنانين",
+        "title_ar": "المفهوم الكوريتوري واختيار الفنانين",
+        "description": "صياغة الثيمة العامة للمعرض، واختيار الفنانين المشاركين وحدود ما سيتم عرضه.",
+        "description_ar": "صياغة الثيمة العامة للمعرض، واختيار الفنانين المشاركين وحدود ما سيتم عرضه.",
+        "definitionOfDone": "نص كوريتوري أولي، وقائمة الفنانين المدعوين، مع ملاحظات حول ما ينسجم وما لا ينسجم مع الثيمة.",
+        "definitionOfDone_ar": "نص كوريتوري أولي، وقائمة الفنانين المدعوين، مع ملاحظات حول ما ينسجم وما لا ينسجم مع الثيمة.",
+        "unit": "people",
+        "ownerId": "886172468870541353",
+        "defaultOwnerFunc": "producer",
+        "defaultOwnerRole": "producer",
+        "defaultChannelKey": "people.exhibitions",
+        "size": "M",
+        "due": "2025-10-07",
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        },
+        "status": "open",
+        "createdAt": "2025-11-29T01:59:58.275Z",
+        "completedAt": null,
+        "templateId": "people.exhibit.curatorial_concept",
+        "quality": null,
+        "ethics": null
+      },
+      {
+        "id": 2,
+        "title": "استلام الأعمال والبيانات من الفنانين",
+        "title_ar": "استلام الأعمال والبيانات من الفنانين",
+        "description": "جمع صور الأعمال، القياسات، النصوص المرافقة، وسياسات البيع أو الطباعة لكل فنان.",
+        "description_ar": "جمع صور الأعمال، القياسات، النصوص المرافقة، وسياسات البيع أو الطباعة لكل فنان.",
+        "definitionOfDone": "ملف بيانات لكل فنان يضم الأعمال، النصوص، الأسعار (إن وجدت)، وملاحظات الحقوق.",
+        "definitionOfDone_ar": "ملف بيانات لكل فنان يضم الأعمال، النصوص، الأسعار (إن وجدت)، وملاحظات الحقوق.",
+        "unit": "people",
+        "ownerId": "886172468870541353",
+        "defaultOwnerFunc": "producer",
+        "defaultOwnerRole": "producer",
+        "defaultChannelKey": "people.exhibitions",
+        "size": "M",
+        "due": "2025-10-17",
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        },
+        "status": "open",
+        "createdAt": "2025-11-29T01:59:58.278Z",
+        "completedAt": null,
+        "templateId": "people.exhibit.artist_intake",
+        "quality": null,
+        "ethics": null
+      },
+      {
+        "id": 3,
+        "title": "تصميم الفضاء ومسار الزائر",
+        "title_ar": "تصميم الفضاء ومسار الزائر",
+        "description": "توزيع الأعمال في المكان بطريقة تخدم الثيمة، مع الانتباه لتدفق الزوار ونقاط التفاعل.",
+        "description_ar": "توزيع الأعمال في المكان بطريقة تخدم الثيمة، مع الانتباه لتدفق الزوار ونقاط التفاعل.",
+        "definitionOfDone": "مخطط بسيط يوضح أماكن الأعمال، الاتجاه العام لحركة الزوار، وأي محطات تفاعلية.",
+        "definitionOfDone_ar": "مخطط بسيط يوضح أماكن الأعمال، الاتجاه العام لحركة الزوار، وأي محطات تفاعلية.",
+        "unit": "people",
+        "ownerId": "886172468870541353",
+        "defaultOwnerFunc": "designer",
+        "defaultOwnerRole": "designer",
+        "defaultChannelKey": "people.exhibitions",
+        "size": "M",
+        "due": "2025-11-06",
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        },
+        "status": "open",
+        "createdAt": "2025-11-29T01:59:58.282Z",
+        "completedAt": null,
+        "templateId": "people.exhibit.space_and_flow",
+        "quality": null,
+        "ethics": null
+      },
+      {
+        "id": 4,
+        "title": "البرنامج الموازي (ندوات، موسيقى، نقاشات)",
+        "title_ar": "البرنامج الموازي (ندوات، موسيقى، نقاشات)",
+        "description": "تحديد جلسات النقاش أو العروض الموسيقية المرتبطة بالمعرض، ومن يدير أو يشارك فيها.",
+        "description_ar": "تحديد جلسات النقاش أو العروض الموسيقية المرتبطة بالمعرض، ومن يدير أو يشارك فيها.",
+        "definitionOfDone": "جدول بالجلسات الموازية مع التواريخ، المتحدثين أو الموسيقيين، وهدف كل جلسة.",
+        "definitionOfDone_ar": "جدول بالجلسات الموازية مع التواريخ، المتحدثين أو الموسيقيين، وهدف كل جلسة.",
+        "unit": "people",
+        "ownerId": "886172468870541353",
+        "defaultOwnerFunc": "event_host",
+        "defaultOwnerRole": "event_host",
+        "defaultChannelKey": "people.exhibitions",
+        "size": "M",
+        "due": "2025-11-16",
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        },
+        "status": "open",
+        "createdAt": "2025-11-29T01:59:58.283Z",
+        "completedAt": null,
+        "templateId": "people.exhibit.program_schedule",
+        "quality": null,
+        "ethics": null
+      },
+      {
+        "id": 5,
+        "title": "تنسيق الطبقة التفاعلية والبيع أونلاين",
+        "title_ar": "تنسيق الطبقة التفاعلية والبيع أونلاين",
+        "description": "الاتفاق مع وحدة الجيكس على شكل المعرض التفاعلي على الويب، وآلية حجز أو شراء الأعمال.",
+        "description_ar": "الاتفاق مع وحدة الجيكس على شكل المعرض التفاعلي على الويب، وآلية حجز أو شراء الأعمال.",
+        "definitionOfDone": "مذكرة مشتركة بين People و Geeks تشرح شكل المعرض الرقمي، وكيفية إدخال البيانات، ومسار تجربة الزائر أونلاين.",
+        "definitionOfDone_ar": "مذكرة مشتركة بين People و Geeks تشرح شكل المعرض الرقمي، وكيفية إدخال البيانات، ومسار تجربة الزائر أونلاين.",
+        "unit": "people",
+        "ownerId": "886172468870541353",
+        "defaultOwnerFunc": "producer",
+        "defaultOwnerRole": "producer",
+        "defaultChannelKey": "people.exhibitions",
+        "size": "M",
+        "due": "2025-11-21",
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        },
+        "status": "open",
+        "createdAt": "2025-11-29T01:59:58.284Z",
+        "completedAt": null,
+        "templateId": "people.exhibit.digital_coordination",
+        "quality": null,
+        "ethics": null
+      },
+      {
+        "id": 6,
+        "title": "تقرير المعرض والتعلّم للدورات القادمة",
+        "title_ar": "تقرير المعرض والتعلّم للدورات القادمة",
+        "description": "تلخيص ما حدث في المعرض: الحضور، المبيعات، ردود فعل الفنانين والجمهور، وما يجب تحسينه.",
+        "description_ar": "تلخيص ما حدث في المعرض: الحضور، المبيعات، ردود فعل الفنانين والجمهور، وما يجب تحسينه.",
+        "definitionOfDone": "تقرير مختصر يشمل أرقاماً أساسية، أبرز الملاحظات، وصوراً أو روابط توثيقية، محفوظ في أرشيف حبق.",
+        "definitionOfDone_ar": "تقرير مختصر يشمل أرقاماً أساسية، أبرز الملاحظات، وصوراً أو روابط توثيقية، محفوظ في أرشيف حبق.",
+        "unit": "people",
+        "ownerId": "886172468870541353",
+        "defaultOwnerFunc": "producer",
+        "defaultOwnerRole": "producer",
+        "defaultChannelKey": "people.exhibitions",
+        "size": "M",
+        "due": "2025-12-13",
+        "reminders": {
+          "mainSentAt": null,
+          "handoverSentAt": null
+        },
+        "status": "open",
+        "createdAt": "2025-11-29T01:59:58.285Z",
+        "completedAt": null,
+        "templateId": "people.exhibit.wrap_report",
+        "quality": null,
+        "ethics": null
+      }
+    ],
+    "unit": "people",
+    "units": [
+      "people",
+      "production"
+    ],
+    "pipelineKey": "people.exhibition_cycle"
   }
 ]
