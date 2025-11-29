@@ -13,7 +13,8 @@ const commandModules = [
   require('./src/commands/remind')
 ];
 
-const commands = [
+// Inline "extra" commands (previously named `commands`, renamed to avoid collision)
+const extraCommands = [
   {
     name: 'ping',
     description: 'اختبار استجابة HabApp',
@@ -129,7 +130,7 @@ const commands = [
       {
         type: 1,
         name: 'summary',
-        description: 'عرض ملفك في حبق بناءً على الأدوار الحالية في ديسكورد'
+        description: 'عرض ملفك في حبق بناء على الأدوار الحالية في ديسكورد'
       },
       {
         type: 1,
@@ -164,6 +165,15 @@ const commands = [
   }
 ];
 
+// Build commands from modules (supports modules exposing `data` (SlashCommandBuilder) or raw objects)
+const builtCommands = commandModules.map(cmd => {
+  if (cmd && cmd.data && typeof cmd.data.toJSON === 'function') {
+    return cmd.data.toJSON();
+  }
+  // If module exported an object already suitable for registration, use it directly
+  return cmd;
+});
+
 // Final list sent to Discord
 const commands = [...builtCommands, ...extraCommands];
 
@@ -187,7 +197,7 @@ if (!guildId) {
   process.exit(1);
 }
 
-const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
+const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN || cfg.token);
 
 async function main() {
   try {
