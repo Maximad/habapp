@@ -4,7 +4,7 @@
 const units = [
   {
     key: 'production',
-    name_ar: 'وحدة الإنتاج',
+    name_ar: 'الإنتاج',
     description_ar: 'مسؤولة عن الفيديوهات، الوثائقيات، والمشاريع المرئية.',
     pipelines: [
       'production.video_basic',
@@ -14,7 +14,7 @@ const units = [
   },
   {
     key: 'think',
-    name_ar: 'وحدة التفكير',
+    name_ar: 'فِكر',
     description_ar: 'مختبر الأبحاث والدعم المنهجي للوحدات الأخرى.',
     pipelines: [
       'think.research_brief',
@@ -24,7 +24,7 @@ const units = [
   },
   {
     key: 'media',
-    name_ar: 'وحدة الإعلام',
+    name_ar: 'الإعلام',
     description_ar: 'تكتب وتنشر المقالات والقصص المصوّرة والمحتوى الاجتماعي.',
     pipelines: [
       'media.lab90_cycle',
@@ -39,7 +39,7 @@ const units = [
   },
   {
     key: 'people',
-    name_ar: 'وحدة الناس',
+    name_ar: 'الناس',
     description_ar: 'تنظّم الفعاليات والحوارات والسهرات الثقافية.',
     pipelines: [
       'people.volunteer_onboarding',
@@ -56,7 +56,7 @@ const units = [
   },
   {
     key: 'geeks',
-    name_ar: 'وحدة الجيكس',
+    name_ar: 'الجيكس',
     description_ar: 'تطوّر المواقع والأدوات والتطبيقات الصغيرة.',
     pipelines: [
       'geeks.site_basic',

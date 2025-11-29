@@ -247,6 +247,7 @@ function createProject({
     createdBy: createdBy || null,
     templateCode: template ? template.code : null,
     tasks: [],
+    unit: resolvedUnit,
     units: finalUnits,
     pipelineKey: pipeline ? pipeline.key : pipelineKey
   });
