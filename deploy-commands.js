@@ -3,6 +3,7 @@ require('dotenv').config();
 const { REST, Routes } = require('discord.js');
 const cfg = require('./config.json');
 
+// Slash-command builder modules (new style)
 const commandModules = [
   require('./src/commands/ping'),
   require('./src/commands/profile'),
@@ -12,13 +13,16 @@ const commandModules = [
   require('./src/commands/remind')
 ];
 
-const commands = [
-  {
-    name: 'ping',
-    description: 'اختبار استجابة HabApp',
-    dm_permission: false,
-    type: 1
-  },
+// Build commands from SlashCommandBuilder exports
+const builtCommands = commandModules.map((mod) => {
+  if (mod && mod.data && typeof mod.data.toJSON === 'function') {
+    return mod.data.toJSON();
+  }
+  return mod.data || mod;
+});
+
+// Extra legacy/static commands
+const extraCommands = [
   {
     name: 'habapp_start',
     description: 'إرسال رسالة الترحيب التفاعلية في هذه القناة',
@@ -163,14 +167,38 @@ const commands = [
   }
 ];
 
+// Final list sent to Discord
 const commands = [...builtCommands, ...extraCommands];
+
+// Resolve application and guild IDs from config.json or env
+const appId =
+  cfg.clientId ||
+  process.env.CLIENT_ID ||
+  process.env.DISCORD_CLIENT_ID;
+
+const guildId =
+  cfg.guildId ||
+  process.env.GUILD_ID ||
+  process.env.DISCORD_GUILD_ID;
+
+if (!appId) {
+  console.error('❌ Missing application id (clientId/CLIENT_ID). Check config.json or .env');
+  process.exit(1);
+}
+if (!guildId) {
+  console.error('❌ Missing guild id (guildId/GUILD_ID). Check config.json or .env');
+  process.exit(1);
+}
 
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
 
 async function main() {
   try {
     console.log('Deploying slash commands...');
-    await rest.put(Routes.applicationGuildCommands(cfg.clientId, cfg.guildId), { body: commands });
+    await rest.put(
+      Routes.applicationGuildCommands(appId, guildId),
+      { body: commands }
+    );
     console.log(`Successfully reloaded ${commands.length} application (/) commands.`);
   } catch (error) {
     console.error(error);

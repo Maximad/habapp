@@ -1,10 +1,30 @@
 [
   {
+    "id": null,
+    "discordId": "",
     "userId": "886172468870541353",
+    "username": "",
+    "displayName": null,
     "units": [
       "media",
       "geeks"
     ],
+    "functions": [],
+    "identityMode": "unknown",
+    "state": "guest",
+    "languages": [],
+    "availability": null,
+    "bio": null,
+    "stats": {
+      "completedTasks": 0,
+      "qualityAvg": null,
+      "ethicsFlags": 0,
+      "points": 0,
+      "lastActiveAt": null
+    },
+    "status": null,
+    "createdAt": "2025-11-28T20:11:17.248Z",
+    "updatedAt": "2025-11-28T20:11:17.248Z",
     "roles": [
       "writing",
       "web_dev",
@@ -39,5 +59,77 @@
         "notes": null
       }
     ]
+  },
+  {
+    "id": "886172468870541353",
+    "discordId": "886172468870541353",
+    "userId": "886172468870541353",
+    "username": "maximad_",
+    "displayName": "MaximAD",
+    "units": [
+      "think",
+      "production",
+      "media",
+      "geeks",
+      "people"
+    ],
+    "functions": [
+      "editor-in-chief",
+      "sound",
+      "field-ops",
+      "event-host",
+      "managing-editor",
+      "post-supervisor",
+      "producer",
+      "desk-editor",
+      "reporter",
+      "graphics",
+      "researcher",
+      "photo",
+      "developer",
+      "video"
+    ],
+    "identityMode": "unknown",
+    "state": "guest",
+    "languages": [],
+    "availability": null,
+    "bio": null,
+    "stats": {
+      "completedTasks": 0,
+      "qualityAvg": null,
+      "ethicsFlags": 0,
+      "points": 0,
+      "lastActiveAt": null
+    },
+    "status": null,
+    "createdAt": "2025-11-28T20:11:17.247Z",
+    "updatedAt": "2025-11-28T23:20:02.062Z",
+    "roles": [
+      "@everyone",
+      "[UNIT] Think",
+      "[FUNC] Editor in Chief",
+      "[FUNC] Sound",
+      "[STATE] Guest",
+      "[FUNC] Field Ops",
+      "[UNIT] Production",
+      "[UNIT] Media",
+      "[UNIT] Geeks",
+      "[FUNC] Event Host",
+      "[FUNC] Managing Editor",
+      "[FUNC] Post Supervisor",
+      "[ORG] Safety Lead",
+      "[FUNC] Producer",
+      "[UNIT] People",
+      "[FUNC] Desk Editor",
+      "[ORG] Owner (Administrator)",
+      "[FUNC] Reporter",
+      "[FUNC] Graphics",
+      "[FUNC] Researcher",
+      "[FUNC] Photo",
+      "[FUNC] Developer",
+      "[FUNC] Video"
+    ],
+    "skills": [],
+    "learningInterests": []
   }
 ]
