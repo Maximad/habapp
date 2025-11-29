@@ -9,6 +9,7 @@ const { listTasks, createTask } = require('../tasks');
 const { getProductionTemplateByCode } = require('../templates/templates.production');
 const { getPipelineByKey, getUnitByKey } = require('../units');
 const { getTaskTemplateById } = require('../templates/task-templates');
+const { pickTaskOwner } = require('../../people/memberAssignment');
 const { listMembers } = require('../../people/memberStore');
 const { resolveSlug, validateSlugFormat } = require('../../utils/slug');
 
@@ -321,30 +322,6 @@ function resolveTemplateUnit(template, pipeline, fallbackUnit) {
   return (template.unit || pipeline?.unitKey || pipeline?.unit || fallbackUnit || '').toLowerCase();
 }
 
-function findDefaultOwnerForTemplate(template, pipeline, fallbackUnit, store) {
-  const members = listMembers(store);
-  if (!members || members.length === 0) return null;
-
-  const allowedStates = new Set(['active', 'core', 'lead']);
-  const unitKey = resolveTemplateUnit(template, pipeline, fallbackUnit);
-  const func = (template.defaultOwnerFunc || template.defaultOwnerRole || '').toLowerCase();
-  if (!func || !unitKey) return null;
-
-  const match = members.find(m => {
-    if (!allowedStates.has((m.state || '').toLowerCase())) return false;
-    const unitMatch = Array.isArray(m.units)
-      ? m.units.some(u => (u || '').toLowerCase() === unitKey)
-      : false;
-    const funcMatch = Array.isArray(m.functions)
-      ? m.functions.some(f => (f || '').toLowerCase() === func)
-      : false;
-    return unitMatch && funcMatch;
-  });
-
-  if (!match) return null;
-  return match.discordId || match.id || null;
-}
-
 function createProjectWithScaffold({
   title,
   unit = null,
@@ -362,9 +339,15 @@ function createProjectWithScaffold({
 
   const pipeline = getPipelineByKey(project.pipelineKey || pipelineKey);
   const templates = resolveTemplateListForPipeline(pipeline);
+  const members = listMembers(store);
 
   const createdTasks = templates.map(t => {
-    const ownerId = findDefaultOwnerForTemplate(t, pipeline, unit, store);
+    const templateUnit = resolveTemplateUnit(t, pipeline, unit || (project.units && project.units[0]));
+    const ownerId = pickTaskOwner(
+      members,
+      templateUnit,
+      t.defaultOwnerFunc || t.defaultOwnerRole || null
+    );
     const due = resolveTaskDueDateFromTemplate(t, project);
     const definitionOfDone = t.definitionOfDone_ar || null;
 
@@ -375,12 +358,12 @@ function createProjectWithScaffold({
       description_ar: t.description_ar || null,
       definitionOfDone: definitionOfDone,
       definitionOfDone_ar: definitionOfDone,
-      unit: resolveTemplateUnit(t, pipeline, unit) || null,
+      unit: templateUnit || null,
       templateId: t.id,
       defaultOwnerFunc: t.defaultOwnerFunc || t.defaultOwnerRole || null,
       defaultOwnerRole: t.defaultOwnerRole || t.defaultOwnerFunc || null,
       defaultChannelKey: t.defaultChannelKey || null,
-      ownerId,
+      ownerId: ownerId || null,
       size: t.size || null,
       due
     }, store);

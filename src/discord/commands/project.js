@@ -53,7 +53,29 @@ async function handleCreate(interaction) {
     tasks: result.tasks
   });
 
-  return interaction.editReply(buildSuccessMessage('project_created', { title }));
+  const resolveOwnerDisplay = task => {
+    if (!task?.ownerId) return 'غير معيّن بعد';
+    const member = interaction.guild?.members?.cache?.get(task.ownerId);
+    return member?.displayName || `<@${task.ownerId}>`;
+  };
+
+  const taskLines = (result.tasks || []).map(task => {
+    const sizeTag = task.size ? `[${task.size}] ` : '';
+    const titleLabel = task.title_ar || task.title || 'مهمة بدون عنوان';
+    const ownerLabel = resolveOwnerDisplay(task);
+    return `- ${sizeTag}${titleLabel} – ${ownerLabel}`;
+  });
+
+  const response = [
+    buildSuccessMessage('project_created', { title }),
+    '',
+    'المهام:',
+    ...((taskLines && taskLines.length) ? taskLines : ['- لا توجد مهام حالياً.'])
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  return interaction.editReply(response);
 }
 
 async function handleProject(interaction) {

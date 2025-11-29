@@ -37,6 +37,10 @@ function addTaskToProject(project, fields) {
     defaultChannelKey: fields.defaultChannelKey || null,
     size: fields.size || null,
     due: fields.due || null,
+    reminders: {
+      mainSentAt: null,
+      handoverSentAt: null
+    },
     status: 'open',
     createdAt: now,
     completedAt: null,
