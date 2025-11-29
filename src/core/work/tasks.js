@@ -32,7 +32,6 @@ function addTaskToProject(project, fields) {
     definitionOfDone_ar: fields.definitionOfDone_ar || null,
     unit: fields.unit || null,
     ownerId: fields.ownerId || null,
-    assignedToDiscordId: fields.assignedToDiscordId || fields.ownerId || null,
     defaultOwnerFunc: fields.defaultOwnerFunc || fields.defaultOwnerRole || null,
     defaultOwnerRole: fields.defaultOwnerRole || fields.defaultOwnerFunc || null,
     defaultChannelKey: fields.defaultChannelKey || null,

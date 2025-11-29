@@ -22,9 +22,7 @@ async function notifyProjectCreated({ interaction, project, tasks }) {
   const channelId = getChannelIdByKey(channelKey);
   if (!channelId || !guild) return null;
 
-  const mentions = Array.from(
-    new Set((tasks || []).map(t => t.assignedToDiscordId || t.ownerId).filter(Boolean))
-  )
+  const mentions = Array.from(new Set((tasks || []).map(t => t.ownerId).filter(Boolean)))
     .map(id => `<@${id}>`)
     .join(' ');
 

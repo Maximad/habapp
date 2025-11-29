@@ -7,10 +7,9 @@ function formatTaskLine(entry = {}, options = {}) {
 
   const label = task.title_ar || task.title || 'مهمة بدون عنوان';
   const sizeTag = task.size ? `[${task.size}] ` : '';
-  const ownerId = task.assignedToDiscordId || task.ownerId;
   const owner = showOwner
-    ? ownerId
-      ? `<@${ownerId}>`
+    ? task.ownerId
+      ? `<@${task.ownerId}>`
       : 'غير معيّن بعد'
     : null;
   const due = task.due || task.dueDate || 'غير محدد';

@@ -321,60 +321,28 @@ function resolveTemplateUnit(template, pipeline, fallbackUnit) {
   return (template.unit || pipeline?.unitKey || pipeline?.unit || fallbackUnit || '').toLowerCase();
 }
 
-function autoAssignTasksForProject({ project, tasks, createdByDiscordId }, store) {
-  const members = listMembers(store) || [];
+function findDefaultOwnerForTemplate(template, pipeline, fallbackUnit, store) {
+  const members = listMembers(store);
+  if (!members || members.length === 0) return null;
+
   const allowedStates = new Set(['active', 'core', 'lead']);
-  const unitKey = (project?.unit || (project?.units && project.units[0]) || '').toLowerCase();
-  const creator = members.find(m => (m.discordId || m.id) === createdByDiscordId) || null;
+  const unitKey = resolveTemplateUnit(template, pipeline, fallbackUnit);
+  const func = (template.defaultOwnerFunc || template.defaultOwnerRole || '').toLowerCase();
+  if (!func || !unitKey) return null;
 
-  const pickAssignee = template => {
-    const func = (template?.defaultOwnerFunc || template?.defaultOwnerRole || '').toLowerCase();
-    const candidates = members.filter(m => {
-      if (!allowedStates.has((m.state || '').toLowerCase())) return false;
-      const unitMatch = Array.isArray(m.units)
-        ? m.units.some(u => (u || '').toLowerCase() === unitKey)
-        : false;
-      const funcMatch = func
-        ? Array.isArray(m.functions)
-          ? m.functions.some(f => (f || '').toLowerCase() === func)
-          : false
-        : true;
-      return unitMatch && funcMatch;
-    });
-
-    if (candidates.length > 0) {
-      const chosen = candidates[0];
-      return chosen.discordId || chosen.id || null;
-    }
-
-    if (creator) return createdByDiscordId || creator.discordId || creator.id || null;
-    return null;
-  };
-
-  const projectRecord = findProject(project.slug, store) || project;
-
-  (tasks || []).forEach(task => {
-    const template = task.templateId ? getTaskTemplateById(task.templateId) : null;
-    const assignee = pickAssignee(template);
-    if (!assignee) return;
-
-    task.assignedToDiscordId = task.assignedToDiscordId || assignee;
-    task.ownerId = task.ownerId || assignee;
-
-    if (projectRecord && Array.isArray(projectRecord.tasks)) {
-      const found = projectRecord.tasks.find(t => t && t.id === task.id);
-      if (found) {
-        found.assignedToDiscordId = found.assignedToDiscordId || assignee;
-        found.ownerId = found.ownerId || assignee;
-      }
-    }
+  const match = members.find(m => {
+    if (!allowedStates.has((m.state || '').toLowerCase())) return false;
+    const unitMatch = Array.isArray(m.units)
+      ? m.units.some(u => (u || '').toLowerCase() === unitKey)
+      : false;
+    const funcMatch = Array.isArray(m.functions)
+      ? m.functions.some(f => (f || '').toLowerCase() === func)
+      : false;
+    return unitMatch && funcMatch;
   });
 
-  if (projectRecord) {
-    upsertProject(projectRecord, store);
-  }
-
-  return tasks;
+  if (!match) return null;
+  return match.discordId || match.id || null;
 }
 
 function createProjectWithScaffold({
@@ -396,6 +364,7 @@ function createProjectWithScaffold({
   const templates = resolveTemplateListForPipeline(pipeline);
 
   const createdTasks = templates.map(t => {
+    const ownerId = findDefaultOwnerForTemplate(t, pipeline, unit, store);
     const due = resolveTaskDueDateFromTemplate(t, project);
     const definitionOfDone = t.definitionOfDone_ar || null;
 
@@ -411,8 +380,7 @@ function createProjectWithScaffold({
       defaultOwnerFunc: t.defaultOwnerFunc || t.defaultOwnerRole || null,
       defaultOwnerRole: t.defaultOwnerRole || t.defaultOwnerFunc || null,
       defaultChannelKey: t.defaultChannelKey || null,
-      assignedToDiscordId: null,
-      ownerId: null,
+      ownerId,
       size: t.size || null,
       due
     }, store);
@@ -421,12 +389,8 @@ function createProjectWithScaffold({
   });
 
   const savedProject = findProject(project.slug, store);
-  const assignedTasks = autoAssignTasksForProject(
-    { project: savedProject, tasks: createdTasks, createdByDiscordId },
-    store
-  );
 
-  return { project: savedProject, tasks: assignedTasks };
+  return { project: savedProject, tasks: createdTasks };
 }
 
 function setProjectStage(slug, stage) {

@@ -123,6 +123,11 @@ const extraCommands = [
     options: [
       {
         type: 1,
+        name: 'summary',
+        description: 'عرض ملفك في حبق بناءً على الأدوار الحالية في ديسكورد'
+      },
+      {
+        type: 1,
         name: 'skills',
         description: 'إضافة أو تحديث مهارة',
         options: [
