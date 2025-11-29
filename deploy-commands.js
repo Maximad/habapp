@@ -2,154 +2,24 @@
 require('dotenv').config();
 const { REST, Routes } = require('discord.js');
 const cfg = require('./config.json');
-const { pipelines } = require('./src/core/work/units');
 
-const pipelineChoices = pipelines
-  .filter(p => !p.hidden)
-  .map(p => ({ name: p.name_ar, value: p.key }));
+const commandModules = [
+  require('./src/commands/ping'),
+  require('./src/commands/profile'),
+  require('./src/commands/project'),
+  require('./src/commands/task'),
+  require('./src/commands/status'),
+  require('./src/commands/remind')
+];
 
-const commands = [
-  {
-    name: 'ping',
-    description: 'اختبار استجابة HabApp',
-    dm_permission: false,
-    type: 1
-  },
-  {
-    name: 'profile',
-    description: 'عرض ملفك في حبق بناءً على الأدوار الحالية في ديسكورد',
-    dm_permission: false,
-    type: 1
-  },
+const builtCommands = commandModules.map(c => c.data.toJSON());
+
+const extraCommands = [
   {
     name: 'habapp_start',
     description: 'إرسال رسالة الترحيب التفاعلية في هذه القناة',
     dm_permission: false,
     type: 1
-  },
-  {
-    name: 'project',
-    description: 'إنشاء أو إدارة مشروع إنتاج',
-    dm_permission: false,
-    type: 1,
-    options: [
-      {
-        type: 1,
-        name: 'create',
-        description: 'إنشاء مشروع جديد',
-        options: [
-          { type: 3, name: 'name', description: 'اسم المشروع', required: true },
-          { type: 3, name: 'due', description: 'تاريخ التسليم (YYYY-MM-DD)', required: true },
-          { type: 3, name: 'slug', description: 'رمز قصير للمشروع (اختياري)', required: false },
-          {
-            type: 3,
-            name: 'pipeline',
-            description: 'مسار العمل (اختر المسار المناسب)',
-            required: false,
-            choices: pipelineChoices
-          },
-          {
-            type: 3,
-            name: 'unit',
-            description: 'الوحدة الأساسية إذا لم تكن القناة تفرض وحدة محددة',
-            required: false,
-            choices: [
-              { name: 'الإنتاج', value: 'production' },
-              { name: 'الإعلام', value: 'media' },
-              { name: 'الناس', value: 'people' },
-              { name: 'الجيكس', value: 'geeks' }
-            ]
-          },
-          {
-            type: 3,
-            name: 'units',
-            description: 'وحدات المشروع (مفصولة بفواصل مثل production,media)',
-            required: false
-          },
-          {
-            type: 3,
-            name: 'template',
-            description: 'قالب الإنتاج (A/B/C)',
-            required: false,
-            choices: [
-              { name: 'قالب A - بسيط/داخلي', value: 'A' },
-              { name: 'قالب B - وثائقي قياسي', value: 'B' },
-              { name: 'قالب C - معيار عميل مرتفع', value: 'C' },
-              { name: 'بدون قالب محدد', value: 'none' }
-            ]
-          }
-        ]
-      },
-      {
-        type: 1,
-        name: 'scaffold',
-        description: 'توليد مهام تلقائية من قوالب المسار',
-        options: [
-          { type: 3, name: 'slug', description: 'رمز المشروع', required: true },
-          {
-            type: 3,
-            name: 'pipeline',
-            description: 'مسار العمل (اختياري، يستخدم مسار المشروع إذا تُرك فارغاً)',
-            required: false,
-            choices: pipelineChoices
-          }
-        ]
-      },
-      {
-        type: 1,
-        name: 'stage',
-        description: 'تحديث مرحلة المشروع',
-        options: [
-          { type: 3, name: 'slug', description: 'رمز المشروع', required: true },
-          {
-            type: 3,
-            name: 'stage',
-            description: 'مرحلة المشروع',
-            required: true,
-            choices: [
-              { name: 'التخطيط', value: 'planning' },
-              { name: 'التصوير', value: 'shooting' },
-              { name: 'المونتاج', value: 'editing' },
-              { name: 'المراجعة', value: 'review' },
-              { name: 'مؤرشف', value: 'archived' }
-            ]
-          }
-        ]
-      },
-      {
-        type: 1,
-        name: 'delete',
-        description: 'حذف مشروع بالكامل',
-        options: [
-          { type: 3, name: 'slug', description: 'رمز المشروع', required: true },
-          {
-            type: 5,
-            name: 'confirm',
-            description: 'اكتب true إذا كنت متأكداً من الحذف',
-            required: true
-          }
-        ]
-      },
-      {
-        type: 1,
-        name: 'tasks',
-        description: 'عرض مهام المشروع',
-        options: [
-          { type: 3, name: 'slug', description: 'رمز المشروع', required: true },
-          {
-            type: 3,
-            name: 'status',
-            description: 'حالة المهام',
-            required: false,
-            choices: [
-              { name: 'مفتوحة', value: 'open' },
-              { name: 'منجزة', value: 'done' },
-              { name: 'الكل', value: 'all' }
-            ]
-          }
-        ]
-      }
-    ]
   },
   {
     name: 'task_review',
@@ -227,13 +97,7 @@ const commands = [
               { name: 'الإدارة', value: 'admin' }
             ]
           },
-          {
-            type: 3,
-            name: 'pipeline',
-            description: 'مسار العمل المرتبط',
-            required: true,
-            choices: pipelineChoices
-          },
+          { type: 3, name: 'pipeline', description: 'مسار العمل المرتبط', required: true },
           { type: 3, name: 'title', description: 'عنوان مختصر', required: true },
           { type: 3, name: 'description', description: 'وصف مختصر', required: true },
           { type: 3, name: 'completed_at', description: 'تاريخ الإنجاز (YYYY-MM أو يوم)', required: true },
@@ -287,163 +151,20 @@ const commands = [
         ]
       }
     ]
-  },
-  {
-    name: 'task',
-    description: 'إدارة مهام مشروع',
-    dm_permission: false,
-    type: 1,
-    options: [
-      {
-        type: 1,
-        name: 'add',
-        description: 'إضافة مهمة جديدة',
-        options: [
-          { type: 3, name: 'slug', description: 'رمز المشروع', required: true },
-          { type: 3, name: 'title', description: 'عنوان المهمة', required: true },
-          {
-            type: 3,
-            name: 'unit',
-            description: 'الوحدة المسؤولة',
-            required: false,
-            choices: [
-              { name: 'الإعلام', value: 'media' },
-              { name: 'الإنتاج', value: 'production' },
-              { name: 'فِكر', value: 'think' },
-              { name: 'الناس', value: 'people' },
-              { name: 'الأكاديمية', value: 'academy' },
-              { name: 'الجيكس', value: 'geeks' },
-              { name: 'الإدارة', value: 'admin' }
-            ]
-          },
-          { type: 6, name: 'owner', description: 'تعيين المنفّذ (اختياري)', required: false },
-          { type: 3, name: 'due', description: 'تاريخ التسليم (اختياري)', required: false },
-          {
-            type: 3,
-            name: 'template_id',
-            description: 'معرّف قالب مهمة (اختياري)',
-            required: false
-          }
-        ]
-      },
-      {
-        type: 1,
-        name: 'complete',
-        description: 'وضع مهمة كمنجزة',
-        options: [
-          { type: 3, name: 'slug', description: 'رمز المشروع', required: true },
-          { type: 4, name: 'task_id', description: 'رقم المهمة', required: true }
-        ]
-      },
-      {
-        type: 1,
-        name: 'delete',
-        description: 'حذف مهمة',
-        options: [
-          { type: 3, name: 'slug', description: 'رمز المشروع', required: true },
-          { type: 4, name: 'task_id', description: 'رقم المهمة', required: true }
-        ]
-      },
-      {
-        type: 1,
-        name: 'list',
-        description: 'عرض مهام المشروع',
-        options: [
-          { type: 3, name: 'slug', description: 'رمز المشروع', required: true },
-          {
-            type: 3,
-            name: 'status',
-            description: 'حالة المهام',
-            required: false,
-            choices: [
-              { name: 'مفتوحة', value: 'open' },
-              { name: 'منجزة', value: 'done' },
-              { name: 'الكل', value: 'all' }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'template',
-    description: 'قوالب جاهزة للمهام',
-    dm_permission: false,
-    type: 1,
-    options: [
-      {
-        type: 1,
-        name: 'task-list',
-        description: 'عرض قوالب المهام',
-        options: [
-          {
-            type: 3,
-            name: 'unit',
-            description: 'حصر القوالب بوحدة معيّنة (اختياري)',
-            required: false,
-            choices: [
-              { name: 'الكل', value: 'all' },
-              { name: 'الإعلام', value: 'media' },
-              { name: 'الإنتاج', value: 'production' },
-              { name: 'فِكر', value: 'think' },
-              { name: 'الناس', value: 'people' },
-              { name: 'الأكاديمية', value: 'academy' },
-              { name: 'الجيكس', value: 'geeks' },
-              { name: 'الإدارة', value: 'admin' }
-            ]
-          }
-        ]
-      },
-      {
-        type: 1,
-        name: 'task-spawn',
-        description: 'إنشاء مهمة من قالب',
-        options: [
-          { type: 3, name: 'slug', description: 'رمز المشروع', required: true },
-          { type: 3, name: 'template_id', description: 'معرّف القالب', required: true },
-          { type: 6, name: 'owner', description: 'تعيين المنفّذ (اختياري)', required: false },
-          { type: 3, name: 'due', description: 'تاريخ التسليم (اختياري)', required: false }
-        ]
-      }
-    ]
-  },
-  {
-    name: 'status',
-    description: 'عرض معلومات حالات حبق',
-    dm_permission: false,
-    type: 1,
-    options: [
-      {
-        type: 1,
-        name: 'info',
-        description: 'عرض نظرة عامة على الحالات والمبادئ'
-      },
-      {
-        type: 1,
-        name: 'rewards',
-        description: 'عرض الحوافز والمكافآت المقترحة لكل حالة'
-      }
-    ]
   }
 ];
 
+const commands = [...builtCommands, ...extraCommands];
+
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
-const appId = cfg.applicationId;
-const guildId = cfg.guildId;
 
 async function main() {
   try {
-    console.log(
-      `[HabApp] نشر ${commands.length} أمراً من أوامر HabApp إلى الخادم ${guildId} ...`
-    );
-    
-    await rest.put(
-      Routes.applicationGuildCommands(appId, guildId),
-      { body: commands }
-    );
-    console.log('[HabApp] تم تحديث أوامر HabApp بنجاح.');
-  } catch (err) {
-    console.error('Failed to deploy commands', err);
+    console.log('Deploying slash commands...');
+    await rest.put(Routes.applicationGuildCommands(cfg.clientId, cfg.guildId), { body: commands });
+    console.log(`Successfully reloaded ${commands.length} application (/) commands.`);
+  } catch (error) {
+    console.error(error);
   }
 }
 

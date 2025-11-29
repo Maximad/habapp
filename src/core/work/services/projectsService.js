@@ -5,9 +5,11 @@ const {
   applyProjectDefaults,
   listProjects
 } = require('../projects');
-const { listTasks } = require('../tasks');
+const { listTasks, createTask } = require('../tasks');
 const { getProductionTemplateByCode } = require('../templates/templates.production');
 const { getPipelineByKey, getUnitByKey } = require('../units');
+const { getTaskTemplateById } = require('../templates/task-templates');
+const { listMembers } = require('../../people/memberStore');
 const { resolveSlug, validateSlugFormat } = require('../../utils/slug');
 
 const ALLOWED_STAGES = ['planning', 'shooting', 'editing', 'review', 'archived'];
@@ -252,6 +254,181 @@ function createProject({
   return { project, template };
 }
 
+function resolveTemplateListForPipeline(pipeline) {
+  if (!pipeline) return [];
+
+  const stacks = [];
+  if (Array.isArray(pipeline.templateKeys)) {
+    stacks.push(pipeline.templateKeys);
+  }
+
+  if (Array.isArray(pipeline.defaultTaskTemplateIds)) {
+    stacks.push(pipeline.defaultTaskTemplateIds);
+  }
+
+  if (Array.isArray(pipeline.defaultTemplateIds)) {
+    stacks.push(pipeline.defaultTemplateIds);
+  }
+
+  if (Array.isArray(pipeline.inheritTemplatePipelineKeys)) {
+    for (const key of pipeline.inheritTemplatePipelineKeys) {
+      const inherited = getPipelineByKey(key);
+      if (inherited) {
+        stacks.push(resolveTemplateListForPipeline(inherited).map(t => t.id));
+      }
+    }
+  }
+
+  if (Array.isArray(pipeline.supportTemplateIds)) {
+    stacks.push(pipeline.supportTemplateIds);
+  }
+
+  const seen = new Set();
+  return stacks
+    .flat()
+    .map(id => getTaskTemplateById(id))
+    .filter(Boolean)
+    .filter(t => {
+      if (seen.has(t.id)) return false;
+      seen.add(t.id);
+      return true;
+    });
+}
+
+function resolveTaskDueDateFromTemplate(template, project) {
+  const projectDue = project?.dueDate || project?.due || null;
+
+  if (typeof template.dueOffsetDays === 'number' && projectDue) {
+    const base = new Date(projectDue);
+    if (!Number.isNaN(base.valueOf())) {
+      base.setUTCDate(base.getUTCDate() + template.dueOffsetDays);
+      return base.toISOString().slice(0, 10);
+    }
+  }
+
+  if (projectDue) return projectDue.toString();
+
+  if (typeof template.defaultDueDays === 'number') {
+    const base = new Date();
+    base.setUTCDate(base.getUTCDate() + template.defaultDueDays);
+    return base.toISOString().slice(0, 10);
+  }
+
+  return null;
+}
+
+function resolveTemplateUnit(template, pipeline, fallbackUnit) {
+  return (template.unit || pipeline?.unitKey || pipeline?.unit || fallbackUnit || '').toLowerCase();
+}
+
+function autoAssignTasksForProject({ project, tasks, createdByDiscordId }, store) {
+  const members = listMembers(store) || [];
+  const allowedStates = new Set(['active', 'core', 'lead']);
+  const unitKey = (project?.unit || (project?.units && project.units[0]) || '').toLowerCase();
+  const creator = members.find(m => (m.discordId || m.id) === createdByDiscordId) || null;
+
+  const pickAssignee = template => {
+    const func = (template?.defaultOwnerFunc || template?.defaultOwnerRole || '').toLowerCase();
+    const candidates = members.filter(m => {
+      if (!allowedStates.has((m.state || '').toLowerCase())) return false;
+      const unitMatch = Array.isArray(m.units)
+        ? m.units.some(u => (u || '').toLowerCase() === unitKey)
+        : false;
+      const funcMatch = func
+        ? Array.isArray(m.functions)
+          ? m.functions.some(f => (f || '').toLowerCase() === func)
+          : false
+        : true;
+      return unitMatch && funcMatch;
+    });
+
+    if (candidates.length > 0) {
+      const chosen = candidates[0];
+      return chosen.discordId || chosen.id || null;
+    }
+
+    if (creator) return createdByDiscordId || creator.discordId || creator.id || null;
+    return null;
+  };
+
+  const projectRecord = findProject(project.slug, store) || project;
+
+  (tasks || []).forEach(task => {
+    const template = task.templateId ? getTaskTemplateById(task.templateId) : null;
+    const assignee = pickAssignee(template);
+    if (!assignee) return;
+
+    task.assignedToDiscordId = task.assignedToDiscordId || assignee;
+    task.ownerId = task.ownerId || assignee;
+
+    if (projectRecord && Array.isArray(projectRecord.tasks)) {
+      const found = projectRecord.tasks.find(t => t && t.id === task.id);
+      if (found) {
+        found.assignedToDiscordId = found.assignedToDiscordId || assignee;
+        found.ownerId = found.ownerId || assignee;
+      }
+    }
+  });
+
+  if (projectRecord) {
+    upsertProject(projectRecord, store);
+  }
+
+  return tasks;
+}
+
+function createProjectWithScaffold({
+  title,
+  unit = null,
+  pipelineKey,
+  dueDate,
+  createdByDiscordId
+}, store) {
+  const { project } = createProject({
+    name: title,
+    due: dueDate,
+    unit,
+    pipelineKey,
+    createdBy: createdByDiscordId
+  }, store);
+
+  const pipeline = getPipelineByKey(project.pipelineKey || pipelineKey);
+  const templates = resolveTemplateListForPipeline(pipeline);
+
+  const createdTasks = templates.map(t => {
+    const due = resolveTaskDueDateFromTemplate(t, project);
+    const definitionOfDone = t.definitionOfDone_ar || null;
+
+    const { task } = createTask(project.slug, {
+      title: t.label_ar,
+      title_ar: t.label_ar,
+      description: t.description_ar || null,
+      description_ar: t.description_ar || null,
+      definitionOfDone: definitionOfDone,
+      definitionOfDone_ar: definitionOfDone,
+      unit: resolveTemplateUnit(t, pipeline, unit) || null,
+      templateId: t.id,
+      defaultOwnerFunc: t.defaultOwnerFunc || t.defaultOwnerRole || null,
+      defaultOwnerRole: t.defaultOwnerRole || t.defaultOwnerFunc || null,
+      defaultChannelKey: t.defaultChannelKey || null,
+      assignedToDiscordId: null,
+      ownerId: null,
+      size: t.size || null,
+      due
+    }, store);
+
+    return task;
+  });
+
+  const savedProject = findProject(project.slug, store);
+  const assignedTasks = autoAssignTasksForProject(
+    { project: savedProject, tasks: createdTasks, createdByDiscordId },
+    store
+  );
+
+  return { project: savedProject, tasks: assignedTasks };
+}
+
 function setProjectStage(slug, stage) {
   assertStage(stage);
   const project = ensureProjectExists(slug);
@@ -281,5 +458,6 @@ module.exports = {
   ensureProjectAvailable,
   getProductionTemplate,
   summarizeProductionTemplate,
-  resolveProjectSlug
+  resolveProjectSlug,
+  createProjectWithScaffold
 };
