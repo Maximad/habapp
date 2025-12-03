@@ -12,6 +12,8 @@ const { getTaskTemplateById } = require('../templates/task-templates');
 const { pickTaskOwner } = require('../../people/memberAssignment');
 const { listMembers } = require('../../people/memberStore');
 const { resolveSlug, validateSlugFormat } = require('../../utils/slug');
+const { defaultStore } = require('../../store');
+const { normalizeReminders } = require('../../reminders/reminderService');
 
 const ALLOWED_STAGES = ['planning', 'shooting', 'editing', 'review', 'archived'];
 
@@ -82,6 +84,50 @@ function normalizeDueDate(due) {
 function resolveProjectSlug({ name, slug }, store) {
   const existingSlugs = listProjects(store).map(p => p.slug).filter(Boolean);
   return resolveSlug({ name, slug }, existingSlugs);
+}
+
+function scoreProjectMatch(project, query) {
+  if (!project || !query) return 0;
+  const slug = String(project.slug || '').toLowerCase();
+  const name = String(project.name || project.title || '').toLowerCase();
+  const q = String(query || '').toLowerCase();
+
+  if (!q) return 0;
+
+  if (slug === q) return 120;
+  if (name === q) return 115;
+  if (slug.startsWith(q)) return 105 - Math.min(50, slug.length - q.length);
+  if (name.startsWith(q)) return 100 - Math.min(40, name.length - q.length);
+  if (slug.includes(q)) return 90 - Math.min(30, slug.indexOf(q));
+  if (name.includes(q)) return 85 - Math.min(25, name.indexOf(q));
+  return 0;
+}
+
+function searchProjectsByQuery(query, store = defaultStore) {
+  if (!query || !String(query).trim()) return [];
+  const projects = listProjects(store);
+  const matches = projects
+    .map(project => ({ project, score: scoreProjectMatch(project, query) }))
+    .filter(item => item.score > 0)
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      const aDue = a.project?.dueDate || a.project?.due || '';
+      const bDue = b.project?.dueDate || b.project?.due || '';
+      return String(aDue).localeCompare(String(bDue));
+    });
+
+  return matches;
+}
+
+function resolveProjectByQuery(query, store = defaultStore) {
+  const matches = searchProjectsByQuery(query, store);
+  if (!matches.length) return { project: null, matches: [] };
+
+  const top = matches[0];
+  const second = matches[1];
+  const ambiguous = second && second.score >= top.score - 5;
+
+  return { project: ambiguous ? null : top.project, matches };
 }
 
 function validateUnitPipeline(unit, pipelineKey) {
@@ -323,6 +369,54 @@ function resolveTemplateUnit(template, pipeline, fallbackUnit) {
   return (template.unit || pipeline?.unitKey || pipeline?.unit || fallbackUnit || '').toLowerCase();
 }
 
+function normalizeTaskForView(task) {
+  if (!task) return null;
+  return {
+    ...task,
+    reminders: normalizeReminders(task.reminders)
+  };
+}
+
+function sortTasksByDue(tasks = []) {
+  const parsed = task => {
+    const raw = task?.due || task?.dueDate || null;
+    if (!raw) return null;
+    const date = new Date(raw);
+    return Number.isNaN(date.valueOf()) ? null : date;
+  };
+
+  return [...tasks].sort((a, b) => {
+    const aDate = parsed(a);
+    const bDate = parsed(b);
+
+    if (aDate && bDate) return aDate - bDate;
+    if (aDate && !bDate) return -1;
+    if (!aDate && bDate) return 1;
+    return (a.id || 0) - (b.id || 0);
+  });
+}
+
+function buildProjectSnapshot(slug, store = defaultStore) {
+  const project = findProject(slug, store);
+  if (!project) {
+    const err = new Error('PROJECT_NOT_FOUND');
+    err.code = 'PROJECT_NOT_FOUND';
+    throw err;
+  }
+
+  const pipeline = project.pipelineKey ? getPipelineByKey(project.pipelineKey) : null;
+  const unitKey = project.unit || (Array.isArray(project.units) ? project.units[0] : null) || null;
+  const unit = unitKey ? getUnitByKey(unitKey) : null;
+  const tasks = Array.isArray(project.tasks)
+    ? project.tasks.map(t => normalizeTaskForView(t)).filter(Boolean)
+    : [];
+
+  const openTasks = sortTasksByDue(tasks.filter(t => (t.status || 'open') === 'open'));
+  const doneTasks = sortTasksByDue(tasks.filter(t => (t.status || 'open') === 'done'));
+
+  return { project, pipeline, unit, tasks, openTasks, doneTasks };
+}
+
 function createProjectWithScaffold({
   title,
   unit = null,
@@ -396,16 +490,99 @@ function listProjectTasks(slug, status = 'open') {
   return listTasks(slug, status);
 }
 
+function listProjectTasksForView({ projectSlug, status = 'all' } = {}, store = defaultStore) {
+  if (!projectSlug) {
+    const err = new Error('PROJECT_NOT_FOUND');
+    err.code = 'PROJECT_NOT_FOUND';
+    throw err;
+  }
+
+  const project = findProject(projectSlug, store);
+  if (!project) {
+    const err = new Error('PROJECT_NOT_FOUND');
+    err.code = 'PROJECT_NOT_FOUND';
+    throw err;
+  }
+
+  const tasks = listTasks(projectSlug, status, store)
+    .map(t => normalizeTaskForView(t))
+    .filter(Boolean);
+
+  const grouped = {
+    open: sortTasksByDue(tasks.filter(t => (t.status || 'open') === 'open')),
+    done: sortTasksByDue(tasks.filter(t => (t.status || 'open') === 'done'))
+  };
+
+  const pipeline = project.pipelineKey ? getPipelineByKey(project.pipelineKey) : null;
+  const unitKey = project.unit || (Array.isArray(project.units) ? project.units[0] : null) || null;
+  const unit = unitKey ? getUnitByKey(unitKey) : null;
+
+  return { project, pipeline, unit, tasks: grouped, status };
+}
+
+function listProjectsForView({ unit } = {}, store = defaultStore) {
+  const normalizedUnit = unit ? String(unit).toLowerCase() : null;
+  const projects = listProjects(store)
+    .map(applyProjectDefaults)
+    .filter(project => {
+      if (!normalizedUnit) return true;
+      const primaryUnit = project.unit || (Array.isArray(project.units) ? project.units[0] : null);
+      if (primaryUnit && String(primaryUnit).toLowerCase() !== normalizedUnit) {
+        return false;
+      }
+      const units = Array.isArray(project.units)
+        ? project.units
+        : project.unit
+          ? [project.unit]
+          : [];
+      return units.some(u => String(u || '').toLowerCase() === normalizedUnit);
+    })
+    .sort((a, b) => {
+      const aDue = a.dueDate || a.due || '9999-12-31';
+      const bDue = b.dueDate || b.due || '9999-12-31';
+      return String(aDue).localeCompare(String(bDue));
+    });
+
+  return projects.map(project => {
+    const pipeline = project.pipelineKey ? getPipelineByKey(project.pipelineKey) : null;
+    const unitKey = normalizedUnit || project.unit || (Array.isArray(project.units) ? project.units[0] : null);
+    const unitMeta = unitKey ? getUnitByKey(unitKey) : null;
+    const tasks = Array.isArray(project.tasks) ? project.tasks : [];
+    const counts = tasks.reduce(
+      (acc, t) => {
+        const status = (t && t.status) || 'open';
+        if (status === 'done') acc.done += 1; else acc.open += 1;
+        return acc;
+      },
+      { open: 0, done: 0 }
+    );
+    const nextDue = tasks.reduce((acc, t) => {
+      const due = t?.due || t?.dueDate || null;
+      if (!due) return acc;
+      if (!acc) return due;
+      return String(due).localeCompare(String(acc)) < 0 ? due : acc;
+    }, project.dueDate || project.due || null);
+
+    return { project, pipeline, unit: unitMeta, counts, nextDue };
+  });
+}
+
 module.exports = {
   ALLOWED_STAGES,
   createProject,
   setProjectStage,
   removeProject,
   listProjectTasks,
+  listProjectTasksForView,
+  listProjectsForView,
+  resolveProjectByQuery,
+  searchProjectsByQuery,
+  buildProjectSnapshot,
   ensureProjectExists,
   ensureProjectAvailable,
   getProductionTemplate,
   summarizeProductionTemplate,
   resolveProjectSlug,
-  createProjectWithScaffold
+  createProjectWithScaffold,
+  validateUnitPipeline
 };

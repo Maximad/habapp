@@ -117,47 +117,6 @@ const extraCommands = [
       }
     ]
   },
-  {
-    name: 'profile_update',
-    description: 'تحديث مهارات واهتمامات الأعضاء',
-    dm_permission: false,
-    type: 1,
-    options: [
-      {
-        type: 1,
-        name: 'summary',
-        description: 'عرض ملفك في حبق بناءً على الأدوار الحالية في ديسكورد'
-      },
-      {
-        type: 1,
-        name: 'skills',
-        description: 'إضافة أو تحديث مهارة',
-        options: [
-          { type: 3, name: 'key', description: 'معرّف المهارة', required: true },
-          {
-            type: 3,
-            name: 'level',
-            description: 'المستوى',
-            required: true,
-            choices: [
-              { name: 'مبتدئ', value: 'beginner' },
-              { name: 'متوسط', value: 'intermediate' },
-              { name: 'متقدم', value: 'advanced' }
-            ]
-          },
-          { type: 3, name: 'examples', description: 'روابط أو أمثلة مفصولة بفواصل', required: false }
-        ]
-      },
-      {
-        type: 1,
-        name: 'learning',
-        description: 'تسجيل اهتمام تعلم جديد',
-        options: [
-          { type: 3, name: 'key', description: 'المجال أو المهارة', required: true },
-          { type: 3, name: 'notes', description: 'ملاحظات اختيارية', required: false }
-        ]
-      }
-    ]
   }
 ];
 

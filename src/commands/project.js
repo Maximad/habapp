@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
-const handleProject = require('../discord/commands/project');
+const projectHandlers = require('../discord/commands/project');
 const { units } = require('../core/work/units');
 
 // وحدة الاختيار: عددها قليل فآمن نستخدمها كـ choices
@@ -16,7 +16,7 @@ const data = new SlashCommandBuilder()
       .setDescription('إنشاء مشروع وتوليد المهام الافتراضية')
       .addStringOption(o =>
         o
-          .setName('name') // مهم أن تبقى name لتطابق الكود في الهاندلر/الكور
+          .setName('title')
           .setDescription('عنوان المشروع')
           .setRequired(true)
       )
@@ -39,7 +39,7 @@ const data = new SlashCommandBuilder()
       .addStringOption(option =>
         option
           .setName('pipeline')
-          .setDescription('مفتاح مسار العمل (مثلاً production.video_doc_interviews)')
+          .setDescription('مفتاح مسار العمل (مثلاً media.article_short)')
           .setRequired(true)
           .setAutocomplete(true)
       )
@@ -98,7 +98,11 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
-  return handleProject(interaction);
+  return projectHandlers.handleProject(interaction);
 }
 
-module.exports = { data, execute };
+async function autocomplete(interaction) {
+  return projectHandlers.handleProjectAutocomplete(interaction);
+}
+
+module.exports = { data, execute, autocomplete };

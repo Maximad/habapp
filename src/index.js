@@ -3,7 +3,7 @@ const { Client, GatewayIntentBits, Events } = require('discord.js');
 require('dotenv').config();
 
 const cfg = require('../config.json');
-const handleProject = require('./discord/commands/project');
+const projectCommand = require('./commands/project');
 const handleRemind = require('./discord/commands/remind');
 const {
   handleTaskAdd,
@@ -11,7 +11,6 @@ const {
   handleTaskDelete,
   handleTaskList
 } = require('./discord/adapters/tasks');
-const handlePipelineAutocomplete = require('./discord/autocomplete/pipeline');
 const {
   handleStatusInfo,
   handleStatusRewards
@@ -48,13 +47,74 @@ client.once(Events.ClientReady, async c => {
 // ───────── interaction handling ─────────
 client.on(Events.InteractionCreate, interaction =>
   handleInteraction(interaction, async () => {
+    if (interaction.isChatInputCommand()) {
+      const guild = interaction.guild;
+      if (!guild) return;
+
+      const name = interaction.commandName;
+
+      if (name === 'ping') {
+        return interaction.reply({ content: 'HabApp حيّ ويعمل ✅', ephemeral: true });
+      }
+
+      if (name === 'habapp_start') {
+        return sendOnboardingMessage(interaction);
+      }
+
+      // ───── project ─────
+      if (name === 'project' && projectCommand?.execute) {
+        return projectCommand.execute(interaction);
+      }
+
+      if (name === 'remind') {
+        const sub = interaction.options.getSubcommand();
+        if (sub === 'tasks') return handleRemind(interaction);
+      }
+
+      // ───── task ─────
+      if (name === 'task') {
+        const sub = interaction.options.getSubcommand();
+
+        if (sub === 'add') return handleTaskAdd(interaction);
+        if (sub === 'complete') return handleTaskComplete(interaction);
+        if (sub === 'delete') return handleTaskDelete(interaction);
+        if (sub === 'list') return handleTaskList(interaction);
+      }
+
+      // ───── status ─────
+      if (name === 'status') {
+        const sub = interaction.options.getSubcommand();
+        if (sub === 'overview') return handleStatusInfo(interaction);
+        if (sub === 'detail') return handleStatusRewards(interaction);
+      }
+
+      // ───── task_review ─────
+      if (name === 'task_review') {
+        return handleTaskReview(interaction);
+      }
+
+      // ───── work_backfill ─────
+      if (name === 'work_backfill') {
+        const sub = interaction.options.getSubcommand();
+        if (sub === 'add') return handleWorkBackfillAdd(interaction);
+        if (sub === 'verify') return handleWorkBackfillVerify(interaction);
+      }
+
+      // ───── profile ─────
+      if (name === 'profile') {
+        const sub = interaction.options.getSubcommand(false);
+        if (!sub || sub === 'summary') return handleProfile(interaction);
+        if (sub === 'skills') return handleProfileSkills(interaction);
+        if (sub === 'learning') return handleProfileLearning(interaction);
+      }
+
+      return;
+    }
+
     if (interaction.isAutocomplete()) {
       const { commandName } = interaction;
-      if (commandName === 'project') {
-        const focused = interaction.options.getFocused(true);
-        if (focused.name === 'pipeline') {
-          return handlePipelineAutocomplete(interaction);
-        }
+      if (commandName === 'project' && projectCommand?.autocomplete) {
+        return projectCommand.autocomplete(interaction);
       }
       return;
     }
@@ -73,68 +133,6 @@ client.on(Events.InteractionCreate, interaction =>
 
     if (interaction.isModalSubmit() && interaction.customId?.startsWith('onboard_')) {
       return handleOnboardingModal(interaction);
-    }
-
-    if (!interaction.isChatInputCommand()) return;
-
-    const guild = interaction.guild;
-    if (!guild) return;
-
-    const name = interaction.commandName;
-
-    if (name === 'ping') {
-      return interaction.reply({ content: 'HabApp حيّ ويعمل ✅', ephemeral: true });
-    }
-
-    if (name === 'habapp_start') {
-      return sendOnboardingMessage(interaction);
-    }
-
-    // ───── project ─────
-    if (name === 'project') {
-      return handleProject(interaction);
-    }
-
-    if (name === 'remind') {
-      const sub = interaction.options.getSubcommand();
-      if (sub === 'tasks') return handleRemind(interaction);
-    }
-
-    // ───── task ─────
-    if (name === 'task') {
-      const sub = interaction.options.getSubcommand();
-
-      if (sub === 'add') return handleTaskAdd(interaction);
-      if (sub === 'complete') return handleTaskComplete(interaction);
-      if (sub === 'delete') return handleTaskDelete(interaction);
-      if (sub === 'list') return handleTaskList(interaction);
-    }
-
-    // ───── status ─────
-    if (name === 'status') {
-      const sub = interaction.options.getSubcommand();
-      if (sub === 'overview') return handleStatusInfo(interaction);
-      if (sub === 'detail') return handleStatusRewards(interaction);
-    }
-
-    // ───── task_review ─────
-    if (name === 'task_review') {
-      return handleTaskReview(interaction);
-    }
-
-    // ───── work_backfill ─────
-    if (name === 'work_backfill') {
-      const sub = interaction.options.getSubcommand();
-      if (sub === 'add') return handleWorkBackfillAdd(interaction);
-      if (sub === 'verify') return handleWorkBackfillVerify(interaction);
-    }
-
-    // ───── profile ─────
-    if (name === 'profile') {
-      const sub = interaction.options.getSubcommand(false);
-      if (!sub || sub === 'summary') return handleProfile(interaction);
-      if (sub === 'skills') return handleProfileSkills(interaction);
-      if (sub === 'learning') return handleProfileLearning(interaction);
     }
   })
 );
