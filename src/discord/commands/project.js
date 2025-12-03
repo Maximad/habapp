@@ -3,10 +3,9 @@ const {
   resolveProjectByQuery,
   buildProjectSnapshot,
   listProjectTasksForView,
-  listProjectsForView,
   validateUnitPipeline
 } = require('../../core/work/services/projectsService');
-const { pipelines, getPipelineByKey, getUnitByKey, listPipelinesByUnit } = require('../../core/work/units');
+const { getPipelineByKey, getUnitByKey, listPipelinesByUnit } = require('../../core/work/units');
 const { notifyProjectCreated } = require('../adapters/projectNotifications');
 const { validateDueDate } = require('../utils/validation');
 const { unitKeyToArabic } = require('../i18n/profileLabels');
@@ -99,32 +98,6 @@ function formatProjectSummary(snapshot) {
     .join('\n');
 }
 
-function formatProjectList(views = [], unitLabel = null) {
-  if (!views.length) {
-    return unitLabel
-      ? 'لا توجد مشاريع مسجلة لهذه الوحدة حالياً.'
-      : 'لا توجد مشاريع نشطة حالياً في النظام.';
-  }
-
-  const header = unitLabel
-    ? `المشاريع في وحدة ${unitLabel}:`
-    : 'قائمة المشاريع الحالية:';
-
-  const lines = [header];
-
-  views.forEach(view => {
-    const project = view.project || {};
-    const title = project.name || project.title || project.slug;
-    const pipelineLabel = (view.pipeline && (view.pipeline.name_ar || view.pipeline.key)) || project.pipelineKey || '—';
-    const due = project.dueDate || project.due || view.nextDue || 'بدون موعد';
-    const stage = formatStage(project.stage);
-    const openCount = view.counts?.open ?? 0;
-    lines.push(`• ${title} (${project.slug}) — ${pipelineLabel} — ${due} — ${stage} — مهام مفتوحة: ${openCount}`);
-  });
-
-  return lines.join('\n');
-}
-
 async function handleCreate(interaction) {
   try {
     const rawTitle = interaction.options.getString('title');
@@ -159,8 +132,7 @@ async function handleCreate(interaction) {
     let pipeline = null;
     try {
       const validation = validateUnitPipeline(unitKey, pipelineKey);
-      const normalizedUnit = validation.unit || unitKey;
-      unit = normalizedUnit ? getUnitByKey(normalizedUnit) : null;
+      unit = validation.unit ? getUnitByKey(validation.unit) : null;
       pipeline = validation.pipeline || (pipelineKey ? getPipelineByKey(pipelineKey) : null);
 
       if (!unit) {
@@ -262,29 +234,6 @@ async function handleOpen(interaction) {
   }
 }
 
-async function handleList(interaction) {
-  try {
-    const unitKey = interaction.options.getString('unit');
-
-    await interaction.deferReply({ ephemeral: true });
-
-    const unit = unitKey ? getUnitByKey(unitKey) : null;
-    if (unitKey && !unit) {
-      return interaction.editReply('الوحدة المحددة غير معروفة. اختر من القائمة ثم أعد المحاولة.');
-    }
-
-    const views = listProjectsForView({ unit: unitKey || undefined });
-    const unitLabel = unit ? unit.name_ar || unit.key : null;
-
-    const content = formatProjectList(views, unitLabel || (unitKey ? unitKey : null));
-    return interaction.editReply(content);
-  } catch (err) {
-    console.error('[HabApp][project-list]', err);
-    const fallback = 'تعذر عرض قائمة المشاريع حالياً. حاول بعد قليل أو أبلغ فريق HabApp.';
-    return safeEditOrReply(interaction, { content: fallback, ephemeral: true });
-  }
-}
-
 async function handleTasks(interaction) {
   try {
     const query = interaction.options.getString('project');
@@ -339,37 +288,6 @@ async function handleTasks(interaction) {
   }
 }
 
-async function handleProjectAutocomplete(interaction) {
-  if (!interaction.isAutocomplete()) return;
-
-  const focused = interaction.options.getFocused(true);
-  if (focused.name !== 'pipeline') return;
-
-  const unitKey = interaction.options.getString('unit');
-  const query = (focused.value || '').toLowerCase();
-
-  const candidates = unitKey ? listPipelinesByUnit(unitKey) : pipelines.filter(p => !p.hidden);
-
-  const filtered = candidates
-    .filter(p => {
-      if (!query) return true;
-      const name = (p.name_ar || '').toLowerCase();
-      const key = (p.key || '').toLowerCase();
-      return name.includes(query) || key.includes(query);
-    })
-    .slice(0, 25)
-    .map(p => {
-      const unitLabel = unitKeyToArabic(p.unitKey || p.unit || unitKey) || p.unitKey || p.unit || '';
-      const label = unitLabel ? `${unitLabel} – ${p.name_ar || p.key}` : (p.name_ar || p.key);
-      return {
-        name: `${label} (${p.key})`,
-        value: p.key
-      };
-    });
-
-  return interaction.respond(filtered);
-}
-
 async function handleProject(interaction) {
   const sub = interaction.options.getSubcommand();
   if (sub === 'create') {
@@ -382,10 +300,6 @@ async function handleProject(interaction) {
 
   if (sub === 'tasks') {
     return handleTasks(interaction);
-  }
-
-  if (sub === 'list') {
-    return handleList(interaction);
   }
 
   return interaction.reply({

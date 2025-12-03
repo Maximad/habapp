@@ -520,53 +520,6 @@ function listProjectTasksForView({ projectSlug, status = 'all' } = {}, store = d
   return { project, pipeline, unit, tasks: grouped, status };
 }
 
-function listProjectsForView({ unit } = {}, store = defaultStore) {
-  const normalizedUnit = unit ? String(unit).toLowerCase() : null;
-  const projects = listProjects(store)
-    .map(applyProjectDefaults)
-    .filter(project => {
-      if (!normalizedUnit) return true;
-      const primaryUnit = project.unit || (Array.isArray(project.units) ? project.units[0] : null);
-      if (primaryUnit && String(primaryUnit).toLowerCase() !== normalizedUnit) {
-        return false;
-      }
-      const units = Array.isArray(project.units)
-        ? project.units
-        : project.unit
-          ? [project.unit]
-          : [];
-      return units.some(u => String(u || '').toLowerCase() === normalizedUnit);
-    })
-    .sort((a, b) => {
-      const aDue = a.dueDate || a.due || '9999-12-31';
-      const bDue = b.dueDate || b.due || '9999-12-31';
-      return String(aDue).localeCompare(String(bDue));
-    });
-
-  return projects.map(project => {
-    const pipeline = project.pipelineKey ? getPipelineByKey(project.pipelineKey) : null;
-    const unitKey = normalizedUnit || project.unit || (Array.isArray(project.units) ? project.units[0] : null);
-    const unitMeta = unitKey ? getUnitByKey(unitKey) : null;
-    const tasks = Array.isArray(project.tasks) ? project.tasks : [];
-    const counts = tasks.reduce(
-      (acc, t) => {
-        const status = (t && t.status) || 'open';
-        if (status === 'done') acc.done += 1; else acc.open += 1;
-        return acc;
-      },
-      { open: 0, done: 0 }
-    );
-    const nextDue = tasks.reduce((acc, t) => {
-      const due = t?.due || t?.dueDate || null;
-      if (!due) return acc;
-      if (!acc) return due;
-      return String(due).localeCompare(String(acc)) < 0 ? due : acc;
-    }, project.dueDate || project.due || null);
-
-    return { project, pipeline, unit: unitMeta, counts, nextDue };
-  });
-}
-
 module.exports = {
   ALLOWED_STAGES,
   createProject,
@@ -574,7 +527,6 @@ module.exports = {
   removeProject,
   listProjectTasks,
   listProjectTasksForView,
-  listProjectsForView,
   resolveProjectByQuery,
   searchProjectsByQuery,
   buildProjectSnapshot,

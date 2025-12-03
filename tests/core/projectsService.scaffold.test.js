@@ -9,7 +9,6 @@ const {
   createProjectWithScaffold,
   resolveProjectByQuery,
   listProjectTasksForView,
-  listProjectsForView,
   createProject
 } = require('../../src/core/work/services/projectsService');
 const { upsertMember } = require('../../src/core/people/memberStore');
@@ -225,43 +224,4 @@ test('listProjectTasksForView groups, sorts, and preserves reminders', t => {
   assert.strictEqual(view.tasks.done[0].title_ar, 'مهمة ثانية');
   assert.strictEqual(view.tasks.open[0].reminders.mainSentAt, '2024-09-01T00:00:00.000Z');
   assert.strictEqual(view.tasks.open[0].ownerId, '11');
-});
-
-test('listProjectsForView filters by unit and counts tasks', t => {
-  const { store, dir } = createTempStore();
-  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
-
-  const { project: prod } = createProject({
-    name: 'مشروع إنتاج',
-    slug: 'prod-one',
-    due: '2024-10-01',
-    unit: 'production',
-    pipelineKey: 'production.support'
-  }, store);
-
-  const { project: media } = createProject({
-    name: 'مشروع إعلام',
-    slug: 'media-one',
-    due: '2024-11-01',
-    unit: 'media',
-    pipelineKey: 'media.article_short'
-  }, store);
-
-  createTask(prod.slug, { title: 'م1', status: 'open', due: '2024-09-01' }, store);
-  const { task: doneTask } = createTask(prod.slug, { title: 'م2', status: 'open', due: '2024-08-20' }, store);
-  completeTask(prod.slug, doneTask.id, store);
-
-  createTask(media.slug, { title: 'كتابة', status: 'open', due: '2024-10-15' }, store);
-
-  const byUnit = listProjectsForView({ unit: 'production' }, store);
-  assert.strictEqual(byUnit.length, 1);
-  assert.strictEqual(byUnit[0].project.slug, 'prod-one');
-  assert.strictEqual(byUnit[0].counts.open, 1);
-  assert.strictEqual(byUnit[0].counts.done, 1);
-  assert.strictEqual(byUnit[0].nextDue, '2024-08-20');
-
-  const all = listProjectsForView({}, store);
-  assert.strictEqual(all.length, 2);
-  assert.strictEqual(all[0].project.slug, 'prod-one');
-  assert.strictEqual(all[1].project.slug, 'media-one');
 });
