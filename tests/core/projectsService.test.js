@@ -5,7 +5,7 @@ const os = require('os');
 const path = require('path');
 
 const { createStore } = require('../../src/core/store');
-const { createProject } = require('../../src/core/work/services/projectsService');
+const { createProject, validateUnitPipeline } = require('../../src/core/work/services/projectsService');
 const { getPipelineByKey } = require('../../src/core/work/units');
 
 function createTempStore() {
@@ -85,4 +85,15 @@ test('validateUnitPipeline handles case-insensitive unit and pipeline keys', t =
 
   assert.strictEqual(project.units[0], 'production');
   assert.strictEqual(project.pipelineKey, 'production.video_basic');
+});
+
+test('validateUnitPipeline enforces unit/pipeline alignment', () => {
+  const ok = validateUnitPipeline('media', 'media.article_short');
+  assert.strictEqual(ok.unit, 'media');
+  assert.strictEqual(ok.pipeline.key, 'media.article_short');
+
+  assert.throws(
+    () => validateUnitPipeline('geeks', 'media.article_short'),
+    err => err.code === 'PIPELINE_UNIT_MISMATCH'
+  );
 });

@@ -5,10 +5,17 @@ const os = require('os');
 const path = require('path');
 
 const { createStore } = require('../../src/core/store');
-const { createProjectWithScaffold } = require('../../src/core/work/services/projectsService');
+const {
+  createProjectWithScaffold,
+  resolveProjectByQuery,
+  listProjectTasksForView,
+  createProject
+} = require('../../src/core/work/services/projectsService');
 const { upsertMember } = require('../../src/core/people/memberStore');
 const { getPipelineByKey, pipelines } = require('../../src/core/work/units');
 const { getTaskTemplateById, taskTemplates } = require('../../src/core/work/templates/task-templates');
+const { createTask, completeTask } = require('../../src/core/work/tasks');
+const { loadProjects, saveProjects } = require('../../src/core/work/projects');
 
 function createTempStore() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'habapp-projects-scaffold-'));
@@ -158,4 +165,63 @@ test('pickTaskOwner respects unit, function, and state priority', t => {
   assert.strictEqual(tasks.length, 1);
   assert.strictEqual(tasks[0].ownerId, '333');
   assert.strictEqual(tasks[0].templateId, priorityTemplate.id);
+});
+
+test('resolveProjectByQuery picks the closest Arabic title and shows ambiguity', t => {
+  const { store, dir } = createTempStore();
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  createProject({
+    name: 'وثائقي البحر',
+    slug: 'sea-doc',
+    due: '2024-09-01',
+    unit: 'production',
+    pipelineKey: 'production.support'
+  }, store);
+
+  createProject({
+    name: 'وثائقي الجبل',
+    slug: 'mountain-doc',
+    due: '2024-09-10',
+    unit: 'production',
+    pipelineKey: 'production.support'
+  }, store);
+
+  const specific = resolveProjectByQuery('البحر', store);
+  assert.strictEqual(specific.project.slug, 'sea-doc');
+  assert.ok(specific.matches.length >= 1);
+
+  const ambiguous = resolveProjectByQuery('وثائقي', store);
+  assert.strictEqual(ambiguous.project, null);
+  assert.strictEqual(ambiguous.matches.length, 2);
+});
+
+test('listProjectTasksForView groups, sorts, and preserves reminders', t => {
+  const { store, dir } = createTempStore();
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  const { project } = createProject({
+    name: 'ملف مهام',
+    slug: 'task-file',
+    due: '2024-10-01',
+    unit: 'production',
+    pipelineKey: 'production.support'
+  }, store);
+
+  createTask(project.slug, { title: 'مهمة أولى', title_ar: 'مهمة أولى', size: 'M', due: '2024-09-15', ownerId: '11' }, store);
+  const { task: doneTask } = createTask(project.slug, { title: 'مهمة ثانية', title_ar: 'مهمة ثانية', size: 'S', due: '2024-09-10', ownerId: '22' }, store);
+  completeTask(project.slug, doneTask.id, store);
+
+  const allProjects = loadProjects(store);
+  allProjects[0].tasks[0].reminders = { mainSentAt: '2024-09-01T00:00:00.000Z', handoverSentAt: null };
+  saveProjects(allProjects, store);
+
+  const view = listProjectTasksForView({ projectSlug: project.slug, status: 'all' }, store);
+
+  assert.strictEqual(view.tasks.open.length, 1);
+  assert.strictEqual(view.tasks.done.length, 1);
+  assert.strictEqual(view.tasks.done[0].status, 'done');
+  assert.strictEqual(view.tasks.done[0].title_ar, 'مهمة ثانية');
+  assert.strictEqual(view.tasks.open[0].reminders.mainSentAt, '2024-09-01T00:00:00.000Z');
+  assert.strictEqual(view.tasks.open[0].ownerId, '11');
 });

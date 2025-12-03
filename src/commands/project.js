@@ -1,9 +1,13 @@
 const { SlashCommandBuilder } = require('discord.js');
 const handleProject = require('../discord/commands/project');
-const { units } = require('../core/work/units');
+const { units, pipelines } = require('../core/work/units');
 
 // وحدة الاختيار: عددها قليل فآمن نستخدمها كـ choices
 const unitChoices = units.map(u => ({ name: u.name_ar, value: u.key }));
+const pipelineChoices = pipelines.map(p => ({
+  name: `${p.name_ar || p.key} (${p.key})`,
+  value: p.key
+}));
 
 const data = new SlashCommandBuilder()
   .setName('project')
@@ -39,9 +43,9 @@ const data = new SlashCommandBuilder()
       .addStringOption(option =>
         option
           .setName('pipeline')
-          .setDescription('مفتاح مسار العمل (مثلاً production.video_doc_interviews)')
+          .setDescription('اختر مسار العمل المتوافق مع الوحدة المحددة')
           .setRequired(true)
-          .setAutocomplete(true)
+          .addChoices(...pipelineChoices)
       )
   )
 
