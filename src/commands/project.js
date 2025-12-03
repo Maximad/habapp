@@ -1,13 +1,26 @@
+// src/commands/project.js
 const { SlashCommandBuilder } = require('discord.js');
 const handleProject = require('../discord/commands/project');
 const { units, pipelines } = require('../core/work/units');
 
-// وحدة الاختيار: عددها قليل فآمن نستخدمها كـ choices
-const unitChoices = units.map(u => ({ name: u.name_ar, value: u.key }));
-const pipelineChoices = pipelines.map(p => ({
-  name: `${p.name_ar || p.key} (${p.key})`,
-  value: p.key
+// Discord hard limit: max 25 choices per option
+const MAX_CHOICES = 25;
+
+// Units are few, but we normalize anyway
+const unitChoices = units.map(u => ({
+  name: u.name_ar,
+  value: u.key
 }));
+
+// Pipelines: may be > 25, so we slice
+// We also show (key) in the name so people can still type full keys
+const pipelineChoices = pipelines
+  .filter(p => !p.hidden)
+  .map(p => ({
+    name: `${p.name_ar} (${p.key})`,
+    value: p.key
+  }))
+  .slice(0, MAX_CHOICES);
 
 const data = new SlashCommandBuilder()
   .setName('project')
@@ -20,7 +33,7 @@ const data = new SlashCommandBuilder()
       .setDescription('إنشاء مشروع وتوليد المهام الافتراضية')
       .addStringOption(o =>
         o
-          .setName('name') // مهم أن تبقى name لتطابق الكود في الهاندلر/الكور
+          .setName('title')
           .setDescription('عنوان المشروع')
           .setRequired(true)
       )
@@ -35,18 +48,25 @@ const data = new SlashCommandBuilder()
           .setName('unit')
           .setDescription('الوحدة المسؤولة عن المشروع')
           .setRequired(true);
+
         for (const choice of unitChoices) {
           o.addChoices(choice);
         }
         return o;
       })
-      .addStringOption(option =>
-        option
+      .addStringOption(o => {
+        o
           .setName('pipeline')
-          .setDescription('اختر مسار العمل المتوافق مع الوحدة المحددة')
-          .setRequired(true)
-          .addChoices(...pipelineChoices)
-      )
+          .setDescription(
+            'اختر مسار العمل من القائمة أو اكتب المفتاح يدوياً (مثل production.video_doc_interviews)'
+          )
+          .setRequired(true);
+
+        for (const choice of pipelineChoices) {
+          o.addChoices(choice);
+        }
+        return o;
+      })
   )
 
   // /project list
