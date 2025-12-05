@@ -308,4 +308,11 @@ async function handleProject(interaction) {
   });
 }
 
+async function handleProjectAutocomplete(interaction) {
+  if (typeof interaction.respond === 'function') {
+    return interaction.respond([]);
+  }
+  return [];
+}
+
 module.exports = { handleProject, handleProjectAutocomplete };
