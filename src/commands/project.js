@@ -12,16 +12,6 @@ const unitChoices = units.map(u => ({
   value: u.key
 }));
 
-// Pipelines: may be > 25, so we slice
-// We also show (key) in the name so people can still type full keys
-const pipelineChoices = pipelines
-  .filter(p => !p.hidden)
-  .map(p => ({
-    name: `${p.name_ar} (${p.key})`,
-    value: p.key
-  }))
-  .slice(0, MAX_CHOICES);
-
 const data = new SlashCommandBuilder()
   .setName('project')
   .setDescription('أوامر إدارة المشاريع في حبق')
@@ -60,11 +50,9 @@ const data = new SlashCommandBuilder()
           .setDescription(
             'اختر مسار العمل من القائمة أو اكتب المفتاح يدوياً (مثل production.video_doc_interviews)'
           )
-          .setRequired(true);
+          .setRequired(true)
+          .setAutocomplete(true);
 
-        for (const choice of pipelineChoices) {
-          o.addChoices(choice);
-        }
         return o;
       })
   )
