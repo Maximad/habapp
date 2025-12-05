@@ -5,10 +5,12 @@ const {
   listProjectTasksForView,
   validateUnitPipeline
 } = require('../../core/work/services/projectsService');
-const { getPipelineByKey, getUnitByKey, listPipelinesByUnit } = require('../../core/work/units');
+const { pipelines, getPipelineByKey, getUnitByKey, listPipelinesByUnit } = require('../../core/work/units');
 const { notifyProjectCreated } = require('../adapters/projectNotifications');
 const { validateDueDate } = require('../utils/validation');
 const { unitKeyToArabic } = require('../i18n/profileLabels');
+
+const AUTOCOMPLETE_LIMIT = 25;
 
 function formatPipelineList(unitKey) {
   const list = listPipelinesByUnit(unitKey);
@@ -96,6 +98,32 @@ function formatProjectSummary(snapshot) {
   ]
     .filter(Boolean)
     .join('\n');
+}
+
+async function handleProjectAutocomplete(interaction) {
+  const focused = interaction.options.getFocused(true);
+  if (!focused || focused.name !== 'pipeline') {
+    return interaction.respond([]);
+  }
+
+  const query = String(focused.value || '').toLowerCase();
+  const unitKey = interaction.options.getString('unit');
+
+  const available = pipelines
+    .filter(p => !p.hidden)
+    .filter(p => (!unitKey ? true : p.unitKey === unitKey));
+
+  const matches = available.filter(p => {
+    if (!query) return true;
+    const arabicName = String(p.name_ar || '').toLowerCase();
+    return p.key.toLowerCase().includes(query) || arabicName.includes(query);
+  });
+
+  const choices = matches
+    .slice(0, AUTOCOMPLETE_LIMIT)
+    .map(p => ({ name: `${p.name_ar || p.key} (${p.key})`, value: p.key }));
+
+  return interaction.respond(choices);
 }
 
 async function handleCreate(interaction) {

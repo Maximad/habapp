@@ -1,26 +1,13 @@
 // src/commands/project.js
 const { SlashCommandBuilder } = require('discord.js');
-const handleProject = require('../discord/commands/project');
-const { units, pipelines } = require('../core/work/units');
-
-// Discord hard limit: max 25 choices per option
-const MAX_CHOICES = 25;
+const projectHandlers = require('../discord/commands/project');
+const { units } = require('../core/work/units');
 
 // Units are few, but we normalize anyway
 const unitChoices = units.map(u => ({
   name: u.name_ar,
   value: u.key
 }));
-
-// Pipelines: may be > 25, so we slice
-// We also show (key) in the name so people can still type full keys
-const pipelineChoices = pipelines
-  .filter(p => !p.hidden)
-  .map(p => ({
-    name: `${p.name_ar} (${p.key})`,
-    value: p.key
-  }))
-  .slice(0, MAX_CHOICES);
 
 const data = new SlashCommandBuilder()
   .setName('project')
@@ -60,11 +47,9 @@ const data = new SlashCommandBuilder()
           .setDescription(
             'اختر مسار العمل من القائمة أو اكتب المفتاح يدوياً (مثل production.video_doc_interviews)'
           )
-          .setRequired(true);
+          .setRequired(true)
+          .setAutocomplete(true);
 
-        for (const choice of pipelineChoices) {
-          o.addChoices(choice);
-        }
         return o;
       })
   )
