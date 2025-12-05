@@ -1,7 +1,10 @@
 // src/commands/project.js
 const { SlashCommandBuilder } = require('discord.js');
-const projectHandlers = require('../discord/commands/project');
-const { units } = require('../core/work/units');
+const { handleProject, handleProjectAutocomplete } = require('../discord/commands/project');
+const { units, pipelines } = require('../core/work/units');
+
+// Discord hard limit: max 25 choices per option
+const MAX_CHOICES = 25;
 
 // Units are few, but we normalize anyway
 const unitChoices = units.map(u => ({
@@ -107,11 +110,11 @@ const data = new SlashCommandBuilder()
   );
 
 async function execute(interaction) {
-  return projectHandlers.handleProject(interaction);
+  return handleProject(interaction);
 }
 
 async function autocomplete(interaction) {
-  return projectHandlers.handleProjectAutocomplete(interaction);
+  return handleProjectAutocomplete(interaction);
 }
 
 module.exports = { data, execute, autocomplete };
