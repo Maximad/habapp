@@ -1,6 +1,16 @@
 {
   "clientId": "1441826703742599260",
   "guildId": "1423826407271825441",
+  "token": "",
+
+  "unitRoleIds": {
+    "media": "REPLACE_WITH_MEDIA_ROLE_ID",
+    "production": "REPLACE_WITH_PRODUCTION_ROLE_ID",
+    "people": "REPLACE_WITH_PEOPLE_ROLE_ID",
+    "geeks": "REPLACE_WITH_GEEKS_ROLE_ID",
+    "think": "REPLACE_WITH_THINK_ROLE_ID"
+  },
+
   "forum": {
     "productionForumId": "1441833861540741331"
   },

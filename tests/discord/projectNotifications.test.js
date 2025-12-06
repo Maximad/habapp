@@ -2,6 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 const { notifyProjectCreated } = require('../../src/discord/adapters/projectNotifications');
+const cfg = require('../../config.json');
 
 function createMockGuild(sentMessages) {
   return {
@@ -20,10 +21,12 @@ test('notifyProjectCreated posts summary to the unit main channel', async () => 
   const sent = [];
   const guild = createMockGuild(sent);
   const interaction = { guild };
+  const originalRole = cfg.unitRoleIds.media;
+  cfg.unitRoleIds.media = 'MEDIA_ROLE_ID';
   const project = {
     name: 'مبادرة تجريبية',
-    units: ['production'],
-    pipelineKey: 'production.video_basic',
+    units: ['media'],
+    pipelineKey: 'media.production_kit',
     dueDate: '2024-06-01'
   };
   const tasks = [
@@ -32,8 +35,10 @@ test('notifyProjectCreated posts summary to the unit main channel', async () => 
   ];
 
   await notifyProjectCreated({ interaction, project, tasks });
+  cfg.unitRoleIds.media = originalRole;
 
   assert.equal(sent.length, 1, 'should send one message');
+  assert.match(sent[0].content, /<@&MEDIA_ROLE_ID>/);
   assert.match(sent[0].content, /تفاصيل المشروع/);
   assert.match(sent[0].content, /مبادرة تجريبية/);
   assert.match(sent[0].content, /تنظيم الطاقم/);

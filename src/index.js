@@ -4,12 +4,14 @@ require('dotenv').config();
 
 const cfg = require('../config.json');
 const projectCommand = require('./commands/project');
+const taskCommand = require('./commands/task');
 const handleRemind = require('./discord/commands/remind');
 const {
   handleTaskAdd,
   handleTaskComplete,
   handleTaskDelete,
-  handleTaskList
+  handleTaskList,
+  handleTaskOffer
 } = require('./discord/adapters/tasks');
 const {
   handleStatusInfo,
@@ -28,6 +30,7 @@ const {
 const { handleInteraction } = require('./discord/utils/interactionWrapper');
 const { startReminderScheduler } = require('./discord/scheduler/reminders');
 const { handleReminderButton } = require('./discord/handlers/reminderButtons');
+const { handleTaskButton } = require('./discord/handlers/taskButtons');
 
 // ───────── client ─────────
 const client = new Client({
@@ -79,6 +82,7 @@ client.on(Events.InteractionCreate, interaction =>
         if (sub === 'complete') return handleTaskComplete(interaction);
         if (sub === 'delete') return handleTaskDelete(interaction);
         if (sub === 'list') return handleTaskList(interaction);
+        if (sub === 'offer') return handleTaskOffer(interaction);
       }
 
       // ───── status ─────
@@ -116,6 +120,9 @@ client.on(Events.InteractionCreate, interaction =>
       if (commandName === 'project' && projectCommand?.autocomplete) {
         return projectCommand.autocomplete(interaction);
       }
+      if (commandName === 'task' && taskCommand?.autocomplete) {
+        return taskCommand.autocomplete(interaction);
+      }
       return;
     }
 
@@ -125,6 +132,10 @@ client.on(Events.InteractionCreate, interaction =>
 
     if (interaction.isButton() && interaction.customId?.startsWith('reminder:')) {
       return handleReminderButton(interaction);
+    }
+
+    if (interaction.isButton() && interaction.customId?.startsWith('task:')) {
+      return handleTaskButton(interaction);
     }
 
     if (interaction.isStringSelectMenu() && interaction.customId?.startsWith('onboard_')) {
