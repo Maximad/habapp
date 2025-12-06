@@ -93,6 +93,18 @@ const data = new SlashCommandBuilder()
           .setDescription('اسم المشروع (اختياري)')
           .setRequired(false)
       )
+  )
+  .addSubcommand(sub =>
+    sub
+      .setName('offer')
+      .setDescription('نشر مهمة لقبولها من أعضاء الوحدة')
+      .addStringOption(o =>
+        o
+          .setName('task_id')
+          .setDescription('معرّف المهمة المطلوب عرضها')
+          .setRequired(true)
+          .setAutocomplete(true)
+      )
   );
 
 async function execute(interaction) {
@@ -103,6 +115,7 @@ async function execute(interaction) {
   if (sub === 'list') return handleTask.handleTaskList(interaction);
   if (sub === 'complete') return handleTask.handleTaskComplete(interaction);
   if (sub === 'delete') return handleTask.handleTaskDelete(interaction);
+  if (sub === 'offer') return handleTask.handleTaskOffer(interaction);
 
   return interaction.reply({
     content: 'هذا الجزء من أمر المهام غير جاهز حالياً.',
@@ -110,7 +123,16 @@ async function execute(interaction) {
   });
 }
 
+async function autocomplete(interaction) {
+  const handleTask = require('../discord/adapters/tasks');
+  if (typeof handleTask.handleTaskAutocomplete === 'function') {
+    return handleTask.handleTaskAutocomplete(interaction);
+  }
+  return interaction.respond ? interaction.respond([]) : [];
+}
+
 module.exports = {
   data,
-  execute
+  execute,
+  autocomplete
 };
