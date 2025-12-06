@@ -16,12 +16,18 @@
     "availability": null,
     "bio": null,
     "stats": {
-      "completedTasks": 0,
-      "qualityAvg": null,
-      "ethicsFlags": 0,
-      "points": 0,
-      "lastActiveAt": null
+      "tasksCompleted": 0,
+      "quality": {
+        "reviews": 0,
+        "avgScore": 0
+      },
+      "ethics": {
+        "ok": 0,
+        "needsDiscussion": 0,
+        "violation": 0
+      }
     },
+    "recommendedState": "guest",
     "status": null,
     "createdAt": "2025-11-28T20:11:17.248Z",
     "updatedAt": "2025-11-28T20:11:17.248Z",
@@ -95,15 +101,21 @@
     "availability": null,
     "bio": null,
     "stats": {
-      "completedTasks": 0,
-      "qualityAvg": null,
-      "ethicsFlags": 0,
-      "points": 0,
-      "lastActiveAt": null
+      "tasksCompleted": 0,
+      "quality": {
+        "reviews": 0,
+        "avgScore": 0
+      },
+      "ethics": {
+        "ok": 0,
+        "needsDiscussion": 0,
+        "violation": 0
+      }
     },
+    "recommendedState": "guest",
     "status": null,
     "createdAt": "2025-11-28T20:11:17.247Z",
-    "updatedAt": "2025-11-28T23:20:02.062Z",
+    "updatedAt": "2025-12-06T08:27:03.676Z",
     "roles": [
       "@everyone",
       "[UNIT] Think",

@@ -335,6 +335,17 @@ async function handleProject(interaction) {
     ephemeral: true
   });
 }
+async function handleProjectAutocomplete(interaction) {
+  // Temporary no-op autocomplete handler.
+  // Once Codex implements real autocomplete, this will be replaced.
+  try {
+    if (interaction.respond) {
+      await interaction.respond([]);
+    }
+  } catch (err) {
+    console.error('[HabApp][autocomplete][project] error:', err);
+  }
+}
 
 async function handleProjectAutocomplete(interaction) {
   if (typeof interaction.respond === 'function') {
