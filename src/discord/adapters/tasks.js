@@ -1,3 +1,4 @@
+const cfg = require('../../../config.json');
 const { buildErrorMessage } = require('../i18n/messages');
 const memberSyncService = require('../../core/people/memberSyncService');
 const membersStore = require('../../core/people/membersStore');
