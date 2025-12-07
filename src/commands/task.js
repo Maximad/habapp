@@ -103,7 +103,6 @@ const data = new SlashCommandBuilder()
           .setName('task_id')
           .setDescription('معرّف المهمة المطلوب عرضها')
           .setRequired(true)
-          .setAutocomplete(true)
       )
   );
 

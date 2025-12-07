@@ -237,12 +237,7 @@ async function createTasksFromTemplates({ projectSlug, pipelineKey }, store) {
 
 function canMemberTakeTask(task, memberProfile) {
   const units = memberProfile.units || [];
-  const functions = memberProfile.functions || [];
   if (task.unit && !units.includes(task.unit)) {
-    return false;
-  }
-  const functionKey = task.functionKey || null;
-  if (functionKey && !functions.includes(functionKey)) {
     return false;
   }
   return true;
@@ -250,10 +245,9 @@ function canMemberTakeTask(task, memberProfile) {
 
 function claimTask(store, taskId, memberId, memberProfile) {
   let task;
-  let container;
   try {
-    container = store.getTaskById(taskId);
-    task = container && container.task ? container.task : container;
+    const found = store.getTaskById(taskId);
+    task = found && found.task ? found.task : found;
   } catch (err) {
     const error = new Error('TASK_NOT_FOUND');
     error.code = 'TASK_NOT_FOUND';
@@ -278,16 +272,12 @@ function claimTask(store, taskId, memberId, memberProfile) {
     throw error;
   }
 
-  const updatedTask = { ...task, ownerId: memberId };
+  task.ownerId = memberId;
   if (typeof store.saveTask === 'function') {
-    store.saveTask(updatedTask, container);
-  } else if (container && container.task) {
-    container.task.ownerId = memberId;
-  } else {
-    task.ownerId = memberId;
+    store.saveTask(task);
   }
 
-  return updatedTask;
+  return task;
 }
 
 module.exports = {

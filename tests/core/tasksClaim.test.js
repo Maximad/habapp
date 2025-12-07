@@ -16,10 +16,10 @@ function createMockStore(tasks) {
 }
 
 test('claimTask assigns owner when task is open and member is eligible', () => {
-  const tasks = [{ id: 1, unit: 'media', functionKey: 'media.photo', ownerId: null, title: 'Edit clip' }];
+  const tasks = [{ id: 1, unit: 'media', ownerId: null, title: 'Edit clip' }];
   const store = createMockStore(tasks);
 
-  const result = claimTask(store, 1, 'member-1', { units: ['media'], functions: ['media.photo'] });
+  const result = claimTask(store, 1, 'member-1', { units: ['media'] });
 
   assert.equal(result.ownerId, 'member-1');
   assert.equal(tasks[0].ownerId, 'member-1');
@@ -43,21 +43,6 @@ test('claimTask rejects members outside the task unit', () => {
     assert.equal(err.code, 'TASK_NOT_ELIGIBLE');
     return true;
   });
-});
-
-test('claimTask rejects members missing the required function', () => {
-  const tasks = [
-    { id: 4, unit: 'media', functionKey: 'media.photo', ownerId: null, title: 'Take photos' }
-  ];
-  const store = createMockStore(tasks);
-
-  assert.throws(
-    () => claimTask(store, 4, 'member-4', { units: ['media'], functions: ['media.video'] }),
-    err => {
-      assert.equal(err.code, 'TASK_NOT_ELIGIBLE');
-      return true;
-    }
-  );
 });
 
 test('claimTask throws a code when the task is missing', () => {

@@ -8,26 +8,6 @@ const { getUnitByKey, getPipelineByKey } = require('../../core/work/units');
 const { resolveChannelKey } = require('./projectNotifications');
 const { getChannelIdByKey } = require('../utils/channels');
 
-function getTaskFunctionKey(task) {
-  return task.functionKey || null;
-}
-
-function buildMentions(task) {
-  const unitKey = task.unit;
-  const functionKey = getTaskFunctionKey(task);
-  const mentions = [];
-
-  if (functionKey && cfg.functionRoleIds && cfg.functionRoleIds[functionKey]) {
-    mentions.push(`<@&${cfg.functionRoleIds[functionKey]}>`);
-  }
-
-  if (unitKey && cfg.unitRoleIds && cfg.unitRoleIds[unitKey]) {
-    mentions.push(`<@&${cfg.unitRoleIds[unitKey]}>`);
-  }
-
-  return mentions.join(' ');
-}
-
 function getRoleNames(interaction) {
   const cache = interaction.member?.roles?.cache;
   return Array.from(cache?.values?.() || [])
@@ -134,19 +114,15 @@ async function handleTaskOffer(interaction) {
     const unitNameAr = unit?.name_ar || unitKey || '—';
     const due = task.due || task.dueDate || 'غير محدد';
     const sizeLabel = `[${(task.size || '—').toString().toUpperCase()}]`;
-    const functionKey = getTaskFunctionKey(task) || '—';
-    const mentions = buildMentions({ ...task, unit: unitKey });
 
     const title = task.title || task.title_ar || 'بدون عنوان';
 
     await channel.send({
       content:
-        `${mentions ? `${mentions}\n` : ''}` +
         `مهمة جديدة:\n` +
         `العنوان: ${title}\n` +
         `المشروع: ${project.title || project.name || project.slug}\n` +
         `الوحدة: ${unitNameAr}\n` +
-        `التخصص: ${functionKey}\n` +
         `الموعد: ${due}\n` +
         `الحجم: ${sizeLabel}`,
       components: [

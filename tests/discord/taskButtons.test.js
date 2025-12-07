@@ -34,26 +34,11 @@ test('handleTaskButton parses task id and calls claimTask', async () => {
       calls.push({ store, taskId });
       return { id: taskId, title: 'Demo', unit: 'media' };
     },
-    resolveProfile: async () => ({ units: ['media'], functions: ['media.photo'] }),
+    resolveProfile: async () => ({ units: ['media'] }),
     store: fakeStore
   });
 
   assert.equal(calls.length, 1);
   assert.equal(calls[0].taskId, 42);
   assert.equal(interaction.updated.content.includes('العنوان: Demo'), true);
-});
-
-test('handleTaskButton sends not-eligible message on function mismatch', async () => {
-  const interaction = createInteraction('task:claim:99');
-
-  await handleTaskButton(interaction, {
-    claimTask: () => {
-      const err = new Error('nope');
-      err.code = 'TASK_NOT_ELIGIBLE';
-      throw err;
-    },
-    resolveProfile: async () => ({ units: ['media'], functions: [] })
-  });
-
-  assert.equal(interaction.replied.content.includes('تخصص'), true);
 });

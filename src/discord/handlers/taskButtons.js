@@ -79,7 +79,7 @@ async function handleTaskButton(interaction, deps = {}) {
     }
     if (err.code === 'TASK_NOT_ELIGIBLE') {
       return interaction.reply({
-        content: 'هذه المهمة مخصصة لوحدة أو تخصص مختلف عنك.',
+        content: 'هذه المهمة مخصصة لوحدة أو دور مختلف عنك.',
         ephemeral: true
       });
     }
