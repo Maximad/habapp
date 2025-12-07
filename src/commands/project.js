@@ -1,26 +1,26 @@
 // src/commands/project.js
 const { SlashCommandBuilder } = require('discord.js');
-const handleProject = require('../discord/commands/project');
+const projectHandlers = require('../discord/commands/project');
 const { units, pipelines } = require('../core/work/units');
 
 // Discord hard limit: max 25 choices per option
 const MAX_CHOICES = 25;
 
-// Units are few, but we normalize anyway
+// Units (few) – full dropdown
 const unitChoices = units.map(u => ({
   name: u.name_ar,
-  value: u.key
+  value: u.key,
 }));
 
-// Pipelines: may be > 25, so we slice
-// We also show (key) in the name so people can still type full keys
+// Pipelines – we’ll show up to 25 as a helper list,
+// but still allow typing any valid key.
 const pipelineChoices = pipelines
   .filter(p => !p.hidden)
+  .slice(0, MAX_CHOICES)
   .map(p => ({
     name: `${p.name_ar} (${p.key})`,
-    value: p.key
-  }))
-  .slice(0, MAX_CHOICES);
+    value: p.key,
+  }));
 
 const data = new SlashCommandBuilder()
   .setName('project')
@@ -35,13 +35,13 @@ const data = new SlashCommandBuilder()
         o
           .setName('title')
           .setDescription('عنوان المشروع')
-          .setRequired(true)
+          .setRequired(true),
       )
       .addStringOption(o =>
         o
           .setName('due')
           .setDescription('تاريخ التسليم (YYYY-MM-DD)')
-          .setRequired(true)
+          .setRequired(true),
       )
       .addStringOption(o => {
         o
@@ -58,7 +58,7 @@ const data = new SlashCommandBuilder()
         o
           .setName('pipeline')
           .setDescription(
-            'اختر مسار العمل من القائمة أو اكتب المفتاح يدوياً (مثل production.video_doc_interviews)'
+            'اختر مسار العمل من القائمة أو اكتب المفتاح يدوياً (مثل production.video_doc_interviews)',
           )
           .setRequired(true);
 
@@ -66,7 +66,7 @@ const data = new SlashCommandBuilder()
           o.addChoices(choice);
         }
         return o;
-      })
+      }),
   )
 
   // /project list
@@ -82,7 +82,7 @@ const data = new SlashCommandBuilder()
           o.addChoices(choice);
         }
         return o;
-      })
+      }),
   )
 
   // /project open
@@ -94,8 +94,8 @@ const data = new SlashCommandBuilder()
         o
           .setName('project')
           .setDescription('اسم المشروع أو جزء منه')
-          .setRequired(true)
-      )
+          .setRequired(true),
+      ),
   )
 
   // /project tasks
@@ -107,7 +107,7 @@ const data = new SlashCommandBuilder()
         o
           .setName('project')
           .setDescription('اسم المشروع أو آخر مشروع للوحدة عند تركه فارغاً')
-          .setRequired(false)
+          .setRequired(false),
       )
       .addStringOption(o =>
         o
@@ -116,13 +116,17 @@ const data = new SlashCommandBuilder()
           .addChoices(
             { name: 'مفتوحة', value: 'open' },
             { name: 'منجزة', value: 'done' },
-            { name: 'الكل', value: 'all' }
-          )
-      )
+            { name: 'الكل', value: 'all' },
+          ),
+      ),
   );
 
 async function execute(interaction) {
-  return handleProject(interaction);
+  return projectHandlers.handleProject(interaction);
 }
 
-module.exports = { data, execute };
+async function autocomplete(interaction) {
+  return projectHandlers.handleProjectAutocomplete(interaction);
+}
+
+module.exports = { data, execute, autocomplete };

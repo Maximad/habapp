@@ -3,7 +3,7 @@ require('dotenv').config();
 const { REST, Routes } = require('discord.js');
 const cfg = require('./config.json');
 
-// 1) Commands implemented via SlashCommandBuilder modules
+// 1) Load builder-based commands from src/commands
 const commandModules = [
   require('./src/commands/ping'),
   require('./src/commands/profile'),
@@ -15,7 +15,7 @@ const commandModules = [
 
 const builtCommands = commandModules.map(m => m.data.toJSON());
 
-// 2) Extra raw commands that do NOT have modules
+// 2) Extra JSON-only commands (no builders yet)
 const extraCommands = [
   {
     name: 'habapp_start',
@@ -161,6 +161,7 @@ const extraCommands = [
   }
 ];
 
+// 3) Merge everything
 const commands = [...builtCommands, ...extraCommands];
 
 const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
@@ -169,7 +170,10 @@ async function main() {
   try {
     console.log('Deploying slash commands...');
     await rest.put(
-      Routes.applicationGuildCommands(cfg.clientId, cfg.guildId),
+      Routes.applicationGuildCommands(
+        process.env.DISCORD_CLIENT_ID || cfg.clientId,
+        process.env.DISCORD_GUILD_ID || cfg.guildId
+      ),
       { body: commands }
     );
     console.log(`Successfully reloaded ${commands.length} application (/) commands.`);

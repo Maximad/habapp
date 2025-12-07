@@ -31,6 +31,7 @@ function addTaskToProject(project, fields) {
     definitionOfDone: fields.definitionOfDone || null,
     definitionOfDone_ar: fields.definitionOfDone_ar || null,
     unit: fields.unit || null,
+    functionKey: fields.functionKey || null,
     ownerId: fields.ownerId || null,
     defaultOwnerFunc: fields.defaultOwnerFunc || fields.defaultOwnerRole || null,
     defaultOwnerRole: fields.defaultOwnerRole || fields.defaultOwnerFunc || null,
@@ -114,6 +115,23 @@ function getTaskById(taskId, store = defaultStore) {
     }
   }
   throw new Error('Task not found');
+}
+
+function saveTask(task, store = defaultStore) {
+  if (!task || typeof task.id === 'undefined') {
+    throw new Error('Task not found');
+  }
+
+  const { projects, projectIndex, taskIndex, project } = getTaskById(task.id, store);
+  const nextTask = { ...project.tasks[taskIndex], ...task };
+
+  projects[projectIndex] = {
+    ...project,
+    tasks: project.tasks.map((t, idx) => (idx === taskIndex ? nextTask : t))
+  };
+
+  saveProjects(projects, store);
+  return nextTask;
 }
 
 function listTasks(slug, status, store) {
@@ -201,6 +219,7 @@ async function createTasksFromTemplates({ projectSlug, pipelineKey }, store) {
         definitionOfDone: t.definitionOfDone_ar || null,
         definitionOfDone_ar: t.definitionOfDone_ar || null,
         unit: t.unit,
+        functionKey: t.functionKey || null,
         templateId: t.id,
         defaultOwnerFunc: t.defaultOwnerFunc || t.defaultOwnerRole || null,
         defaultOwnerRole: t.defaultOwnerRole || t.defaultOwnerFunc || null,
@@ -216,11 +235,59 @@ async function createTasksFromTemplates({ projectSlug, pipelineKey }, store) {
   return created;
 }
 
+function canMemberTakeTask(task, memberProfile) {
+  const units = memberProfile.units || [];
+  if (task.unit && !units.includes(task.unit)) {
+    return false;
+  }
+  return true;
+}
+
+function claimTask(store, taskId, memberId, memberProfile) {
+  let task;
+  try {
+    const found = store.getTaskById(taskId);
+    task = found && found.task ? found.task : found;
+  } catch (err) {
+    const error = new Error('TASK_NOT_FOUND');
+    error.code = 'TASK_NOT_FOUND';
+    throw error;
+  }
+
+  if (!task) {
+    const error = new Error('TASK_NOT_FOUND');
+    error.code = 'TASK_NOT_FOUND';
+    throw error;
+  }
+
+  if (task.ownerId && task.ownerId !== memberId) {
+    const error = new Error('TASK_ALREADY_TAKEN');
+    error.code = 'TASK_ALREADY_TAKEN';
+    throw error;
+  }
+
+  if (!canMemberTakeTask(task, memberProfile || {})) {
+    const error = new Error('TASK_NOT_ELIGIBLE');
+    error.code = 'TASK_NOT_ELIGIBLE';
+    throw error;
+  }
+
+  task.ownerId = memberId;
+  if (typeof store.saveTask === 'function') {
+    store.saveTask(task);
+  }
+
+  return task;
+}
+
 module.exports = {
   createTask,
   completeTask,
   deleteTask,
   listTasks,
   getTaskById,
-  createTasksFromTemplates
+  saveTask,
+  createTasksFromTemplates,
+  canMemberTakeTask,
+  claimTask
 };

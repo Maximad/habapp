@@ -12,12 +12,7 @@ module.exports = {
     .addSubcommand(sub =>
       sub
         .setName('detail')
-        .setDescription('عرض تفاصيل حالة محددة')
-        .addStringOption(o =>
-          o.setName('id')
-            .setDescription('معرف الحالة (lead/core/active/friend/on_call/founding/trial/guest/suspended)')
-            .setRequired(true)
-        )
+        .setDescription('عرض تفاصيل المنافع والحوافز لكل حالة')
   ),
   async execute(interaction, ctx) {
     const { status } = ctx;
@@ -32,20 +27,8 @@ module.exports = {
     }
 
     if (sub === 'detail') {
-      const id = interaction.options.getString('id', true);
-      const st = status.getState(id);
-      if (!st) {
-        return interaction.reply({
-          content: require('../discord/i18n/messages').errorMessage('status_not_found'),
-          ephemeral: true
-        });
-      }
-
-      const text =
-        `**${st.name}**\n` +
-        `${st.short}\n\n` +
-        `*تلميح حول المنافع والمكافآت:* ${st.rewardsHint}`;
-
+      const rewardsText = status.rewards ? status.rewards() : status.formatRewards ? status.formatRewards() : status.formatOverview();
+      const text = `🎁 المنافع والحوافز:\n\n${rewardsText}`;
       return interaction.reply({
         content: text,
         ephemeral: true
