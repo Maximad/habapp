@@ -26,25 +26,22 @@ function createAutocompleteInteraction({ value = '', unit = null } = {}) {
   };
 }
 
-test('project create pipeline option relies on autocomplete', () => {
+test('project create pipeline option exposes static choices', () => {
   const json = data.toJSON();
   const pipelineOption = findOption(json, 'create', 'pipeline');
 
   assert.ok(pipelineOption, 'pipeline option should exist');
-  assert.equal(pipelineOption.autocomplete, true);
-  assert.ok(!pipelineOption.choices || pipelineOption.choices.length === 0);
+  assert.ok(!pipelineOption.autocomplete, 'pipeline option should not use autocomplete');
+  assert.ok(Array.isArray(pipelineOption.choices));
+  assert.ok(pipelineOption.choices.length > 0, 'pipeline choices should be predefined');
 });
 
-test('pipeline autocomplete surfaces pipelines beyond the initial 25', async () => {
-  const lastPipeline = pipelines[pipelines.length - 1];
-  const interaction = createAutocompleteInteraction({ value: lastPipeline.key });
+test('pipeline autocomplete handler is effectively disabled', async () => {
+  const interaction = createAutocompleteInteraction({ value: pipelines[0].key });
 
   await projectHandlers.handleProjectAutocomplete(interaction);
 
   const [response] = interaction.getResponses();
   assert.ok(Array.isArray(response));
-  assert.ok(
-    response.some(choice => choice.value === lastPipeline.key),
-    'expected autocomplete results to include the requested pipeline'
-  );
+  assert.equal(response.length, 0);
 });

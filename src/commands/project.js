@@ -12,6 +12,11 @@ const unitChoices = units.map(u => ({
   value: u.key
 }));
 
+const pipelineChoices = pipelines
+  .filter(p => !p.hidden)
+  .slice(0, MAX_CHOICES)
+  .map(p => ({ name: p.name_ar || p.key, value: p.key }));
+
 const data = new SlashCommandBuilder()
   .setName('project')
   .setDescription('أوامر إدارة المشاريع في حبق')
@@ -47,11 +52,12 @@ const data = new SlashCommandBuilder()
       .addStringOption(o => {
         o
           .setName('pipeline')
-          .setDescription(
-            'اختر مسار العمل من القائمة أو اكتب المفتاح يدوياً (مثل production.video_doc_interviews)'
-          )
-          .setRequired(true)
-          .setAutocomplete(true);
+          .setDescription('اختر مسار العمل من القائمة الثابتة')
+          .setRequired(true);
+
+        for (const choice of pipelineChoices) {
+          o.addChoices(choice);
+        }
 
         return o;
       })

@@ -1,6 +1,27 @@
 {
   "clientId": "1441826703742599260",
   "guildId": "1423826407271825441",
+  "token": "",
+
+  "unitRoleIds": {
+    "media": "REPLACE_WITH_MEDIA_ROLE_ID",
+    "production": "REPLACE_WITH_PRODUCTION_ROLE_ID",
+    "people": "REPLACE_WITH_PEOPLE_ROLE_ID",
+    "geeks": "REPLACE_WITH_GEEKS_ROLE_ID",
+    "think": "REPLACE_WITH_THINK_ROLE_ID"
+  },
+
+  "functionRoleIds": {
+    "media.photo": "REPLACE_WITH_MEDIA_PHOTO_ROLE_ID",
+    "media.video": "REPLACE_WITH_MEDIA_VIDEO_ROLE_ID",
+    "media.social": "REPLACE_WITH_MEDIA_SOCIAL_ROLE_ID",
+    "media.wp": "REPLACE_WITH_MEDIA_WP_ROLE_ID",
+    "media.editor": "REPLACE_WITH_MEDIA_EDITOR_ROLE_ID",
+    "geeks.web": "REPLACE_WITH_GEEKS_WEB_ROLE_ID",
+    "geeks.wp": "REPLACE_WITH_GEEKS_WP_ROLE_ID",
+    "geeks.automation": "REPLACE_WITH_GEEKS_AUTOMATION_ROLE_ID"
+  },
+
   "forum": {
     "productionForumId": "1441833861540741331"
   },
