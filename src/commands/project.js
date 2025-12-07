@@ -50,8 +50,7 @@ const data = new SlashCommandBuilder()
           .setDescription(
             'اختر مسار العمل من القائمة أو اكتب المفتاح يدوياً (مثل production.video_doc_interviews)'
           )
-          .setRequired(true)
-          .setAutocomplete(true);
+          .setRequired(true);
 
         return o;
       })
