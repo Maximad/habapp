@@ -1162,32 +1162,12 @@ const mediaTaskTemplates = [
     dueOffsetDays: 0
   },
   {
-    id: 'media_ideas_round',
-    type: 'task',
-    unit: 'media',
-
-    label_ar: 'جولة أفكار نشر ١٠ أفكار واعتماد ٣',
-    description_ar: 'جلسة سريعة لجمع ١٠ أفكار ونقاشها واعتماد ٣ منها كبدايات مشاريع.',
-
-    size: 'S',
-    definitionOfDone_ar:
-      'جدول في قناة أفكار النشر يحتوي على ١٠ أفكار مختصرة، مع تحديد ٣ أفكار معتمدة ومذكور اسم المالك المبدئي لكل فكرة.',
-
-    defaultOwnerRole: 'editor',
-    defaultChannelKey: 'media.ideas',
-    defaultDueDays: 2,
-
-    pipelineKey: 'media.article_short',
-
-    tags: ['أفكار', 'نشر', 'تخطيط']
-  },
-  {
     id: 'media_assignment_memo',
     type: 'task',
     unit: 'media',
 
-    label_ar: 'مذكرة تكليف لمادة محددة',
-    description_ar: 'كتابة مذكرة تكليف واضحة لمادة واحدة مع تعريف الإنجاز والموعد والمالك.',
+    label_ar: 'ملف تكليف / Brief للمادة (سياق، أهداف، روابط مرجعية)',
+    description_ar: 'كتابة موجز تكليف واضح للمادة يشمل السياق، الأهداف، الروابط المرجعية، وتعريف الإنجاز.',
 
     size: 'S',
     definitionOfDone_ar:
@@ -1200,6 +1180,66 @@ const mediaTaskTemplates = [
     pipelineKey: 'media.article_short',
 
     tags: ['تكليف', 'تحرير', 'إدارة مهام']
+  },
+  {
+    id: 'media_visual_direction',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'توجيه بصري للمادة واختيار نمط الصور',
+    description_ar: 'تحديد أسلوب بصري للمادة مع مراجع أو moodboard وتوجيهات للصور أو اللقطات المطلوبة.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'مذكرة أو لوحة مرئية تحدد النمط والألوان والعدسات أو زوايا التصوير المقترحة، متفق عليها مع الفريق.',
+
+    defaultOwnerFunc: 'design_lead',
+    defaultChannelKey: 'media.graphics',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['تصميم', 'صور', 'توجيه']
+  },
+  {
+    id: 'media_cover_selection',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'اختيار صور الغلاف والصور المرافقة مع metadata',
+    description_ar: 'تجهيز صور الغلاف والمرافقة مع بيانات وصفية ونص بديل وتعليمات النشر.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'مجموعة صور مختارة مع نصوص بديلة وتسميات واضحة، وروابط أو مسارات ملفات جاهزة للنشر.',
+
+    defaultOwnerFunc: 'photo_editor',
+    defaultChannelKey: 'media.photo_selection',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['صور', 'غلاف', 'بيانات وصفية']
+  },
+  {
+    id: 'media_color_consistency',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'معالجة لونية موحدة (presets / style guide)',
+    description_ar: 'تطبيق معالجة لونية متسقة وفق دليل الأسلوب أو إعدادات مسبقة للصور أو الفيديو.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ملفات معالجة أو Presets مطبقة على المادة مع عينات قبل/بعد وروابط للملفات الأصلية.',
+
+    defaultOwnerFunc: 'colorist',
+    defaultChannelKey: 'media.graphics',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['لون', 'تصميم', 'اتساق']
   },
   {
     id: 'media_quick_interview',
@@ -1366,20 +1406,62 @@ const mediaTaskTemplates = [
     type: 'task',
     unit: 'media',
 
-    label_ar: 'إدخالات تصحيح خلفية',
-    description_ar: 'توثيق ٣ إلى ٥ عناصر خلفية أو تصحيحية في سجلّ مستقل.',
+    label_ar: 'نشر على الموقع',
+    description_ar: 'نشر المادة على الموقع مع التأكد من العناوين والوصلات والنصوص المصاحبة.',
 
     size: 'S',
     definitionOfDone_ar:
-      '٣ إلى ٥ إدخالات جديدة في سجلّ التصحيحات أو سجل الخلفية، مع التاريخ، رابط المادة، وسبب التعديل أو التوضيح.',
+      'المادة منشورة على الموقع مع روابط سليمة، صور مناسبة، ونصوص مساعدة (Alt/Caption) وفق المعايير التحريرية.',
 
-    defaultOwnerRole: 'corrections_editor',
+    defaultOwnerFunc: 'desk_editor',
+    defaultOwnerRole: 'desk_editor',
     defaultChannelKey: 'media.corrections_log',
     defaultDueDays: 3,
 
     pipelineKey: 'media.article_short',
 
     tags: ['تصحيحات', 'توثيق', 'شفافية']
+  },
+  {
+    id: 'media_social_package',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'حزمة منصّات اجتماعية (بوست + ستوري)',
+    description_ar: 'تصميم نسخة نشر اجتماعية للمنصات الرئيسية مع نصوص بديلة وروابط.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ملفات وصياغات جاهزة للنشر على فيسبوك/إنستغرام أو تويتر، مع نصوص وصفيّة وروابط متابعة.',
+
+    defaultOwnerFunc: 'designer_social',
+    defaultChannelKey: 'media.social',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['سوشال', 'تصميم', 'نشر']
+  },
+  {
+    id: 'media_archive_package',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'أرشفة المادة في الأرشيف المركزي (نصوص، صور، روابط)',
+    description_ar: 'تجميع ملفات المادة وروابطها في مجلد أو رابط موحد مع بيانات وصفية قصيرة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'مجلد أو رابط مركزي يحتوي على النص النهائي، الصور، الروابط الخارجية، وأي تراخيص أو ملاحظات وصول.',
+
+    defaultOwnerFunc: 'archives',
+    defaultChannelKey: 'media.archive',
+    defaultDueDays: 2,
+    hasDocLink: true,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['أرشفة', 'حفظ', 'توثيق']
   },
   {
     id: 'media_styleguide_update',
@@ -1407,13 +1489,15 @@ const mediaTaskTemplates = [
     unit: 'media',
 
     label_ar: 'مراجعة الوصول الرقمي',
-    description_ar: 'فحص Alt للنصوص البديلة، تباين الألوان، والترجمات قبل النشر.',
+    description_ar:
+      'فحص الوصول الرقمي بما يشمل نصوص بديلة وصور ذات تباين مناسب، تخطيط مقروء على الموبايل، وروابط موصوفة بوضوح قبل النشر.',
 
     size: 'S',
     definitionOfDone_ar:
-      'بطاقة فحص منجزة للمادة تحتوي على حالة النص البديل، تباين الألوان، والترجمات، مع علامة واضحة بأن المادة جاهزة من ناحية الوصول.',
+      'بطاقة فحص منجزة للمادة تحتوي على حالة النص البديل، تباين الألوان، الترجمات، وتجربة القراءة على الموبايل مع رابط للتوثيق.',
 
     defaultOwnerRole: 'accessibility_editor',
+    defaultOwnerFunc: 'accessibility',
     defaultChannelKey: 'media.accessibility',
     defaultDueDays: 1,
 
