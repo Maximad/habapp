@@ -8,7 +8,7 @@ const {
   getPipelineByKey,
   listPipelinesByUnit
 } = require('../../src/core/work/units');
-const { getTaskTemplateById } = require('../../src/core/work/templates/task-templates');
+const { taskTemplates, getTaskTemplateById } = require('../../src/core/work/templates/task-templates');
 
 test('units expose expected keys and Arabic metadata', () => {
   const unitKeys = units.map(u => u.key);
@@ -85,6 +85,7 @@ test('media lab90 pipeline and templates are exposed with expected metadata', ()
   const pipeline = getPipelineByKey('media.lab90_cycle');
   assert.ok(pipeline);
   assert.strictEqual(pipeline.unitKey, 'media');
+  assert.strictEqual(pipeline.hidden, true);
   ['media.lab90.recruitment_cohort', 'media.lab90.features_desk_quota', 'media.lab90.mel_cycle_report'].forEach(key => {
     assert.ok(pipeline.templateKeys.includes(key), `template key ${key} should be in media pipeline`);
   });
@@ -94,6 +95,35 @@ test('media lab90 pipeline and templates are exposed with expected metadata', ()
   assert.strictEqual(template.label_ar, 'استقطاب واختيار مجموعة لاب ٩٠');
   assert.strictEqual(template.defaultOwnerFunc, 'managing_editor');
   assert.strictEqual(template.defaultChannelKey, 'media.tasks');
+});
+
+test('media pipelines include publishing, archiving, and cleaned templates', () => {
+  const ideaRoundTemplate = taskTemplates.find(t => t.label_ar === 'جولة أفكار نشر ١٠ أفكار واعتماد ٣');
+  assert.strictEqual(ideaRoundTemplate, undefined);
+
+  const publishTemplate = getTaskTemplateById('media_corrections_log_entry');
+  assert.ok(publishTemplate);
+  assert.strictEqual(publishTemplate.label_ar, 'نشر على الموقع');
+  assert.strictEqual(publishTemplate.defaultOwnerFunc, 'desk_editor');
+
+  const archiveTemplate = getTaskTemplateById('media_archive_package');
+  assert.ok(archiveTemplate);
+  assert.strictEqual(archiveTemplate.label_ar, 'أرشفة المادة في الأرشيف المركزي (نصوص، صور، روابط)');
+  assert.strictEqual(archiveTemplate.hasDocLink, true);
+
+  [
+    'media.article_short',
+    'media.article_long',
+    'media.photo_story',
+    'media.data_brief',
+    'media.short_video_social',
+    'media.podcast_short',
+    'media.translation_adapt'
+  ].forEach(key => {
+    const pipeline = getPipelineByKey(key);
+    assert.ok(pipeline.defaultTemplateIds.includes('media_corrections_log_entry'));
+    assert.ok(pipeline.defaultTemplateIds.includes('media_archive_package'));
+  });
 });
 
 test('think pipelines and templates are exposed with expected metadata', () => {

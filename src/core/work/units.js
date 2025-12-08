@@ -207,6 +207,7 @@ const pipelines = [
     unit: 'media',
     name_ar: 'برنامج حبق لاب 90 للإعلام المدني',
     description_ar: 'برنامج لمدة ٩٠ يوماً لتدريب المشاركين على الصحافة العامة التشاركية وتشغيل ثلاث ديسكات إنتاجية.',
+    hidden: true,
     stages: [
       { key: 'recruit', name_ar: 'استقطاب واختيار' },
       { key: 'train_clinics', name_ar: 'عيادات النزاهة والمهارات' },
@@ -300,24 +301,36 @@ const pipelines = [
     typical_length_words: [800, 1200],
     typical_turnaround_days: 5,
     defaultTaskTemplateIds: [
-      'media_ideas_round',
       'media_assignment_memo',
+      'media_visual_direction',
+      'media_cover_selection',
+      'media_color_consistency',
       'media_quick_interview',
       'media_short_article_write',
       'media_factcheck_bundle',
       'media_accessibility_check',
+      'media_social_package',
       'media_social_cut_3x',
-      'media_corrections_log_entry'
+      'media_corrections_log_entry',
+      'media_archive_package'
     ],
     defaultTemplateIds: [
-      'media_ideas_round',
       'media_assignment_memo',
+      'media_visual_direction',
+      'media_cover_selection',
+      'media_color_consistency',
       'media_quick_interview',
       'media_short_article_write',
       'media_factcheck_bundle',
       'media_accessibility_check',
+      'media_social_package',
       'media_social_cut_3x',
-      'media_corrections_log_entry'
+      'media_corrections_log_entry',
+      'media_archive_package'
+    ],
+    optionalAddons: [
+      { key: 'related_reel', description_ar: 'ريل قصير مرتبط بالمقال للنشر على الشبكات.' },
+      { key: 'data_brief_companion', description_ar: 'موجز بيانات صغير يدعم المادة.' }
     ]
   },
   {
@@ -343,24 +356,36 @@ const pipelines = [
     typical_length_words: [1500, 2200],
     typical_turnaround_days: 10,
     defaultTaskTemplateIds: [
-      'media_ideas_round',
       'media_assignment_memo',
+      'media_visual_direction',
+      'media_cover_selection',
+      'media_color_consistency',
       'media_research_background',
       'media_long_article_write',
       'media_factcheck_bundle',
       'media_risk_ethics_review',
       'media_accessibility_check',
-      'media_corrections_log_entry'
+      'media_social_package',
+      'media_corrections_log_entry',
+      'media_archive_package'
     ],
     defaultTemplateIds: [
-      'media_ideas_round',
       'media_assignment_memo',
+      'media_visual_direction',
+      'media_cover_selection',
+      'media_color_consistency',
       'media_research_background',
       'media_long_article_write',
       'media_factcheck_bundle',
       'media_risk_ethics_review',
       'media_accessibility_check',
-      'media_corrections_log_entry'
+      'media_social_package',
+      'media_corrections_log_entry',
+      'media_archive_package'
+    ],
+    optionalAddons: [
+      { key: 'related_reel', description_ar: 'ريل قصير أو فيديو ترويجي للمادة الطويلة.' },
+      { key: 'photo_companion', description_ar: 'قصة صور مرافقة أو معرض مصغر.' }
     ]
   },
   {
@@ -385,20 +410,32 @@ const pipelines = [
     typical_length_words: [400, 800],
     typical_turnaround_days: 6,
     defaultTaskTemplateIds: [
-      'media_ideas_round',
       'media_assignment_memo',
+      'media_visual_direction',
+      'media_cover_selection',
+      'media_color_consistency',
       'media_photo_story_package',
       'media_factcheck_bundle',
       'media_accessibility_check',
-      'media_corrections_log_entry'
+      'media_social_package',
+      'media_corrections_log_entry',
+      'media_archive_package'
     ],
     defaultTemplateIds: [
-      'media_ideas_round',
       'media_assignment_memo',
+      'media_visual_direction',
+      'media_cover_selection',
+      'media_color_consistency',
       'media_photo_story_package',
       'media_factcheck_bundle',
       'media_accessibility_check',
-      'media_corrections_log_entry'
+      'media_social_package',
+      'media_corrections_log_entry',
+      'media_archive_package'
+    ],
+    optionalAddons: [
+      { key: 'behind_the_scenes', description_ar: 'صور أو ملاحظات من الكواليس للنشر على السوشال.' },
+      { key: 'short_reel', description_ar: 'ريل بصري سريع يرافق القصة المصوّرة.' }
     ]
   },
   {
@@ -423,22 +460,34 @@ const pipelines = [
     typical_length_words: [600, 1200],
     typical_turnaround_days: 7,
     defaultTaskTemplateIds: [
-      'media_ideas_round',
       'media_assignment_memo',
+      'media_visual_direction',
+      'media_cover_selection',
+      'media_color_consistency',
       'media_data_brief',
       'media_method_memo',
       'media_factcheck_bundle',
       'media_accessibility_check',
-      'media_corrections_log_entry'
+      'media_social_package',
+      'media_corrections_log_entry',
+      'media_archive_package'
     ],
     defaultTemplateIds: [
-      'media_ideas_round',
       'media_assignment_memo',
+      'media_visual_direction',
+      'media_cover_selection',
+      'media_color_consistency',
       'media_data_brief',
       'media_method_memo',
       'media_factcheck_bundle',
       'media_accessibility_check',
-      'media_corrections_log_entry'
+      'media_social_package',
+      'media_corrections_log_entry',
+      'media_archive_package'
+    ],
+    optionalAddons: [
+      { key: 'interactive_embed', description_ar: 'نسخة تفاعلية من المخطط أو الخريطة.' },
+      { key: 'explainer_thread', description_ar: 'سلسلة منشورات سوشال تشرح البيانات خطوة بخطوة.' }
     ]
   },
   {
@@ -462,22 +511,34 @@ const pipelines = [
     typical_length_seconds: [60, 120],
     typical_turnaround_days: 5,
     defaultTaskTemplateIds: [
-      'media_ideas_round',
       'media_assignment_memo',
+      'media_visual_direction',
+      'media_cover_selection',
+      'media_color_consistency',
       'media_short_video_script',
       'media_short_video_edit',
+      'media_social_package',
       'media_social_cut_3x',
       'media_accessibility_check',
-      'media_corrections_log_entry'
+      'media_corrections_log_entry',
+      'media_archive_package'
     ],
     defaultTemplateIds: [
-      'media_ideas_round',
       'media_assignment_memo',
+      'media_visual_direction',
+      'media_cover_selection',
+      'media_color_consistency',
       'media_short_video_script',
       'media_short_video_edit',
+      'media_social_package',
       'media_social_cut_3x',
       'media_accessibility_check',
-      'media_corrections_log_entry'
+      'media_corrections_log_entry',
+      'media_archive_package'
+    ],
+    optionalAddons: [
+      { key: 'bts_clip', description_ar: 'لقطة قصيرة من خلف الكواليس للنشر في الستوري.' },
+      { key: 'square_version', description_ar: 'نسخة مربعة أو رأسية للمنصات المختلفة.' }
     ]
   },
   {
@@ -501,20 +562,30 @@ const pipelines = [
     typical_length_minutes: [5, 8],
     typical_turnaround_days: 10,
     defaultTaskTemplateIds: [
-      'media_ideas_round',
       'media_assignment_memo',
       'media_podcast_outline',
       'media_podcast_edit',
+      'media_visual_direction',
+      'media_cover_selection',
+      'media_social_package',
       'media_accessibility_check',
-      'media_corrections_log_entry'
+      'media_corrections_log_entry',
+      'media_archive_package'
     ],
     defaultTemplateIds: [
-      'media_ideas_round',
       'media_assignment_memo',
       'media_podcast_outline',
       'media_podcast_edit',
+      'media_visual_direction',
+      'media_cover_selection',
+      'media_social_package',
       'media_accessibility_check',
-      'media_corrections_log_entry'
+      'media_corrections_log_entry',
+      'media_archive_package'
+    ],
+    optionalAddons: [
+      { key: 'transcript', description_ar: 'نص كامل للحلقة مع طوابع زمنية وروابط المصادر.' },
+      { key: 'audiogram', description_ar: 'مقاطع قصيرة أو Audiogram جاهز للنشر.' }
     ]
   },
   {
@@ -538,14 +609,28 @@ const pipelines = [
     defaultTaskTemplateIds: [
       'media_translation',
       'media_editor_review',
+      'media_visual_direction',
+      'media_cover_selection',
+      'media_color_consistency',
       'media_accessibility_check',
-      'media_corrections_log_entry'
+      'media_social_package',
+      'media_corrections_log_entry',
+      'media_archive_package'
     ],
     defaultTemplateIds: [
       'media_translation',
       'media_editor_review',
+      'media_visual_direction',
+      'media_cover_selection',
+      'media_color_consistency',
       'media_accessibility_check',
-      'media_corrections_log_entry'
+      'media_social_package',
+      'media_corrections_log_entry',
+      'media_archive_package'
+    ],
+    optionalAddons: [
+      { key: 'context_box', description_ar: 'صندوق سياق إضافي أو روابط قارئ للمادة المترجمة.' },
+      { key: 'bilingual_assets', description_ar: 'أصول ثنائية اللغة للنشر على المنصات الاجتماعية.' }
     ]
   },
   {
