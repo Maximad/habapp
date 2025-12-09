@@ -23,28 +23,28 @@
   "taskRouting": {
     "media": {
       "media_writer": {
-        "channelId": "TO_FILL_MEDIA_WRITERS_CHANNEL",
-        "roleIds": ["TO_FILL_MEDIA_WRITERS_ROLE"]
+        "channelId": "1441833844142637098",
+        "roleIds": ["1423836758982000722"]
       },
       "media_photo": {
-        "channelId": "TO_FILL_MEDIA_PHOTO_CHANNEL",
-        "roleIds": ["TO_FILL_MEDIA_PHOTOGRAPHERS_ROLE"]
+        "channelId": "1441833850614317076",
+        "roleIds": ["1423836759418212453"]
       },
       "media_editor": {
-        "channelId": "TO_FILL_MEDIA_EDITORS_CHANNEL",
-        "roleIds": ["TO_FILL_MEDIA_EDITORS_ROLE"]
+        "channelId": "1441833845388214623",
+        "roleIds": ["1423836758021247057"]
       },
       "media_social": {
-        "channelId": "TO_FILL_MEDIA_SOCIAL_CHANNEL",
-        "roleIds": ["TO_FILL_MEDIA_DESIGNERS_ROLE"]
+        "channelId": "1448053199075545280",
+        "roleIds": ["1423837154504867912"]
       },
       "media_web": {
-        "channelId": "TO_FILL_MEDIA_WEB_CHANNEL",
-        "roleIds": ["TO_FILL_MEDIA_DESK_ROLE"]
+        "channelId": "1441833888048480266",
+        "roleIds": ["1423837153762476265"]
       },
       "media_archive": {
-        "channelId": "TO_FILL_MEDIA_ARCHIVE_CHANNEL",
-        "roleIds": ["TO_FILL_MEDIA_ARCHIVE_ROLE"]
+        "channelId": "1441833855219794091",
+        "roleIds": ["1423836761406050496"]
       }
     }
   },
