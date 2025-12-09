@@ -60,6 +60,10 @@ const units = [
     description_ar: 'تطوّر المواقع والأدوات والتطبيقات الصغيرة.',
     pipelines: [
       'geeks.site_basic',
+      'geeks.web_story',
+      'geeks.game_super_khawiye',
+      'geeks.ads_campaign',
+      'geeks.support_external_media',
       'geeks.app_small',
       'geeks.app_accessibility',
       'geeks.automation_stack',
@@ -278,6 +282,17 @@ const pipelines = [
     profile: 'production_support',
     defaultTemplateIds: ['prod_camera_tests', 'prod_sound_library', 'prod_export_presets', 'prod_emergency_plan'],
     hidden: true
+  },
+  {
+    key: 'production.shihan_festival',
+    unitKey: 'production',
+    unit: 'production',
+    name_ar: 'عمليات مهرجان شيحان (إنتاج)',
+    description_ar: 'مسار إنتاجي لمهام التوثيق والتصوير الخاصة بمهرجان شيحان كفعالية متعددة الأيام.',
+    inheritTemplatePipelineKeys: ['production.video_doc_interviews'],
+    hidden: true,
+    category: 'festival',
+    multiEvent: true
   },
   {
     key: 'media.article_short',
@@ -559,8 +574,15 @@ const pipelines = [
       'مؤرشف'
     ],
     suggestedStages: ['idea', 'assignment', 'outline', 'record', 'edit', 'review', 'publish', 'archive'],
+    series: true,
     typical_length_minutes: [5, 8],
     typical_turnaround_days: 10,
+    kind: 'series',
+    recurrence: {
+      type: 'series',
+      pattern: 'seasonal',
+      suggestedCount: 6
+    },
     defaultTaskTemplateIds: [
       'media_assignment_memo',
       'media_podcast_outline',
@@ -637,8 +659,14 @@ const pipelines = [
     key: 'people.volunteer_onboarding',
     unitKey: 'people',
     unit: 'people',
+    kind: 'event',
     name_ar: 'مسار اندماج المتطوعين',
     description_ar: 'من أول تواصل إلى إدماج المتطوع في مسار واضح مع ٣ مهام صغيرة ومُرشِد ومسؤول متابعة.',
+    recurrence: {
+      type: 'series',
+      pattern: 'monthly',
+      suggestedCount: null
+    },
     stages_ar: [
       'استمارة أو تواصل أولي',
       'مكالمة أو لقاء ترحيبي',
@@ -653,22 +681,32 @@ const pipelines = [
       'people_volunteer_onboarding_path',
       'people_welcome_calls_5',
       'people_mini_training_30min',
-      'people_recognition_system'
+      'people_recognition_system',
+      'people_event_archive_entry',
+      'people_log_talent'
     ],
     defaultTemplateIds: [
       'people_volunteer_intake_match',
       'people_volunteer_onboarding_path',
       'people_welcome_calls_5',
       'people_mini_training_30min',
-      'people_recognition_system'
+      'people_recognition_system',
+      'people_event_archive_entry',
+      'people_log_talent'
     ]
   },
   {
     key: 'people.partner_mapping',
     unitKey: 'people',
     unit: 'people',
+    kind: 'event',
     name_ar: 'دفتر الشركاء المحليين والشتات',
     description_ar: 'بناء دفتر تواصل مع شركاء وداعمين محتملين من داخل السويداء والشتات، مع حالة العلاقة ومسؤول المتابعة.',
+    recurrence: {
+      type: 'series',
+      pattern: 'monthly',
+      suggestedCount: null
+    },
     stages_ar: [
       'حصر أولي للجهات المحتملة',
       'تواصل أولي وتعريف حبق',
@@ -681,20 +719,30 @@ const pipelines = [
     defaultTaskTemplateIds: [
       'people_partner_directory_10',
       'people_partner_book_20',
-      'people_recognition_system'
+      'people_recognition_system',
+      'people_event_archive_entry',
+      'people_log_talent'
     ],
     defaultTemplateIds: [
       'people_partner_directory_10',
       'people_partner_book_20',
-      'people_recognition_system'
+      'people_recognition_system',
+      'people_event_archive_entry',
+      'people_log_talent'
     ]
   },
   {
     key: 'people.event_small',
     unitKey: 'people',
     unit: 'people',
+    kind: 'event',
     name_ar: 'فعالية مجتمعية صغيرة',
     description_ar: 'لقاء صغير أو جلسة إصغاء أو نشاط مجتمعي ضمن مساحة محدودة، مع تخطيط بسيط لكن محترم للحضور.',
+    recurrence: {
+      type: 'single',
+      pattern: 'one_off',
+      suggestedCount: null
+    },
     stages_ar: [
       'فكرة ومحور',
       'تخطيط أولي',
@@ -709,31 +757,61 @@ const pipelines = [
       'people_salon_topic_planning',
       'people_event_access_guide',
       'people_tech_rehearsal',
+      'people_event_concept',
+      'people_event_budget_check',
+      'people_event_invite_list',
+      'people_event_poster',
+      'people_event_social_launch',
+      'people_event_social_reminder',
+      'people_event_logistics',
+      'people_event_risk_review',
+      'people_event_recording_policy',
       'people_event_visual_assets',
+      'people_event_photo_doc',
       'people_event_feedback_form',
       'people_listening_session',
+      'people_event_archive_entry',
       'people_event_debrief',
       'people_coc_reminder_pack',
-      'people_accessibility_checklist_event'
+      'people_accessibility_checklist_event',
+      'people_log_talent'
     ],
     defaultTemplateIds: [
       'people_salon_topic_planning',
       'people_event_access_guide',
       'people_tech_rehearsal',
+      'people_event_concept',
+      'people_event_budget_check',
+      'people_event_invite_list',
+      'people_event_poster',
+      'people_event_social_launch',
+      'people_event_social_reminder',
+      'people_event_logistics',
+      'people_event_risk_review',
+      'people_event_recording_policy',
       'people_event_visual_assets',
+      'people_event_photo_doc',
       'people_event_feedback_form',
       'people_listening_session',
+      'people_event_archive_entry',
       'people_event_debrief',
       'people_coc_reminder_pack',
-      'people_accessibility_checklist_event'
+      'people_accessibility_checklist_event',
+      'people_log_talent'
     ]
   },
   {
     key: 'people.event_music',
     unitKey: 'people',
     unit: 'people',
+    kind: 'event',
     name_ar: 'فعالية موسيقية / ليلة موسيقى',
     description_ar: 'أمسية موسيقية أو عرض حي مع جمهور، من اختيار البرنامج إلى التوثيق وما بعد الفعالية.',
+    recurrence: {
+      type: 'single',
+      pattern: 'one_off',
+      suggestedCount: null
+    },
     stages_ar: [
       'فكرة وبرنامج مبدئي',
       'تأكيد المكان والفنانين',
@@ -748,29 +826,59 @@ const pipelines = [
       'people_salon_topic_planning',
       'people_event_access_guide',
       'people_tech_rehearsal',
+      'people_event_concept',
+      'people_event_budget_check',
+      'people_event_invite_list',
+      'people_event_poster',
+      'people_event_social_launch',
+      'people_event_social_reminder',
+      'people_event_logistics',
+      'people_event_risk_review',
+      'people_event_recording_policy',
       'people_event_visual_assets',
+      'people_event_photo_doc',
       'people_event_feedback_form',
+      'people_event_archive_entry',
       'people_event_debrief',
       'people_coc_reminder_pack',
-      'people_accessibility_checklist_event'
+      'people_accessibility_checklist_event',
+      'people_log_talent'
     ],
     defaultTemplateIds: [
       'people_salon_topic_planning',
       'people_event_access_guide',
       'people_tech_rehearsal',
+      'people_event_concept',
+      'people_event_budget_check',
+      'people_event_invite_list',
+      'people_event_poster',
+      'people_event_social_launch',
+      'people_event_social_reminder',
+      'people_event_logistics',
+      'people_event_risk_review',
+      'people_event_recording_policy',
       'people_event_visual_assets',
+      'people_event_photo_doc',
       'people_event_feedback_form',
+      'people_event_archive_entry',
       'people_event_debrief',
       'people_coc_reminder_pack',
-      'people_accessibility_checklist_event'
+      'people_accessibility_checklist_event',
+      'people_log_talent'
     ]
   },
   {
     key: 'people.event_forum',
     unitKey: 'people',
     unit: 'people',
+    kind: 'event',
     name_ar: 'صالون أو منتدى حواري',
     description_ar: 'جلسة حوار أو صالون فكري مع متحدثين وجمهور، مع تنظيم للكلمة، السلامة، والوصول.',
+    recurrence: {
+      type: 'single',
+      pattern: 'one_off',
+      suggestedCount: null
+    },
     stages_ar: [
       'فكرة ومحور',
       'اختيار المتحدثين',
@@ -786,31 +894,61 @@ const pipelines = [
       'people_speakers_roster',
       'people_event_access_guide',
       'people_tech_rehearsal',
+      'people_event_concept',
+      'people_event_budget_check',
+      'people_event_invite_list',
+      'people_event_poster',
+      'people_event_social_launch',
+      'people_event_social_reminder',
+      'people_event_logistics',
+      'people_event_risk_review',
+      'people_event_recording_policy',
       'people_event_visual_assets',
+      'people_event_photo_doc',
       'people_event_feedback_form',
+      'people_event_archive_entry',
       'people_event_debrief',
       'people_coc_reminder_pack',
-      'people_accessibility_checklist_event'
+      'people_accessibility_checklist_event',
+      'people_log_talent'
     ],
     defaultTemplateIds: [
       'people_salon_topic_planning',
       'people_speakers_roster',
       'people_event_access_guide',
       'people_tech_rehearsal',
+      'people_event_concept',
+      'people_event_budget_check',
+      'people_event_invite_list',
+      'people_event_poster',
+      'people_event_social_launch',
+      'people_event_social_reminder',
+      'people_event_logistics',
+      'people_event_risk_review',
+      'people_event_recording_policy',
       'people_event_visual_assets',
+      'people_event_photo_doc',
       'people_event_feedback_form',
+      'people_event_archive_entry',
       'people_event_debrief',
       'people_coc_reminder_pack',
-      'people_accessibility_checklist_event'
+      'people_accessibility_checklist_event',
+      'people_log_talent'
     ]
   },
   {
     key: 'people.event_music_cycle',
     unitKey: 'people',
     unit: 'people',
+    kind: 'event',
     name_ar: 'سلسلة أمسيات موسيقية (مثل Thursday Live Notes)',
     description_ar:
       'تخطيط وتنفيذ دورة من أمسيات موسيقية مدفوعة تخلق دورة اقتصادية وثقافية للفنانين والتقنيين.',
+    recurrence: {
+      type: 'series',
+      pattern: 'weekly',
+      suggestedCount: 4
+    },
     stages: [
       { key: 'concept', name_ar: 'الفكرة والاتفاق مع المكان' },
       { key: 'booking', name_ar: 'حجوزات الفنانين والطاقم' },
@@ -825,16 +963,34 @@ const pipelines = [
       'people.music.tech_and_safety_plan',
       'people.music.comms_and_ticketing',
       'people.music.run_sheet_cycle',
-      'people.music.revenue_split_report'
+      'people.music.revenue_split_report',
+      'people_event_concept',
+      'people_event_budget_check',
+      'people_event_invite_list',
+      'people_event_poster',
+      'people_event_social_launch',
+      'people_event_social_reminder',
+      'people_event_logistics',
+      'people_event_risk_review',
+      'people_event_recording_policy',
+      'people_event_photo_doc',
+      'people_event_archive_entry',
+      'people_log_talent'
     ]
   },
   {
     key: 'people.event_open_mic',
     unitKey: 'people',
     unit: 'people',
+    kind: 'event',
     name_ar: 'مواسم الأوبن مايك والاكتشاف',
     description_ar:
       'تنظيم مواسم أمسيات أوبن مايك مجانية لاحتضان وتجريب المواهب الجديدة وتغذيتها نحو أمسيات أكبر.',
+    recurrence: {
+      type: 'series',
+      pattern: 'monthly',
+      suggestedCount: 6
+    },
     stages: [
       { key: 'frame', name_ar: 'الإطار والقواعد' },
       { key: 'signup_system', name_ar: 'نظام المشاركة' },
@@ -847,16 +1003,32 @@ const pipelines = [
       'people.openmic.signup_system',
       'people.openmic.safety_roles',
       'people.openmic.event_log',
-      'people.openmic.talent_followup'
+      'people.openmic.talent_followup',
+      'people_event_concept',
+      'people_event_poster',
+      'people_event_social_launch',
+      'people_event_social_reminder',
+      'people_event_logistics',
+      'people_event_risk_review',
+      'people_event_recording_policy',
+      'people_event_photo_doc',
+      'people_event_archive_entry',
+      'people_log_talent'
     ]
   },
   {
     key: 'people.exhibition_cycle',
     unitKey: 'people',
     unit: 'people',
+    kind: 'event',
     name_ar: 'دورة معرض فني مع برنامج موازٍ',
     description_ar:
       'تنظيم معرض فني مع هوية كوريتورية وبرنامج حواري وموسيقي وطبقة رقمية بالتنسيق مع وحدة الجيكس.',
+    recurrence: {
+      type: 'series',
+      pattern: 'seasonal',
+      suggestedCount: 3
+    },
     stages: [
       { key: 'curation', name_ar: 'الاختيار والهوية' },
       { key: 'works_intake', name_ar: 'استلام الأعمال والبيانات' },
@@ -871,15 +1043,31 @@ const pipelines = [
       'people.exhibit.space_and_flow',
       'people.exhibit.program_schedule',
       'people.exhibit.digital_coordination',
-      'people.exhibit.wrap_report'
+      'people.exhibit.wrap_report',
+      'people_event_concept',
+      'people_event_poster',
+      'people_event_social_launch',
+      'people_event_social_reminder',
+      'people_event_logistics',
+      'people_event_risk_review',
+      'people_event_recording_policy',
+      'people_event_photo_doc',
+      'people_event_archive_entry',
+      'people_log_talent'
     ]
   },
   {
     key: 'people.training_mini',
     unitKey: 'people',
     unit: 'people',
+    kind: 'event',
     name_ar: 'جلسة تدريب قصيرة',
     description_ar: 'تدريب بسيط من ٣٠ إلى ٩٠ دقيقة لأعضاء أو متطوعين، مع مواد مرافقة وتغذية راجعة.',
+    recurrence: {
+      type: 'single',
+      pattern: 'one_off',
+      suggestedCount: null
+    },
     stages_ar: [
       'تحديد الهدف والجمهور',
       'تصميم المحتوى',
@@ -894,23 +1082,53 @@ const pipelines = [
       'people_event_access_guide',
       'people_event_visual_assets',
       'people_event_feedback_form',
-      'people_event_debrief'
+      'people_event_debrief',
+      'people_event_concept',
+      'people_event_budget_check',
+      'people_event_invite_list',
+      'people_event_poster',
+      'people_event_social_launch',
+      'people_event_social_reminder',
+      'people_event_logistics',
+      'people_event_risk_review',
+      'people_event_recording_policy',
+      'people_event_photo_doc',
+      'people_event_archive_entry',
+      'people_log_talent'
     ],
     defaultTemplateIds: [
       'people_mini_training_30min',
       'people_event_access_guide',
       'people_event_visual_assets',
       'people_event_feedback_form',
-      'people_event_debrief'
+      'people_event_debrief',
+      'people_event_concept',
+      'people_event_budget_check',
+      'people_event_invite_list',
+      'people_event_poster',
+      'people_event_social_launch',
+      'people_event_social_reminder',
+      'people_event_logistics',
+      'people_event_risk_review',
+      'people_event_recording_policy',
+      'people_event_photo_doc',
+      'people_event_archive_entry',
+      'people_log_talent'
     ]
   },
   {
     key: 'people.event_shihan_black_hall',
     unitKey: 'people',
     unit: 'people',
+    kind: 'event',
     name_ar: 'مهرجان شيحان / Black HALL',
     description_ar:
       'مهرجان موسيقي وفنون تجريبية في مقلع تل شيحان وقاعة بلاك هول مع برنامج حواري وتوثيقي.',
+    recurrence: {
+      type: 'series',
+      pattern: 'seasonal',
+      suggestedCount: null
+    },
     stages: [
       'curatorial_concept',
       'partners_and_support',
@@ -956,7 +1174,13 @@ const pipelines = [
       'people.shihan.comms_campaign',
       'people.shihan.ticketing_and_entry',
       'people.shihan.documentation_plan',
-      'people.shihan.post_report'
+      'people.shihan.post_report',
+      'people_event_poster',
+      'people_event_risk_review',
+      'people_event_logistics',
+      'people_event_concept',
+      'people_event_archive_entry',
+      'people_log_talent'
     ],
     defaultTaskTemplateIds: [
       'people.shihan.curatorial_brief',
@@ -970,7 +1194,13 @@ const pipelines = [
       'people.shihan.comms_campaign',
       'people.shihan.ticketing_and_entry',
       'people.shihan.documentation_plan',
-      'people.shihan.post_report'
+      'people.shihan.post_report',
+      'people_event_poster',
+      'people_event_risk_review',
+      'people_event_logistics',
+      'people_event_concept',
+      'people_event_archive_entry',
+      'people_log_talent'
     ],
     defaultTemplateIds: [
       'people.shihan.curatorial_brief',
@@ -984,7 +1214,13 @@ const pipelines = [
       'people.shihan.comms_campaign',
       'people.shihan.ticketing_and_entry',
       'people.shihan.documentation_plan',
-      'people.shihan.post_report'
+      'people.shihan.post_report',
+      'people_event_poster',
+      'people_event_risk_review',
+      'people_event_logistics',
+      'people_event_concept',
+      'people_event_archive_entry',
+      'people_log_talent'
     ],
     defaultChannels: {
       main: 'people.shihan_black_hall',
@@ -1012,17 +1248,163 @@ const pipelines = [
     profile: 'site_basic',
     defaultTaskTemplateIds: [
       'geeks_site_brief',
+      'geeks_site_access_setup',
       'geeks_site_structure',
-      'geeks_site_setup',
-      'geeks_site_qc',
-      'geeks_site_launch_doc'
+      'geeks_site_visual_design',
+      'geeks_site_frontend_build',
+      'geeks_site_backend_setup',
+      'geeks_site_responsive_test',
+      'geeks_site_performance_check',
+      'geeks_site_staging_launch',
+      'geeks_site_launch_monitor',
+      'geeks_site_docs_handover',
+      'geeks_site_archive_snapshots'
     ],
     defaultTemplateIds: [
       'geeks_site_brief',
+      'geeks_site_access_setup',
       'geeks_site_structure',
-      'geeks_site_setup',
-      'geeks_site_qc',
-      'geeks_site_launch_doc'
+      'geeks_site_visual_design',
+      'geeks_site_frontend_build',
+      'geeks_site_backend_setup',
+      'geeks_site_responsive_test',
+      'geeks_site_performance_check',
+      'geeks_site_staging_launch',
+      'geeks_site_launch_monitor',
+      'geeks_site_docs_handover',
+      'geeks_site_archive_snapshots'
+    ]
+  },
+  {
+    key: 'geeks.web_story',
+    unitKey: 'geeks',
+    unit: 'geeks',
+    name_ar: 'قصة تفاعلية / تجربة رقمية',
+    description_ar:
+      'بناء تجربة رقمية أو قصة تفاعلية غنية بالوسائط (خرائط، صور، فيديو، بيانات) مع تجربة استخدام واضحة.',
+    suggestedStages: ['discovery', 'design', 'build', 'test', 'launch', 'handoff'],
+    defaultTemplateIds: [
+      'geeks_story_brief',
+      'geeks_story_access',
+      'geeks_story_user_flow',
+      'geeks_story_visual_system',
+      'geeks_story_frontend_build',
+      'geeks_story_backend_cms',
+      'geeks_story_integration',
+      'geeks_story_qa',
+      'geeks_story_performance',
+      'geeks_story_accessibility',
+      'geeks_story_staging',
+      'geeks_story_launch',
+      'geeks_story_docs',
+      'geeks_story_archive'
+    ],
+    defaultTaskTemplateIds: [
+      'geeks_story_brief',
+      'geeks_story_access',
+      'geeks_story_user_flow',
+      'geeks_story_visual_system',
+      'geeks_story_frontend_build',
+      'geeks_story_backend_cms',
+      'geeks_story_integration',
+      'geeks_story_qa',
+      'geeks_story_performance',
+      'geeks_story_accessibility',
+      'geeks_story_staging',
+      'geeks_story_launch',
+      'geeks_story_docs',
+      'geeks_story_archive'
+    ]
+  },
+  {
+    key: 'geeks.game_super_khawiye',
+    unitKey: 'geeks',
+    unit: 'geeks',
+    name_ar: 'لعبة / تجربة تفاعلية (نمط سوبر خاويّة)',
+    description_ar:
+      'بناء لعبة أو تجربة تفاعلية ممتعة مع سرد بسيط، اختبار لعب، وتوثيق للحفاظ والصيانة.',
+    suggestedStages: ['concept', 'prototype', 'build', 'test', 'launch', 'handoff'],
+    defaultTemplateIds: [
+      'geeks_game_concept',
+      'geeks_game_requirements',
+      'geeks_game_prototype',
+      'geeks_game_playdev',
+      'geeks_game_art_audio',
+      'geeks_game_playtest',
+      'geeks_game_bugfix',
+      'geeks_game_deploy',
+      'geeks_game_analytics',
+      'geeks_game_docs',
+      'geeks_game_archive'
+    ],
+    defaultTaskTemplateIds: [
+      'geeks_game_concept',
+      'geeks_game_requirements',
+      'geeks_game_prototype',
+      'geeks_game_playdev',
+      'geeks_game_art_audio',
+      'geeks_game_playtest',
+      'geeks_game_bugfix',
+      'geeks_game_deploy',
+      'geeks_game_analytics',
+      'geeks_game_docs',
+      'geeks_game_archive'
+    ]
+  },
+  {
+    key: 'geeks.ads_campaign',
+    unitKey: 'geeks',
+    unit: 'geeks',
+    name_ar: 'حملة إعلانات رقمية وقياسها',
+    description_ar:
+      'إعداد الحملة الإعلانية (إعلانات + تتبع + قياس) مع تحسينات جارية وتقرير ختامي.',
+    suggestedStages: ['discovery', 'setup', 'launch', 'monitor', 'report'],
+    defaultTemplateIds: [
+      'geeks_ads_brief',
+      'geeks_ads_tracking',
+      'geeks_ads_structure',
+      'geeks_ads_creatives',
+      'geeks_ads_launch',
+      'geeks_ads_monitoring',
+      'geeks_ads_optimize',
+      'geeks_ads_report',
+      'geeks_ads_handover'
+    ],
+    defaultTaskTemplateIds: [
+      'geeks_ads_brief',
+      'geeks_ads_tracking',
+      'geeks_ads_structure',
+      'geeks_ads_creatives',
+      'geeks_ads_launch',
+      'geeks_ads_monitoring',
+      'geeks_ads_optimize',
+      'geeks_ads_report',
+      'geeks_ads_handover'
+    ]
+  },
+  {
+    key: 'geeks.support_external_media',
+    unitKey: 'geeks',
+    unit: 'geeks',
+    name_ar: 'دعم تقني لشركاء إعلاميين',
+    description_ar:
+      'تهيئة ودعم شركاء الإعلام تقنياً (ووردبريس، أدوات تحليلات، إصلاحات عاجلة، وتسليم توثيق).',
+    suggestedStages: ['intake', 'audit', 'fix', 'monitor', 'handover'],
+    defaultTemplateIds: [
+      'geeks_support_intake',
+      'geeks_support_access',
+      'geeks_support_audit',
+      'geeks_support_fixes',
+      'geeks_support_monitor',
+      'geeks_support_docs'
+    ],
+    defaultTaskTemplateIds: [
+      'geeks_support_intake',
+      'geeks_support_access',
+      'geeks_support_audit',
+      'geeks_support_fixes',
+      'geeks_support_monitor',
+      'geeks_support_docs'
     ]
   },
   {

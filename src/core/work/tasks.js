@@ -32,12 +32,21 @@ function addTaskToProject(project, fields) {
     definitionOfDone_ar: fields.definitionOfDone_ar || null,
     unit: fields.unit || null,
     functionKey: fields.functionKey || null,
+    ownerFunction: fields.ownerFunction || null,
     ownerId: fields.ownerId || null,
     defaultOwnerFunc: fields.defaultOwnerFunc || fields.defaultOwnerRole || null,
     defaultOwnerRole: fields.defaultOwnerRole || fields.defaultOwnerFunc || null,
     defaultChannelKey: fields.defaultChannelKey || null,
     size: fields.size || null,
     due: fields.due || null,
+    stage: fields.stage || null,
+    dueFrom: fields.dueFrom || null,
+    claimable:
+      typeof fields.claimable === 'boolean'
+        ? fields.claimable
+        : fields.claimable === null
+        ? null
+        : undefined,
     reminders: {
       mainSentAt: null,
       handoverSentAt: null
@@ -219,13 +228,17 @@ async function createTasksFromTemplates({ projectSlug, pipelineKey }, store) {
         definitionOfDone: t.definitionOfDone_ar || null,
         definitionOfDone_ar: t.definitionOfDone_ar || null,
         unit: t.unit,
-        functionKey: t.functionKey || null,
+        functionKey: t.functionKey || t.ownerFunction || null,
+        ownerFunction: t.ownerFunction || null,
         templateId: t.id,
         defaultOwnerFunc: t.defaultOwnerFunc || t.defaultOwnerRole || null,
         defaultOwnerRole: t.defaultOwnerRole || t.defaultOwnerFunc || null,
         defaultChannelKey: t.defaultChannelKey || null,
         size: t.size || null,
-        due: resolveTaskDueDate(t, project)
+        due: resolveTaskDueDate(t, project),
+        stage: t.stage || null,
+        dueFrom: t.dueFrom || null,
+        claimable: typeof t.claimable === 'boolean' ? t.claimable : null
       })
     );
 
@@ -240,6 +253,21 @@ function canMemberTakeTask(task, memberProfile) {
   if (task.unit && !units.includes(task.unit)) {
     return false;
   }
+  return true;
+}
+
+function isTaskClaimable(task) {
+  if (!task) return false;
+
+  if (typeof task.claimable === 'boolean') {
+    return task.claimable;
+  }
+
+  const template = task.templateId ? getTaskTemplateById(task.templateId) : null;
+  if (template && typeof template.claimable === 'boolean') {
+    return template.claimable;
+  }
+
   return true;
 }
 
@@ -266,6 +294,12 @@ function claimTask(store, taskId, memberId, memberProfile) {
     throw error;
   }
 
+  if (!isTaskClaimable(task)) {
+    const error = new Error('TASK_NOT_CLAIMABLE');
+    error.code = 'TASK_NOT_CLAIMABLE';
+    throw error;
+  }
+
   if (!canMemberTakeTask(task, memberProfile || {})) {
     const error = new Error('TASK_NOT_ELIGIBLE');
     error.code = 'TASK_NOT_ELIGIBLE';
@@ -289,5 +323,6 @@ module.exports = {
   saveTask,
   createTasksFromTemplates,
   canMemberTakeTask,
-  claimTask
+  claimTask,
+  isTaskClaimable
 };

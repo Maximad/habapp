@@ -3,7 +3,7 @@ const { buildErrorMessage } = require('../i18n/messages');
 const memberSyncService = require('../../core/people/memberSyncService');
 const membersStore = require('../../core/people/membersStore');
 const { listProjects } = require('../../core/work/projects');
-const { getTaskById } = require('../../core/work/tasks');
+const { getTaskById, isTaskClaimable } = require('../../core/work/tasks');
 const { getUnitByKey, getPipelineByKey } = require('../../core/work/units');
 const { resolveChannelKey } = require('./projectNotifications');
 const { getChannelIdByKey } = require('../utils/channels');
@@ -48,6 +48,7 @@ function collectOpenTasksForOffer(profile) {
       const unitMatch = task.unit ? units.includes(task.unit) : true;
       const unowned = !task.ownerId;
       if (!unitMatch && !unowned) return;
+      if (!isTaskClaimable(task)) return;
 
       results.push({ project, task });
     });

@@ -24,7 +24,25 @@ function applyProjectDefaults(project) {
   const units = Array.isArray(project.units) && project.units.length > 0 ? project.units : ['production'];
   const pipelineKey = typeof project.pipelineKey === 'string' && project.pipelineKey.length > 0 ? project.pipelineKey : null;
   const tasks = Array.isArray(project.tasks) ? project.tasks.map(applyTaskDefaults) : project.tasks;
-  return { ...project, units, pipelineKey, tasks };
+  const metadata = project.metadata && typeof project.metadata === 'object' ? project.metadata : {};
+  const driveFolderUrl = project.driveFolderUrl || metadata.driveFolderUrl || null;
+  const mainDocUrl = project.mainDocUrl || metadata.mainDocUrl || null;
+  const normalizedMetadata = {
+    ...metadata,
+    driveFolderUrl,
+    mainDocUrl
+  };
+  const shootDate = project.shootDate || null;
+  return {
+    ...project,
+    units,
+    pipelineKey,
+    tasks,
+    driveFolderUrl,
+    mainDocUrl,
+    shootDate,
+    metadata: normalizedMetadata
+  };
 }
 
 function loadProjects(store = defaultStore) {
