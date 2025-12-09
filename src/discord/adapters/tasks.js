@@ -2,8 +2,8 @@ const config = require('../../../config.json');
 const { buildErrorMessage } = require('../i18n/messages');
 const { listProjects } = require('../../core/work/projects');
 const { getUnitByKey, getPipelineByKey } = require('../../core/work/units');
-const { resolveChannelKey } = require('./projectNotifications');
-const { getChannelIdByKey } = require('../utils/channels');
+const channelKeyMap = require('../config/channelKeys');
+const { resolveChannelKey } = require('../utils/channels');
 const {
   resolveProjectByQuery,
   listClaimableTasksForProject,
@@ -32,6 +32,42 @@ async function handleTaskDelete(interaction) {
 
 async function handleTaskList(interaction) {
   return replyLegacy(interaction);
+}
+
+function resolveFallbackChannelKey(project, pipeline) {
+  const unitKey = (project.units && project.units[0]) || project.unit || pipeline?.unitKey || null;
+
+  const unitMainChannelId = {
+    production: config.channels?.production?.crewRosterId,
+    media: config.channels?.media?.assignmentsId,
+    people: null,
+    geeks: null,
+  };
+
+  if (unitKey && unitMainChannelId[unitKey]) {
+    return unitMainChannelId[unitKey];
+  }
+
+  if (pipeline?.defaultChannelKey) {
+    return channelKeyMap[pipeline.defaultChannelKey] || pipeline.defaultChannelKey;
+  }
+
+  return null;
+}
+
+async function resolveTaskChannel(client, routeConfig, fallbackKey) {
+  // routeConfig is something like { channelId, roleIds }
+  if (routeConfig && routeConfig.channelId) {
+    const channel = await resolveChannelKey(client, routeConfig.channelId);
+    if (channel) return channel;
+  }
+
+  if (fallbackKey) {
+    const channel = await resolveChannelKey(client, fallbackKey);
+    if (channel) return channel;
+  }
+
+  return null;
 }
 
 async function handleTaskOffer(interaction, options = {}) {
@@ -118,18 +154,20 @@ async function handleTaskOffer(interaction, options = {}) {
     const channelResolver = typeof findChannelForProject === 'function'
       ? findChannelForProject
       : async () => {
-          const channelKey = resolveChannelKey(project, pipeline);
-          const channelId = channelKey ? getChannelIdByKey(channelKey) : null;
-          return channelId
-            ? await interaction.guild.channels.fetch(channelId).catch(() => null)
-            : null;
+          const fallbackKey = resolveFallbackChannelKey(project, pipeline);
+          return resolveTaskChannel(interaction.client, null, fallbackKey);
         };
 
     const channel = await channelResolver(project, pipeline);
 
     if (!channel) {
+      console.warn('[HabApp][task offer] No channel configured for route', {
+        unit: project.units?.[0] || project.unit,
+        pipeline: project.pipelineKey,
+        fallbackKey: resolveFallbackChannelKey(project, pipeline),
+      });
       return interaction.reply({
-        content: 'تعذر نشر المهمة لعدم وجود قناة مفعّلة لهذه الوحدة.',
+        content: 'لا توجد قناة مهيّأة لنشر هذه المهمة بعد. اطلب من مسؤول HabApp ضبط الإعدادات.',
         ephemeral: true,
       });
     }
