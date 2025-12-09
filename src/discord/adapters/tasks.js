@@ -333,23 +333,15 @@ async function publishClaimableTasksByFunction({ client, project, tasks } = {}) 
   for (const group of tasksByGroup.values()) {
     const unitRouting = routing[group.unit] || {};
     const destination = unitRouting[group.functionKey];
+    if (!destination || !destination.channelId) continue;
 
-    if (!destination) {
-      console.warn('[HabApp][task routing] No routing config for', { unit: group.unit, functionKey: group.functionKey });
-      continue;
-    }
+    // eslint-disable-next-line no-await-in-loop
+    const channel = await client.channels.fetch(destination.channelId).catch(() => null);
+    if (!channel || typeof channel.send !== 'function') continue;
 
-    const channel = await resolveTaskChannel(client, destination, null);
-    if (!channel || typeof channel.send !== 'function') {
-      console.warn('[HabApp][task routing] Could not resolve channel for', { unit: group.unit, functionKey: group.functionKey, channelId: destination.channelId });
-      continue;
-    }
-
-    const roleIds = Array.isArray(destination.roleIds)
-      ? destination.roleIds.filter(id => !id.startsWith('TO_FILL_'))
-      : [];
-
-    const roleMentions = roleIds.length ? roleIds.map(id => `<@&${id}>`).join(' ') : '';
+    const roleMentions = Array.isArray(destination.roleIds)
+      ? destination.roleIds.map(id => `<@&${id}>`).join(' ')
+      : '';
 
     const projectName = project.title || project.name || project.slug || 'مشروع بدون اسم';
     const lines = group.tasks.map(task => {
@@ -378,12 +370,8 @@ async function publishClaimableTasksByFunction({ client, project, tasks } = {}) 
       lines.join('\n')
     ].filter(Boolean).join('\n');
 
-    try {
-      // eslint-disable-next-line no-await-in-loop
-      await channel.send({ content, components });
-    } catch (err) {
-      console.error('[HabApp][task routing] Failed to send claimable tasks message', { unit: group.unit, functionKey: group.functionKey, error: err });
-    }
+    // eslint-disable-next-line no-await-in-loop
+    await channel.send({ content, components });
   }
 
   return true;

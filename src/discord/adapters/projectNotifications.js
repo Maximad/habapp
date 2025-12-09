@@ -48,12 +48,12 @@ async function notifyProjectCreated({ interaction, project, tasks }) {
     'تم إنشاء مشروع جديد\n' +
     `${summary}${mentions ? `\nتنويه: ${mentions}` : ''}`;
 
-  const message = await channel.send({ content });
+  const message = await postToChannel(guild, channelId, content);
 
   try {
     await publishClaimableTasksByFunction({ client: guild?.client, project, tasks });
   } catch (err) {
-    console.error('[HabApp][project notify] Failed to publish claimable tasks', err);
+    console.error('[HabApp][project notify] failed to publish claimable tasks', err);
   }
 
   return message;

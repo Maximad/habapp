@@ -9,8 +9,8 @@ test('publishClaimableTasksByFunction routes claimable tasks by function', async
   config.taskRouting = {
     media: {
       media_writer: {
-        channelId: '123456789012345678',
-        roleIds: ['234567890123456789']
+        channelId: 'writers-channel',
+        roleIds: ['role-writers']
       }
     }
   };
@@ -57,8 +57,8 @@ test('publishClaimableTasksByFunction routes claimable tasks by function', async
   try {
     await publishClaimableTasksByFunction({ client, project, tasks });
 
-    assert.deepStrictEqual(fetched, ['123456789012345678']);
-    assert.ok(sent[0].content.includes('<@&234567890123456789>'));
+    assert.deepStrictEqual(fetched, ['writers-channel']);
+    assert.ok(sent[0].content.includes('<@&role-writers>'));
     assert.ok(sent[0].content.includes('مقابلة سريعة'));
   } finally {
     config.taskRouting = originalRouting;
