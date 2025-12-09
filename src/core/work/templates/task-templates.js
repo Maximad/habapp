@@ -1370,9 +1370,8 @@ const mediaTaskTemplates = [
     type: 'task',
     unit: 'media',
 
-    label_ar: 'مذكرة تحريرية للموضوع',
-    description_ar:
-      'مذكرة داخلية تلخص زاوية التغطية، الأسئلة الرئيسية، المصادر المقترحة، والروابط المرجعية للمحررين.',
+    label_ar: 'ملف تكليف / Brief للمادة (سياق، أهداف، روابط مرجعية)',
+    description_ar: 'كتابة موجز تكليف واضح للمادة يشمل السياق، الأهداف، الروابط المرجعية، وتعريف الإنجاز.',
 
     size: 'S',
     definitionOfDone_ar:
@@ -1381,7 +1380,6 @@ const mediaTaskTemplates = [
     defaultOwnerRole: 'editor',
     defaultChannelKey: 'media.assignment_desk',
     defaultDueDays: 1,
-    optional: true,
 
     pipelineKey: 'media.article_short',
 
@@ -1399,59 +1397,13 @@ const mediaTaskTemplates = [
     definitionOfDone_ar:
       'مذكرة أو لوحة مرئية تحدد النمط والألوان والعدسات أو زوايا التصوير المقترحة، متفق عليها مع الفريق.',
 
-    defaultOwnerFunc: 'designer',
-    ownerFunction: 'designer',
-    stage: 'planning',
+    defaultOwnerFunc: 'design_lead',
     defaultChannelKey: 'media.graphics',
     defaultDueDays: 2,
 
     pipelineKey: 'media.article_short',
 
     tags: ['تصميم', 'صور', 'توجيه']
-  },
-  {
-    id: 'media_image_selection',
-    type: 'task',
-    unit: 'media',
-
-    label_ar: 'اختيار الصور وتوجيه بصري للمادة',
-    description_ar: 'تجميع صور أو لقطات مقترحة مع ملاحظات التوجيه البصري ومصادر الملفات.',
-
-    size: 'S',
-    definitionOfDone_ar:
-      'قائمة صور مختارة مع روابط الملفات أو مجلدها، ملاحظات استخدام، ونص بديل أو تعليمات لكل صورة.',
-
-    defaultOwnerFunc: 'designer',
-    ownerFunction: 'designer',
-    stage: 'planning',
-    defaultChannelKey: 'media.graphics',
-    defaultDueDays: 2,
-
-    pipelineKey: 'media.article_short',
-
-    tags: ['صور', 'اختيار', 'تصميم']
-  },
-  {
-    id: 'media_image_editing',
-    type: 'task',
-    unit: 'media',
-
-    label_ar: 'معالجة الصور وتصديرها بالمقاسات المعتمدة',
-    description_ar: 'توحيد الألوان والمقاسات وإعداد ملفات جاهزة للنشر مع تسميات واضحة.',
-
-    size: 'S',
-    definitionOfDone_ar:
-      'مجموعة صور نهائية بمقاسات المنصات المطلوبة، مع نصوص بديلة وعناوين ملفات منظمة وجاهزة للنشر.',
-
-    defaultOwnerFunc: 'designer',
-    ownerFunction: 'designer',
-    stage: 'edit',
-    defaultChannelKey: 'media.graphics',
-    defaultDueDays: 2,
-
-    pipelineKey: 'media.article_short',
-
-    tags: ['صور', 'تصميم', 'معالجة']
   },
   {
     id: 'media_cover_selection',
@@ -1465,9 +1417,7 @@ const mediaTaskTemplates = [
     definitionOfDone_ar:
       'مجموعة صور مختارة مع نصوص بديلة وتسميات واضحة، وروابط أو مسارات ملفات جاهزة للنشر.',
 
-    defaultOwnerFunc: 'photo',
-    ownerFunction: 'photo',
-    stage: 'edit',
+    defaultOwnerFunc: 'photo_editor',
     defaultChannelKey: 'media.photo_selection',
     defaultDueDays: 2,
 
@@ -1487,9 +1437,7 @@ const mediaTaskTemplates = [
     definitionOfDone_ar:
       'ملفات معالجة أو Presets مطبقة على المادة مع عينات قبل/بعد وروابط للملفات الأصلية.',
 
-    defaultOwnerFunc: 'designer',
-    ownerFunction: 'designer',
-    stage: 'edit',
+    defaultOwnerFunc: 'colorist',
     defaultChannelKey: 'media.graphics',
     defaultDueDays: 2,
 
@@ -1663,8 +1611,7 @@ const mediaTaskTemplates = [
     unit: 'media',
 
     label_ar: 'نشر على الموقع',
-    description_ar:
-      'نشر المادة على ووردبرس/الموقع مع التأكد من العناوين والوصلات والنصوص المصاحبة، وضبط التصنيفات والروابط الدائمة.',
+    description_ar: 'نشر المادة على الموقع مع التأكد من العناوين والوصلات والنصوص المصاحبة.',
 
     size: 'S',
     definitionOfDone_ar:
@@ -1672,9 +1619,6 @@ const mediaTaskTemplates = [
 
     defaultOwnerFunc: 'desk_editor',
     defaultOwnerRole: 'desk_editor',
-    ownerFunction: 'desk_editor',
-    stage: 'post',
-    channel: 'website',
     defaultChannelKey: 'media.corrections_log',
     defaultDueDays: 3,
 
@@ -1694,12 +1638,9 @@ const mediaTaskTemplates = [
     definitionOfDone_ar:
       'ملفات وصياغات جاهزة للنشر على فيسبوك/إنستغرام أو تويتر، مع نصوص وصفيّة وروابط متابعة.',
 
-    defaultOwnerFunc: 'designer',
-    ownerFunction: 'designer',
-    stage: 'post',
+    defaultOwnerFunc: 'designer_social',
     defaultChannelKey: 'media.social',
     defaultDueDays: 2,
-    crossUnit: { people: true },
 
     pipelineKey: 'media.article_short',
 
@@ -1717,9 +1658,7 @@ const mediaTaskTemplates = [
     definitionOfDone_ar:
       'مجلد أو رابط مركزي يحتوي على النص النهائي، الصور، الروابط الخارجية، وأي تراخيص أو ملاحظات وصول.',
 
-    defaultOwnerFunc: 'archive',
-    ownerFunction: 'archive',
-    stage: 'post',
+    defaultOwnerFunc: 'archives',
     defaultChannelKey: 'media.archive',
     defaultDueDays: 2,
     hasDocLink: true,
@@ -1753,18 +1692,16 @@ const mediaTaskTemplates = [
     type: 'task',
     unit: 'media',
 
-    label_ar: 'مراجعة الوصول الرقمي (ألوان، حجم خط، نصوص بديلة، وصف الصور)',
+    label_ar: 'مراجعة الوصول الرقمي',
     description_ar:
-      'فحص الوصول الرقمي شاملاً التباين، حجم الخط، النصوص البديلة للصور، التسميات الواضحة للروابط، وتجربة القراءة على الموبايل مع هاشتاغات مناسبة.',
+      'فحص الوصول الرقمي بما يشمل نصوص بديلة وصور ذات تباين مناسب، تخطيط مقروء على الموبايل، وروابط موصوفة بوضوح قبل النشر.',
 
     size: 'S',
     definitionOfDone_ar:
       'بطاقة فحص منجزة للمادة تحتوي على حالة النص البديل، تباين الألوان، الترجمات، وتجربة القراءة على الموبايل مع رابط للتوثيق.',
 
     defaultOwnerRole: 'accessibility_editor',
-    defaultOwnerFunc: 'desk_editor',
-    ownerFunction: 'desk_editor',
-    stage: 'post',
+    defaultOwnerFunc: 'accessibility',
     defaultChannelKey: 'media.accessibility',
     defaultDueDays: 1,
 

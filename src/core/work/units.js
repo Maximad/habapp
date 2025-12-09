@@ -212,7 +212,6 @@ const pipelines = [
     name_ar: 'برنامج حبق لاب 90 للإعلام المدني',
     description_ar: 'برنامج لمدة ٩٠ يوماً لتدريب المشاركين على الصحافة العامة التشاركية وتشغيل ثلاث ديسكات إنتاجية.',
     hidden: true,
-    kind: 'program',
     stages: [
       { key: 'recruit', name_ar: 'استقطاب واختيار' },
       { key: 'train_clinics', name_ar: 'عيادات النزاهة والمهارات' },
@@ -317,9 +316,8 @@ const pipelines = [
     typical_length_words: [800, 1200],
     typical_turnaround_days: 5,
     defaultTaskTemplateIds: [
+      'media_assignment_memo',
       'media_visual_direction',
-      'media_image_selection',
-      'media_image_editing',
       'media_cover_selection',
       'media_color_consistency',
       'media_quick_interview',
@@ -332,9 +330,8 @@ const pipelines = [
       'media_archive_package'
     ],
     defaultTemplateIds: [
+      'media_assignment_memo',
       'media_visual_direction',
-      'media_image_selection',
-      'media_image_editing',
       'media_cover_selection',
       'media_color_consistency',
       'media_quick_interview',
@@ -374,9 +371,8 @@ const pipelines = [
     typical_length_words: [1500, 2200],
     typical_turnaround_days: 10,
     defaultTaskTemplateIds: [
+      'media_assignment_memo',
       'media_visual_direction',
-      'media_image_selection',
-      'media_image_editing',
       'media_cover_selection',
       'media_color_consistency',
       'media_research_background',
@@ -385,15 +381,12 @@ const pipelines = [
       'media_risk_ethics_review',
       'media_accessibility_check',
       'media_social_package',
-      'media_article_long_reel',
-      'media_article_long_data_brief',
       'media_corrections_log_entry',
       'media_archive_package'
     ],
     defaultTemplateIds: [
+      'media_assignment_memo',
       'media_visual_direction',
-      'media_image_selection',
-      'media_image_editing',
       'media_cover_selection',
       'media_color_consistency',
       'media_research_background',
@@ -402,8 +395,6 @@ const pipelines = [
       'media_risk_ethics_review',
       'media_accessibility_check',
       'media_social_package',
-      'media_article_long_reel',
-      'media_article_long_data_brief',
       'media_corrections_log_entry',
       'media_archive_package'
     ],
@@ -434,9 +425,8 @@ const pipelines = [
     typical_length_words: [400, 800],
     typical_turnaround_days: 6,
     defaultTaskTemplateIds: [
+      'media_assignment_memo',
       'media_visual_direction',
-      'media_image_selection',
-      'media_image_editing',
       'media_cover_selection',
       'media_color_consistency',
       'media_photo_story_package',
@@ -447,9 +437,8 @@ const pipelines = [
       'media_archive_package'
     ],
     defaultTemplateIds: [
+      'media_assignment_memo',
       'media_visual_direction',
-      'media_image_selection',
-      'media_image_editing',
       'media_cover_selection',
       'media_color_consistency',
       'media_photo_story_package',
@@ -486,9 +475,8 @@ const pipelines = [
     typical_length_words: [600, 1200],
     typical_turnaround_days: 7,
     defaultTaskTemplateIds: [
+      'media_assignment_memo',
       'media_visual_direction',
-      'media_image_selection',
-      'media_image_editing',
       'media_cover_selection',
       'media_color_consistency',
       'media_data_brief',
@@ -496,14 +484,12 @@ const pipelines = [
       'media_factcheck_bundle',
       'media_accessibility_check',
       'media_social_package',
-      'media_optional_reel',
       'media_corrections_log_entry',
       'media_archive_package'
     ],
     defaultTemplateIds: [
+      'media_assignment_memo',
       'media_visual_direction',
-      'media_image_selection',
-      'media_image_editing',
       'media_cover_selection',
       'media_color_consistency',
       'media_data_brief',
@@ -511,7 +497,6 @@ const pipelines = [
       'media_factcheck_bundle',
       'media_accessibility_check',
       'media_social_package',
-      'media_optional_reel',
       'media_corrections_log_entry',
       'media_archive_package'
     ],
@@ -541,6 +526,7 @@ const pipelines = [
     typical_length_seconds: [60, 120],
     typical_turnaround_days: 5,
     defaultTaskTemplateIds: [
+      'media_assignment_memo',
       'media_visual_direction',
       'media_cover_selection',
       'media_color_consistency',
@@ -553,6 +539,7 @@ const pipelines = [
       'media_archive_package'
     ],
     defaultTemplateIds: [
+      'media_assignment_memo',
       'media_visual_direction',
       'media_cover_selection',
       'media_color_consistency',
@@ -597,11 +584,9 @@ const pipelines = [
       suggestedCount: 6
     },
     defaultTaskTemplateIds: [
+      'media_assignment_memo',
       'media_podcast_outline',
       'media_podcast_edit',
-      'media_podcast_series_plan',
-      'media_podcast_publish_schedule',
-      'media_podcast_episode_template',
       'media_visual_direction',
       'media_cover_selection',
       'media_social_package',
@@ -610,11 +595,9 @@ const pipelines = [
       'media_archive_package'
     ],
     defaultTemplateIds: [
+      'media_assignment_memo',
       'media_podcast_outline',
       'media_podcast_edit',
-      'media_podcast_series_plan',
-      'media_podcast_publish_schedule',
-      'media_podcast_episode_template',
       'media_visual_direction',
       'media_cover_selection',
       'media_social_package',
@@ -649,8 +632,6 @@ const pipelines = [
       'media_translation',
       'media_editor_review',
       'media_visual_direction',
-      'media_image_selection',
-      'media_image_editing',
       'media_cover_selection',
       'media_color_consistency',
       'media_accessibility_check',
@@ -662,8 +643,6 @@ const pipelines = [
       'media_translation',
       'media_editor_review',
       'media_visual_direction',
-      'media_image_selection',
-      'media_image_editing',
       'media_cover_selection',
       'media_color_consistency',
       'media_accessibility_check',
