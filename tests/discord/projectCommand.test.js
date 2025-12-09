@@ -43,5 +43,6 @@ test('pipeline autocomplete handler is effectively disabled', async () => {
 
   const [response] = interaction.getResponses();
   assert.ok(Array.isArray(response));
-  assert.equal(response.length, 0);
+  assert.ok(response.length > 0);
+  assert.ok(response.some(choice => choice.value === pipelines[0].key));
 });

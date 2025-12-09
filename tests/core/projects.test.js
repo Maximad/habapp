@@ -34,10 +34,12 @@ test('projects persist to custom store with defaults and are case-insensitive', 
     pipelineKey: null,
     driveFolderUrl: null,
     mainDocUrl: null,
+    docUrl: null,
     shootDate: null,
     metadata: {
       driveFolderUrl: null,
-      mainDocUrl: null
+      mainDocUrl: null,
+      docUrl: null
     }
   });
 
@@ -58,10 +60,12 @@ test('projects without units/pipeline get defaults when loaded', t => {
   assert.strictEqual(loaded.pipelineKey, null);
   assert.strictEqual(loaded.driveFolderUrl, null);
   assert.strictEqual(loaded.mainDocUrl, null);
+  assert.strictEqual(loaded.docUrl, null);
   assert.strictEqual(loaded.shootDate, null);
   assert.deepStrictEqual(loaded.metadata, {
     driveFolderUrl: null,
-    mainDocUrl: null
+    mainDocUrl: null,
+    docUrl: null
   });
 });
 

@@ -71,8 +71,12 @@ test('people pipelines expose required tasks, ownership, stages, and cross-unit 
       pipeline.key === 'people.training_mini' ||
       pipeline.key === 'people.exhibition_cycle'
     ) {
-      const mediaCrossUnit = templates.some((t) => t.crossUnit && t.crossUnit.media === true);
-      const geeksCrossUnit = templates.some((t) => t.crossUnit && t.crossUnit.geeks === true);
+      const mediaCrossUnit = templates.some(
+        (t) => t.crossUnit && (t.crossUnit.targetUnit === 'media' || t.crossUnit.media === true)
+      );
+      const geeksCrossUnit = templates.some(
+        (t) => t.crossUnit && (t.crossUnit.targetUnit === 'geeks' || t.crossUnit.geeks === true)
+      );
       assert.ok(mediaCrossUnit, `${pipeline.key} should surface media crossUnit hints`);
       assert.ok(geeksCrossUnit, `${pipeline.key} should surface geeks crossUnit hints`);
 
@@ -83,7 +87,9 @@ test('people pipelines expose required tasks, ownership, stages, and cross-unit 
         );
       });
     } else {
-      const geeksCrossUnit = templates.some((t) => t.crossUnit && t.crossUnit.geeks === true);
+      const geeksCrossUnit = templates.some(
+        (t) => t.crossUnit && (t.crossUnit.targetUnit === 'geeks' || t.crossUnit.geeks === true)
+      );
       assert.ok(typeof geeksCrossUnit === 'boolean');
     }
   });
@@ -100,5 +106,22 @@ test('people pipelines include archiving and talent follow-up tasks', () => {
 
     assert.ok(archiveTask, `${pipeline.key} should include archive task`);
     assert.ok(talentTask, `${pipeline.key} should include talent log task`);
+  });
+});
+
+test('people event pipelines carry explicit media/geeks request tasks', () => {
+  const eventSmall = pipelines.find((p) => p.key === 'people.event_small');
+  const openMic = pipelines.find((p) => p.key === 'people.event_open_mic');
+
+  [eventSmall, openMic].forEach((pipeline) => {
+    const templateIds = getTemplateIdsForPipeline(pipeline);
+    const templates = templateIds.map((id) => getTaskTemplateById(id)).filter(Boolean);
+    const mediaRequest = templates.find((t) => t.id === 'people_event_media_request');
+    const geeksRequest = templates.find((t) => t.id === 'people_event_geeks_request');
+
+    assert.ok(mediaRequest, `${pipeline.key} should include media request task`);
+    assert.strictEqual(mediaRequest.crossUnit.targetUnit, 'media');
+    assert.ok(geeksRequest, `${pipeline.key} should include geeks request task`);
+    assert.strictEqual(geeksRequest.crossUnit.targetUnit, 'geeks');
   });
 });

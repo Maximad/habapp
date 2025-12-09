@@ -82,6 +82,17 @@ const data = new SlashCommandBuilder()
           o.addChoices(choice);
         }
         return o;
+      })
+      .addStringOption(o => {
+        o
+          .setName('status')
+          .setDescription('حالة المشروع (اختياري)')
+          .addChoices(
+            { name: 'نشط', value: 'active' },
+            { name: 'مؤرشف', value: 'archived' },
+            { name: 'الكل', value: 'all' },
+          );
+        return o;
       }),
   )
 
@@ -94,7 +105,8 @@ const data = new SlashCommandBuilder()
         o
           .setName('project')
           .setDescription('اسم المشروع أو جزء منه')
-          .setRequired(true),
+          .setRequired(true)
+          .setAutocomplete(true),
       ),
   )
 
@@ -107,7 +119,8 @@ const data = new SlashCommandBuilder()
         o
           .setName('project')
           .setDescription('اسم المشروع أو آخر مشروع للوحدة عند تركه فارغاً')
-          .setRequired(false),
+          .setRequired(false)
+          .setAutocomplete(true),
       )
       .addStringOption(o =>
         o

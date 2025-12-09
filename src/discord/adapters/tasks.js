@@ -1,61 +1,13 @@
-const cfg = require('../../../config.json');
 const { buildErrorMessage } = require('../i18n/messages');
-const memberSyncService = require('../../core/people/memberSyncService');
-const membersStore = require('../../core/people/membersStore');
 const { listProjects } = require('../../core/work/projects');
-const { getTaskById, isTaskClaimable } = require('../../core/work/tasks');
 const { getUnitByKey, getPipelineByKey } = require('../../core/work/units');
 const { resolveChannelKey } = require('./projectNotifications');
 const { getChannelIdByKey } = require('../utils/channels');
-
-function getRoleNames(interaction) {
-  const cache = interaction.member?.roles?.cache;
-  return Array.from(cache?.values?.() || [])
-    .map(r => r?.name)
-    .filter(Boolean);
-}
-
-async function resolveMemberProfile(interaction) {
-  const discordId = interaction.user?.id;
-  const username = interaction.user?.username || '';
-  const displayName =
-    interaction.member?.displayName ||
-    interaction.member?.nickname ||
-    interaction.user?.globalName ||
-    interaction.user?.username ||
-    null;
-  const roles = getRoleNames(interaction);
-
-  await memberSyncService.syncMemberFromRoles({
-    discordId,
-    username,
-    displayName,
-    roles
-  });
-
-  return membersStore.getMemberByDiscordId(discordId);
-}
-
-function collectOpenTasksForOffer(profile) {
-  const projects = listProjects();
-  const units = profile?.units || [];
-  const results = [];
-
-  projects.forEach(project => {
-    (project.tasks || []).forEach(task => {
-      const status = task?.status || 'open';
-      if (status !== 'open') return;
-      const unitMatch = task.unit ? units.includes(task.unit) : true;
-      const unowned = !task.ownerId;
-      if (!unitMatch && !unowned) return;
-      if (!isTaskClaimable(task)) return;
-
-      results.push({ project, task });
-    });
-  });
-
-  return results;
-}
+const {
+  resolveProjectByQuery,
+  listClaimableTasksForProject,
+  searchProjectsByQuery,
+} = require('../../core/work/services/projectsService');
 
 async function replyLegacy(interaction) {
   const message = buildErrorMessage('tasks_command_legacy');
@@ -81,108 +33,232 @@ async function handleTaskList(interaction) {
   return replyLegacy(interaction);
 }
 
-async function handleTaskOffer(interaction) {
+async function handleTaskOffer(interaction, options = {}) {
+  const {
+    resolveProject = resolveProjectByQuery,
+    listClaimableTasks = listClaimableTasksForProject,
+    findChannelForProject = null,
+  } = options;
+
   try {
-    const taskId = interaction.options.getString('task_id');
-    if (!taskId) {
+    const projectQuery = interaction.options.getString('project');
+    const taskQuery = interaction.options.getString('task');
+
+    if (!projectQuery || !projectQuery.trim()) {
       return interaction.reply({
-        content: 'يجب تحديد المهمة المراد نشرها.',
-        ephemeral: true
+        content: 'يجب اختيار مشروع أولاً لعرض المهام المتاحة.',
+        ephemeral: true,
       });
     }
 
-    const { project, task } = getTaskById(taskId);
-    if (!project || !task) {
+    const { project, matches } = resolveProject(projectQuery);
+
+    if (!project && (!matches || matches.length === 0)) {
       return interaction.reply({
-        content: 'لم نتمكن من العثور على هذه المهمة.',
-        ephemeral: true
+        content: 'ما قدرنا نلاقي مشروع بهذا الوصف. جرّب /project list أو اكتب جزء أوضح من الاسم.',
+        ephemeral: true,
       });
+    }
+
+    if (!project && matches && matches.length > 0) {
+      const list = matches
+        .slice(0, 5)
+        .map(m => `• ${m.project.name || m.project.title} (${m.project.slug})`)
+        .join('\n');
+      return interaction.reply({
+        content:
+          'وجدنا أكثر من مشروع بهذا الاسم. وضّح أكثر:\n' +
+          `${list}\n\n` +
+          'أعد المحاولة بكتابة كلمة مميزة من العنوان أو استخدم المعرّف (slug).',
+        ephemeral: true,
+      });
+    }
+
+    const claimable = listClaimableTasks({ projectSlug: project.slug }) || [];
+
+    if (!claimable.length) {
+      return interaction.reply({
+        content: 'لا توجد مهام قابلة للاستلام حالياً في هذا المشروع.',
+        ephemeral: true,
+      });
+    }
+
+    let tasksToOffer = claimable;
+    if (taskQuery) {
+      const parsed = typeof taskQuery === 'string' && taskQuery.includes('::')
+        ? taskQuery.split('::')
+        : null;
+
+      if (parsed && parsed[1]) {
+        const taskId = Number(parsed[1]);
+        tasksToOffer = claimable.filter(t => Number(t.id) === taskId);
+      } else {
+        const q = String(taskQuery || '').toLowerCase();
+        tasksToOffer = claimable.filter(t => {
+          const titleAr = String(t.title_ar || '').toLowerCase();
+          const title = String(t.title || '').toLowerCase();
+          return (
+            titleAr.includes(q) ||
+            title.includes(q) ||
+            String(t.id).includes(q)
+          );
+        });
+      }
+
+      if (!tasksToOffer.length) {
+        return interaction.reply({
+          content: 'لا توجد مهمة مطابقة لهذا الاسم في هذا المشروع.',
+          ephemeral: true,
+        });
+      }
     }
 
     const pipeline = project.pipelineKey ? getPipelineByKey(project.pipelineKey) : null;
-    const channelKey = resolveChannelKey(project, pipeline);
-    const channelId = channelKey ? getChannelIdByKey(channelKey) : null;
-    const channel = channelId ? await interaction.guild.channels.fetch(channelId).catch(() => null) : null;
+    const channelResolver = typeof findChannelForProject === 'function'
+      ? findChannelForProject
+      : async () => {
+          const channelKey = resolveChannelKey(project, pipeline);
+          const channelId = channelKey ? getChannelIdByKey(channelKey) : null;
+          return channelId
+            ? await interaction.guild.channels.fetch(channelId).catch(() => null)
+            : null;
+        };
+
+    const channel = await channelResolver(project, pipeline);
+
     if (!channel) {
       return interaction.reply({
         content: 'تعذر نشر المهمة لعدم وجود قناة مفعّلة لهذه الوحدة.',
-        ephemeral: true
+        ephemeral: true,
       });
     }
 
-    const unitKey = task.unit || (project.units && project.units[0]) || project.unit || pipeline?.unitKey || null;
+    const unitKey =
+      project.units?.[0] || project.unit || pipeline?.unitKey || tasksToOffer[0]?.unit || null;
     const unit = unitKey ? getUnitByKey(unitKey) : null;
     const unitNameAr = unit?.name_ar || unitKey || '—';
-    const due = task.due || task.dueDate || 'غير محدد';
-    const sizeLabel = `[${(task.size || '—').toString().toUpperCase()}]`;
 
-    const title = task.title || task.title_ar || 'بدون عنوان';
+    const payloads = tasksToOffer.slice(0, 10).map(task => {
+      const due = task.due || task.dueDate || 'غير محدد';
+      const sizeLabel = `[${(task.size || '—').toString().toUpperCase()}]`;
+      const title = task.title_ar || task.title || 'بدون عنوان';
 
-    await channel.send({
-      content:
-        `مهمة جديدة:\n` +
-        `العنوان: ${title}\n` +
-        `المشروع: ${project.title || project.name || project.slug}\n` +
-        `الوحدة: ${unitNameAr}\n` +
-        `الموعد: ${due}\n` +
-        `الحجم: ${sizeLabel}`,
-      components: [
-        {
-          type: 1,
-          components: [
-            {
-              type: 2,
-              style: 1,
-              custom_id: `task:claim:${task.id}`,
-              label: 'قبول المهمة'
-            }
-          ]
-        }
-      ]
+      return {
+        content:
+          `مهمة جديدة:\n` +
+          `العنوان: ${title}\n` +
+          `المشروع: ${project.title || project.name || project.slug}\n` +
+          `الوحدة: ${unitNameAr}\n` +
+          `الموعد: ${due}\n` +
+          `الحجم: ${sizeLabel}`,
+        components: [
+          {
+            type: 1,
+            components: [
+              {
+                type: 2,
+                style: 1,
+                custom_id: `task:claim:${task.id}`,
+                label: 'قبول المهمة',
+              },
+            ],
+          },
+        ],
+      };
     });
 
+    for (const payload of payloads) {
+      // eslint-disable-next-line no-await-in-loop
+      await channel.send(payload);
+    }
+
     return interaction.reply({
-      content: 'تم نشر المهمة في قناة الوحدة مع زر قبول.',
-      ephemeral: true
+      content: 'تم نشر المهام المتاحة لهذا المشروع ليتمكن الأعضاء من استلامها.',
+      ephemeral: true,
     });
   } catch (err) {
     console.error('[HabApp][task offer]', err);
     return interaction.reply({
       content: 'حدث خطأ أثناء نشر المهمة. حاول مرة أخرى لاحقاً.',
-      ephemeral: true
+      ephemeral: true,
     });
   }
 }
 
-async function handleTaskAutocomplete(interaction) {
+async function handleTaskAutocomplete(interaction, options = {}) {
+  const {
+    resolveProject = resolveProjectByQuery,
+    listClaimableTasks = listClaimableTasksForProject,
+    searchProjects = searchProjectsByQuery,
+    listAllProjects = listProjects,
+  } = options;
+
   try {
     const sub = interaction.options.getSubcommand();
     const focused = interaction.options.getFocused(true);
-    if (sub !== 'offer' || focused?.name !== 'task_id') {
+    if (sub !== 'offer' || !focused) {
       return interaction.respond([]);
     }
 
-    const profile = (await resolveMemberProfile(interaction)) || {};
-    const query = String(focused.value || '').toLowerCase();
-    const tasks = collectOpenTasksForOffer(profile);
+    if (focused.name === 'project') {
+      const query = String(focused.value || '').trim().toLowerCase();
+      const matches = query
+        ? searchProjects(query)
+        : (listAllProjects() || []).map(p => ({ project: p, score: 0 }));
 
-    const filtered = tasks.filter(({ task }) => {
-      if (!query) return true;
-      const label = `${task.title_ar || task.title || ''}`.toLowerCase();
-      return label.includes(query) || String(task.id).includes(query);
-    });
+      const choices = matches
+        .slice(0, 25)
+        .map(item => item.project)
+        .map(project => {
+          const unitKey = project.units?.[0] || project.unit || null;
+          const unit = unitKey ? getUnitByKey(unitKey) : null;
+          const unitLabel = unit?.name_ar || unitKey || '—';
+          const name = `${project.name || project.title || project.slug} – ${unitLabel} – (${project.slug})`;
+          return { name, value: project.slug };
+        });
 
-    const choices = filtered.slice(0, 25).map(({ project, task }) => {
-      const dueLabel = task.due || task.dueDate || 'بدون موعد';
-      return {
-        name: `[${project.name || project.title || project.slug}] ${
-          task.title || task.title_ar || 'بدون عنوان'
-        } — ${dueLabel}`,
-        value: String(task.id)
-      };
-    });
+      return interaction.respond(choices);
+    }
 
-    return interaction.respond(choices);
+    if (focused.name === 'task') {
+      const projectValue = interaction.options.getString('project');
+      if (!projectValue) {
+        return interaction.respond([]);
+      }
+
+      let project = null;
+      if (projectValue.includes('::')) {
+        const [slug] = projectValue.split('::');
+        project = resolveProject(slug)?.project;
+      } else {
+        const resolved = resolveProject(projectValue);
+        project = resolved?.project;
+      }
+
+      if (!project) {
+        return interaction.respond([]);
+      }
+
+      const claimable = listClaimableTasks({ projectSlug: project.slug }) || [];
+      const query = String(focused.value || '').toLowerCase();
+
+      const filtered = claimable.filter(task => {
+        if (!query) return true;
+        const titleAr = String(task.title_ar || '').toLowerCase();
+        const title = String(task.title || '').toLowerCase();
+        return titleAr.includes(query) || title.includes(query) || String(task.id).includes(query);
+      });
+
+      const choices = filtered.slice(0, 25).map(task => {
+        const sizeLabel = task.size ? `[${String(task.size).toUpperCase()}] ` : '';
+        const name = `${sizeLabel}${task.title_ar || task.title || 'بدون عنوان'}`;
+        return { name, value: `${project.slug}::${task.id}` };
+      });
+
+      return interaction.respond(choices);
+    }
+
+    return interaction.respond([]);
   } catch (err) {
     console.error('[HabApp][task autocomplete]', err);
     if (interaction.respond) {

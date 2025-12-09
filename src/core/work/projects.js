@@ -27,10 +27,12 @@ function applyProjectDefaults(project) {
   const metadata = project.metadata && typeof project.metadata === 'object' ? project.metadata : {};
   const driveFolderUrl = project.driveFolderUrl || metadata.driveFolderUrl || null;
   const mainDocUrl = project.mainDocUrl || metadata.mainDocUrl || null;
+  const docUrl = project.docUrl || metadata.docUrl || mainDocUrl || null;
   const normalizedMetadata = {
     ...metadata,
     driveFolderUrl,
-    mainDocUrl
+    mainDocUrl,
+    docUrl
   };
   const shootDate = project.shootDate || null;
   return {
@@ -40,6 +42,7 @@ function applyProjectDefaults(project) {
     tasks,
     driveFolderUrl,
     mainDocUrl,
+    docUrl,
     shootDate,
     metadata: normalizedMetadata
   };

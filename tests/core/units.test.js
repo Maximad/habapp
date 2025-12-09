@@ -112,8 +112,9 @@ test('media pipelines include publishing, archiving, and cleaned templates', () 
 
   const archiveTemplate = getTaskTemplateById('media_archive_package');
   assert.ok(archiveTemplate);
-  assert.strictEqual(archiveTemplate.label_ar, 'أرشفة المادة في الأرشيف المركزي (نصوص، صور، روابط)');
+  assert.strictEqual(archiveTemplate.label_ar, 'أرشفة المادة والملفات المرافقة');
   assert.strictEqual(archiveTemplate.hasDocLink, true);
+  assert.strictEqual(archiveTemplate.ownerFunction, 'desk_editor');
 
   [
     'media.article_short',
