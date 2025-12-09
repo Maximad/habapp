@@ -84,19 +84,26 @@ test('media pipelines include art direction, social, and archiving tasks', () =>
   const artKeys = ['media.article_short', 'media.article_long', 'media.photo_story'];
   artKeys.forEach(key => {
     const pipeline = getPipelineByKey(key);
-    assert.ok(pipeline.defaultTemplateIds.includes('media_image_selection'));
-    assert.ok(pipeline.defaultTemplateIds.includes('media_image_editing'));
-    assert.ok(pipeline.defaultTemplateIds.includes('media_visual_direction'));
-    const coverTask = getTaskTemplateById('media_cover_selection');
-    assert.ok(coverTask);
-    assert.ok(coverTask.label_ar.includes('غلاف'));
-    assert.strictEqual(coverTask.ownerFunction, 'designer');
+    if (key !== 'media.article_short') {
+      assert.ok(pipeline.defaultTemplateIds.includes('media_image_selection'));
+      assert.ok(pipeline.defaultTemplateIds.includes('media_image_editing'));
+      assert.ok(pipeline.defaultTemplateIds.includes('media_visual_direction'));
+      const coverTask = getTaskTemplateById('media_cover_selection');
+      assert.ok(coverTask);
+      assert.ok(coverTask.label_ar.includes('غلاف'));
+      assert.strictEqual(coverTask.ownerFunction, 'designer');
+    }
   });
 
   mediaPipelineKeys.forEach(key => {
     const pipeline = getPipelineByKey(key);
-    assert.ok(pipeline.defaultTemplateIds.includes('media_corrections_log_entry'));
-    assert.ok(pipeline.defaultTemplateIds.includes('media_archive_package'));
+    if (key === 'media.article_short') {
+      assert.ok(pipeline.defaultTemplateIds.includes('media_article_short_publish'));
+      assert.ok(pipeline.defaultTemplateIds.includes('media_article_short_archive'));
+    } else {
+      assert.ok(pipeline.defaultTemplateIds.includes('media_corrections_log_entry'));
+      assert.ok(pipeline.defaultTemplateIds.includes('media_archive_package'));
+    }
   });
 
   const social = getTaskTemplateById('media_social_package');
@@ -105,6 +112,41 @@ test('media pipelines include art direction, social, and archiving tasks', () =>
 
   const editing = getTaskTemplateById('media_image_editing');
   assert.strictEqual(editing.size, 'M');
+});
+
+test('media.article_short pipeline tasks reordered with offsets and roles', () => {
+  const pipeline = getPipelineByKey('media.article_short');
+  assert.ok(pipeline);
+
+  const defaults = (pipeline.defaultTemplateIds || []).map(id => getTaskTemplateById(id));
+  assert.strictEqual(defaults.length, 8);
+
+  const titles = defaults.map(t => t.label_ar);
+  assert.ok(titles.includes('مقابلة سريعة وجمع المادة'));
+  assert.ok(titles.includes('كتابة المقال القصير'));
+  assert.ok(titles.includes('اختيار صور المادة وتوثيق الحقوق وصورة الغلاف والمعالجة الأولية'));
+  assert.ok(titles.includes('تحرير مجموعة الصور ومعالجة اللون وفق دليل الهوية البصرية'));
+  assert.ok(titles.includes('حزمة منصات اجتماعية للمادة (بوست + ستوري + ٣ تقطيعات)'));
+  assert.ok(titles.includes('نشر على الموقع'));
+  assert.ok(titles.includes('أرشفة المادة والملفات المرافقة'));
+
+  const byFunction = Object.fromEntries(defaults.map(t => [t.functionKey, t.id]));
+  assert.ok(byFunction.media_writer);
+  assert.ok(byFunction.media_photo);
+  assert.ok(byFunction.media_editor);
+  assert.ok(byFunction.media_social);
+  assert.ok(byFunction.media_web);
+  assert.ok(byFunction.media_archive);
+
+  const offsetMap = Object.fromEntries(defaults.map(t => [t.label_ar, t.meta?.offsetDays]));
+  assert.strictEqual(offsetMap['مقابلة سريعة وجمع المادة'], -4);
+  assert.strictEqual(offsetMap['كتابة المقال القصير'], -3);
+  assert.strictEqual(offsetMap['اختيار صور المادة وتوثيق الحقوق وصورة الغلاف والمعالجة الأولية'], -3);
+  assert.strictEqual(offsetMap['تحرير مجموعة الصور ومعالجة اللون وفق دليل الهوية البصرية'], -2);
+  assert.strictEqual(offsetMap['مراجعة سهولة القراءة والوصول للمادة'], -2);
+  assert.strictEqual(offsetMap['حزمة منصات اجتماعية للمادة (بوست + ستوري + ٣ تقطيعات)'], -1);
+  assert.strictEqual(offsetMap['نشر على الموقع'], 0);
+  assert.strictEqual(offsetMap['أرشفة المادة والملفات المرافقة'], 1);
 });
 
 test('optional cross-format and series planning tasks are marked', () => {

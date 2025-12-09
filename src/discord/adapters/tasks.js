@@ -1,3 +1,4 @@
+const config = require('../../../config.json');
 const { buildErrorMessage } = require('../i18n/messages');
 const { listProjects } = require('../../core/work/projects');
 const { getUnitByKey, getPipelineByKey } = require('../../core/work/units');
@@ -268,11 +269,82 @@ async function handleTaskAutocomplete(interaction, options = {}) {
   }
 }
 
+async function publishClaimableTasksByFunction({ client, project, tasks } = {}) {
+  const routing = config.taskRouting || {};
+  if (!client || !project) return null;
+
+  const projectUnit = (project.units && project.units[0]) || project.unit || null;
+  if (!projectUnit) return null;
+
+  const normalizedUnit = String(projectUnit).toLowerCase();
+  const tasksByGroup = new Map();
+
+  (tasks || []).forEach(task => {
+    if (!task || !task.claimable) return;
+    if (!task.functionKey) return;
+    const taskUnit = (task.unit || projectUnit || '').toString().toLowerCase();
+    if (taskUnit !== normalizedUnit) return;
+
+    const key = `${taskUnit}::${task.functionKey}`;
+    if (!tasksByGroup.has(key)) {
+      tasksByGroup.set(key, { unit: taskUnit, functionKey: task.functionKey, tasks: [] });
+    }
+    tasksByGroup.get(key).tasks.push(task);
+  });
+
+  for (const group of tasksByGroup.values()) {
+    const unitRouting = routing[group.unit] || {};
+    const destination = unitRouting[group.functionKey];
+    if (!destination || !destination.channelId) continue;
+
+    // eslint-disable-next-line no-await-in-loop
+    const channel = await client.channels.fetch(destination.channelId).catch(() => null);
+    if (!channel || typeof channel.send !== 'function') continue;
+
+    const roleMentions = Array.isArray(destination.roleIds)
+      ? destination.roleIds.map(id => `<@&${id}>`).join(' ')
+      : '';
+
+    const projectName = project.title || project.name || project.slug || 'مشروع بدون اسم';
+    const lines = group.tasks.map(task => {
+      const sizeLabel = `[${String(task.size || '—').toUpperCase()}]`;
+      const title = task.title_ar || task.title || 'بدون عنوان';
+      const due = task.due || task.dueDate || 'غير محدد';
+      return `• ${sizeLabel} ${title} – الموعد: ${due}`;
+    });
+
+    const buttons = group.tasks.map(task => ({
+      type: 2,
+      style: 1,
+      custom_id: `task:claim:${task.id}`,
+      label: 'استلام المهمة',
+    }));
+
+    const components = [];
+    for (let i = 0; i < buttons.length; i += 5) {
+      components.push({ type: 1, components: buttons.slice(i, i + 5) });
+    }
+
+    const content = [
+      roleMentions,
+      `مهام قابلة للاستلام – المشروع: ${projectName}`,
+      `نوع العمل: ${group.functionKey}`,
+      lines.join('\n')
+    ].filter(Boolean).join('\n');
+
+    // eslint-disable-next-line no-await-in-loop
+    await channel.send({ content, components });
+  }
+
+  return true;
+}
+
 module.exports = {
   handleTaskAdd,
   handleTaskComplete,
   handleTaskDelete,
   handleTaskList,
   handleTaskOffer,
-  handleTaskAutocomplete
+  handleTaskAutocomplete,
+  publishClaimableTasksByFunction
 };

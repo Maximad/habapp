@@ -126,8 +126,13 @@ test('media pipelines include publishing, archiving, and cleaned templates', () 
     'media.translation_adapt'
   ].forEach(key => {
     const pipeline = getPipelineByKey(key);
-    assert.ok(pipeline.defaultTemplateIds.includes('media_corrections_log_entry'));
-    assert.ok(pipeline.defaultTemplateIds.includes('media_archive_package'));
+    if (key === 'media.article_short') {
+      assert.ok(pipeline.defaultTemplateIds.includes('media_article_short_publish'));
+      assert.ok(pipeline.defaultTemplateIds.includes('media_article_short_archive'));
+    } else {
+      assert.ok(pipeline.defaultTemplateIds.includes('media_corrections_log_entry'));
+      assert.ok(pipeline.defaultTemplateIds.includes('media_archive_package'));
+    }
   });
 });
 

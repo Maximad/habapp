@@ -1,6 +1,7 @@
 const cfg = require('../../../config.json');
 const { getChannelIdByKey, postToChannel } = require('../utils/channels');
 const { getPipelineByKey } = require('../../core/work/units');
+const { publishClaimableTasksByFunction } = require('./tasks');
 const { formatProjectSummary } = require('../utils/formatters');
 
 const unitMainChannelKey = {
@@ -41,7 +42,15 @@ async function notifyProjectCreated({ interaction, project, tasks }) {
     'تم إنشاء مشروع جديد\n' +
     `${summary}${mentions ? `\nتنويه: ${mentions}` : ''}`;
 
-  return postToChannel(guild, channelId, content);
+  const message = await postToChannel(guild, channelId, content);
+
+  try {
+    await publishClaimableTasksByFunction({ client: guild?.client, project, tasks });
+  } catch (err) {
+    console.error('[HabApp][project notify] failed to publish claimable tasks', err);
+  }
+
+  return message;
 }
 
 module.exports = { notifyProjectCreated, resolveChannelKey };
