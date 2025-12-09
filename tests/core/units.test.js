@@ -8,7 +8,7 @@ const {
   getPipelineByKey,
   listPipelinesByUnit
 } = require('../../src/core/work/units');
-const { getTaskTemplateById } = require('../../src/core/work/templates/task-templates');
+const { taskTemplates, getTaskTemplateById } = require('../../src/core/work/templates/task-templates');
 
 test('units expose expected keys and Arabic metadata', () => {
   const unitKeys = units.map(u => u.key);
@@ -31,7 +31,11 @@ test('pipelines are linked to units and retrievable by key', () => {
   assert.ok(pipelineKeys.includes('people.event_music_cycle'));
   assert.ok(pipelineKeys.includes('people.event_open_mic'));
   assert.ok(pipelineKeys.includes('people.exhibition_cycle'));
-  assert.ok(pipelineKeys.includes('geeks.app_small'));
+  assert.ok(pipelineKeys.includes('geeks.site_basic'));
+  assert.ok(pipelineKeys.includes('geeks.web_story'));
+  assert.ok(pipelineKeys.includes('geeks.game_super_khawiye'));
+  assert.ok(pipelineKeys.includes('geeks.ads_campaign'));
+  assert.ok(pipelineKeys.includes('geeks.support_external_media'));
   assert.ok(pipelineKeys.includes('geeks.automation_stack'));
   assert.ok(pipelineKeys.includes('geeks.discord_infra'));
   assert.ok(pipelineKeys.includes('media.translation_adapt'));
@@ -85,6 +89,7 @@ test('media lab90 pipeline and templates are exposed with expected metadata', ()
   const pipeline = getPipelineByKey('media.lab90_cycle');
   assert.ok(pipeline);
   assert.strictEqual(pipeline.unitKey, 'media');
+  assert.strictEqual(pipeline.hidden, true);
   ['media.lab90.recruitment_cohort', 'media.lab90.features_desk_quota', 'media.lab90.mel_cycle_report'].forEach(key => {
     assert.ok(pipeline.templateKeys.includes(key), `template key ${key} should be in media pipeline`);
   });
@@ -94,6 +99,35 @@ test('media lab90 pipeline and templates are exposed with expected metadata', ()
   assert.strictEqual(template.label_ar, 'استقطاب واختيار مجموعة لاب ٩٠');
   assert.strictEqual(template.defaultOwnerFunc, 'managing_editor');
   assert.strictEqual(template.defaultChannelKey, 'media.tasks');
+});
+
+test('media pipelines include publishing, archiving, and cleaned templates', () => {
+  const ideaRoundTemplate = taskTemplates.find(t => t.label_ar === 'جولة أفكار نشر ١٠ أفكار واعتماد ٣');
+  assert.strictEqual(ideaRoundTemplate, undefined);
+
+  const publishTemplate = getTaskTemplateById('media_corrections_log_entry');
+  assert.ok(publishTemplate);
+  assert.strictEqual(publishTemplate.label_ar, 'نشر على الموقع');
+  assert.strictEqual(publishTemplate.defaultOwnerFunc, 'desk_editor');
+
+  const archiveTemplate = getTaskTemplateById('media_archive_package');
+  assert.ok(archiveTemplate);
+  assert.strictEqual(archiveTemplate.label_ar, 'أرشفة المادة في الأرشيف المركزي (نصوص، صور، روابط)');
+  assert.strictEqual(archiveTemplate.hasDocLink, true);
+
+  [
+    'media.article_short',
+    'media.article_long',
+    'media.photo_story',
+    'media.data_brief',
+    'media.short_video_social',
+    'media.podcast_short',
+    'media.translation_adapt'
+  ].forEach(key => {
+    const pipeline = getPipelineByKey(key);
+    assert.ok(pipeline.defaultTemplateIds.includes('media_corrections_log_entry'));
+    assert.ok(pipeline.defaultTemplateIds.includes('media_archive_package'));
+  });
 });
 
 test('think pipelines and templates are exposed with expected metadata', () => {
@@ -163,33 +197,25 @@ test('people pipelines and templates are exposed with expected metadata', () => 
 });
 
 test('geeks pipelines and templates are exposed with expected metadata', () => {
-  const appPipeline = getPipelineByKey('geeks.app_small');
-  assert.ok(appPipeline);
-  assert.ok(appPipeline.templateKeys.includes('geeks.app.discovery'));
+  const sitePipeline = getPipelineByKey('geeks.site_basic');
+  assert.ok(sitePipeline);
+  assert.ok(sitePipeline.defaultTaskTemplateIds.includes('geeks_site_frontend_build'));
 
-  const stackPipeline = getPipelineByKey('geeks.automation_stack');
-  assert.ok(stackPipeline);
-  assert.ok(stackPipeline.templateKeys.includes('geeks.stack.flow_design'));
+  const storyPipeline = getPipelineByKey('geeks.web_story');
+  assert.ok(storyPipeline);
+  assert.ok(storyPipeline.defaultTaskTemplateIds.includes('geeks_story_frontend_build'));
 
-  const discordPipeline = getPipelineByKey('geeks.discord_infra');
-  assert.ok(discordPipeline);
-  assert.ok(discordPipeline.templateKeys.includes('geeks.discord.audit_current'));
+  const adsPipeline = getPipelineByKey('geeks.ads_campaign');
+  assert.ok(adsPipeline);
+  assert.ok(adsPipeline.defaultTaskTemplateIds.includes('geeks_ads_tracking'));
 
-  const discoveryTemplate = getTaskTemplateById('geeks.app.discovery');
-  assert.ok(discoveryTemplate);
-  assert.strictEqual(discoveryTemplate.label_ar, 'فهم الحاجة والتأكد منها');
-  assert.strictEqual(discoveryTemplate.defaultOwnerFunc, 'producer');
-  assert.strictEqual(discoveryTemplate.defaultChannelKey, 'geeks.automation');
+  const storyTemplate = getTaskTemplateById('geeks_story_frontend_build');
+  assert.ok(storyTemplate);
+  assert.strictEqual(storyTemplate.ownerFunction, 'geeks_frontend');
+  assert.strictEqual(storyTemplate.stage, 'build');
 
-  const flowTemplate = getTaskTemplateById('geeks.stack.flow_design');
-  assert.ok(flowTemplate);
-  assert.strictEqual(flowTemplate.label_ar, 'تصميم تدفق الأتمتة');
-  assert.strictEqual(flowTemplate.defaultOwnerFunc, 'developer');
-  assert.strictEqual(flowTemplate.defaultChannelKey, 'geeks.automation');
-
-  const auditTemplate = getTaskTemplateById('geeks.discord.audit_current');
-  assert.ok(auditTemplate);
-  assert.strictEqual(auditTemplate.label_ar, 'مراجعة بنية ديسكورد الحالية');
-  assert.strictEqual(auditTemplate.defaultOwnerFunc, 'developer');
-  assert.strictEqual(auditTemplate.defaultChannelKey, 'geeks.bot_audit');
+  const siteDocTemplate = getTaskTemplateById('geeks_site_docs_handover');
+  assert.ok(siteDocTemplate);
+  assert.strictEqual(siteDocTemplate.ownerFunction, 'geeks_tech_pm');
+  assert.strictEqual(siteDocTemplate.stage, 'post');
 });

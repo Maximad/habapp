@@ -9,7 +9,8 @@ const {
   createProjectWithScaffold,
   resolveProjectByQuery,
   listProjectTasksForView,
-  createProject
+  createProject,
+  resolveTaskDueDateFromTemplate
 } = require('../../src/core/work/services/projectsService');
 const { upsertMember } = require('../../src/core/people/memberStore');
 const { getPipelineByKey, pipelines } = require('../../src/core/work/units');
@@ -62,7 +63,8 @@ test('createProjectWithScaffold builds tasks with owners and Arabic text', t => 
     assert.strictEqual(task.description_ar, tpl.description_ar);
     assert.strictEqual(task.definitionOfDone_ar, tpl.definitionOfDone_ar || null);
     assert.strictEqual(task.defaultChannelKey, tpl.defaultChannelKey || null);
-    assert.strictEqual(task.due, '2024-12-10');
+    const expectedDue = resolveTaskDueDateFromTemplate(tpl, project);
+    assert.strictEqual(task.due, expectedDue);
     assert.strictEqual(task.ownerId, ownerMap[task.templateId]);
   }
 });

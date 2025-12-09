@@ -258,7 +258,8 @@ function createProject({
   templateCode = null,
   unit = null,
   units = ['production'],
-  pipelineKey = null
+  pipelineKey = null,
+  shootDate = null
 }, store) {
   const dueDate = normalizeDueDate(due);
   const resolvedSlug = resolveProjectSlug({ name, slug }, store);
@@ -295,7 +296,8 @@ function createProject({
     tasks: [],
     unit: resolvedUnit,
     units: finalUnits,
-    pipelineKey: pipeline ? pipeline.key : pipelineKey
+    pipelineKey: pipeline ? pipeline.key : pipelineKey,
+    shootDate
   });
 
   upsertProject(project, store);
@@ -345,11 +347,27 @@ function resolveTemplateListForPipeline(pipeline) {
 
 function resolveTaskDueDateFromTemplate(template, project) {
   const projectDue = project?.dueDate || project?.due || null;
+  const shootDate = project?.shootDate || null;
+  const offset =
+    (template.deadlineOffset && typeof template.deadlineOffset.value === 'number'
+      ? template.deadlineOffset.value
+      : null) ??
+    (typeof template.dueOffsetDays === 'number' ? template.dueOffsetDays : null) ??
+    (typeof template.defaultDueDays === 'number' ? template.defaultDueDays : null);
 
-  if (typeof template.dueOffsetDays === 'number' && projectDue) {
-    const base = new Date(projectDue);
+  const dueFromRaw = template.dueFrom || template.deadlineOffset?.from || null;
+  const dueFrom = dueFromRaw === 'shoot_date' || dueFromRaw === 'shootDate' ? 'shoot_date' : 'project_due';
+
+  const baseDateString =
+    dueFrom === 'shoot_date'
+      ? shootDate || projectDue || null
+      : projectDue || null;
+
+  if (baseDateString) {
+    const base = new Date(baseDateString);
     if (!Number.isNaN(base.valueOf())) {
-      base.setUTCDate(base.getUTCDate() + template.dueOffsetDays);
+      const offsetValue = typeof offset === 'number' ? offset : 0;
+      base.setUTCDate(base.getUTCDate() + offsetValue);
       return base.toISOString().slice(0, 10);
     }
   }
@@ -422,14 +440,16 @@ function createProjectWithScaffold({
   unit = null,
   pipelineKey,
   dueDate,
-  createdByDiscordId
+  createdByDiscordId,
+  shootDate = null
 }, store) {
   const { project } = createProject({
     name: title,
     due: dueDate,
     unit,
     pipelineKey,
-    createdBy: createdByDiscordId
+    createdBy: createdByDiscordId,
+    shootDate
   }, store);
 
   const pipeline = getPipelineByKey(project.pipelineKey || pipelineKey);
@@ -459,7 +479,12 @@ function createProjectWithScaffold({
       defaultOwnerRole: t.defaultOwnerRole || t.defaultOwnerFunc || null,
       defaultChannelKey: t.defaultChannelKey || null,
       ownerId: ownerId || null,
+      ownerFunction: t.ownerFunction || null,
+      functionKey: t.functionKey || t.ownerFunction || null,
+      stage: t.stage || null,
+      dueFrom: t.dueFrom || null,
       size: t.size || null,
+      claimable: typeof t.claimable === 'boolean' ? t.claimable : null,
       due
     }, store);
 
@@ -536,5 +561,6 @@ module.exports = {
   summarizeProductionTemplate,
   resolveProjectSlug,
   createProjectWithScaffold,
-  validateUnitPipeline
+  validateUnitPipeline,
+  resolveTaskDueDateFromTemplate
 };

@@ -13,15 +13,33 @@ const unitLabels = {
 const functionLabels = {
   reporter: 'صحافة / كتابة',
   producer: 'إنتاج',
+  director: 'مخرج',
+  dop: 'مدير تصوير',
   video: 'فيديو',
   photo: 'تصوير فوتوغرافي',
   graphics: 'غرافيك',
   sound: 'صوت',
+  post: 'مونتاج / بوست برودكشن',
   developer: 'تطوير / برمجة',
   researcher: 'بحث',
   data_analyst: 'تحليل بيانات',
+  data: 'بيانات / تصور بيانات',
   event_host: 'استضافة فعاليات',
-  field_ops: 'ميدان ولوجستيات'
+  field_ops: 'ميدان ولوجستيات',
+  people_programmer: 'برمجة الفعاليات والمحتوى',
+  people_coordination: 'تنسيق ولوجستيات الفعاليات',
+  designer: 'تصميم / غرافيك',
+  ethics: 'أخلاقيات وسلامة',
+  media_documentation: 'توثيق إعلامي',
+  archive: 'أرشيف',
+  desk_editor: 'تحرير / نشر الموقع',
+  geeks_tech_pm: 'إدارة تقنية / PM',
+  geeks_frontend: 'تطوير واجهات',
+  geeks_backend: 'تطوير خلفيات / CMS',
+  geeks_fullstack: 'تطوير متكامل',
+  geeks_uiux: 'تصميم وتجربة مستخدم',
+  geeks_qa: 'اختبارات وضمان جودة',
+  geeks_analytics: 'تحليل وقياس رقمي'
 };
 
 const stateLabels = {

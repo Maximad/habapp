@@ -54,3 +54,57 @@ test('claimTask throws a code when the task is missing', () => {
     return true;
   });
 });
+
+test('claimTask rejects non-claimable tasks (template metadata)', () => {
+  const tasks = [
+    { id: 10, unit: 'production', ownerId: null, templateId: 'prod.prep.call_sheet' }
+  ];
+  const store = createMockStore(tasks);
+
+  assert.throws(
+    () => claimTask(store, 10, 'member-10', { units: ['production'] }),
+    err => {
+      assert.equal(err.code, 'TASK_NOT_CLAIMABLE');
+      return true;
+    }
+  );
+});
+
+test('claimTask allows claimable tasks even when claimable is defined in the template', () => {
+  const tasks = [
+    { id: 11, unit: 'production', ownerId: null, templateId: 'prod.shoot.camera_tests' }
+  ];
+  const store = createMockStore(tasks);
+
+  const result = claimTask(store, 11, 'member-11', { units: ['production'] });
+
+  assert.equal(result.ownerId, 'member-11');
+});
+
+test('claimTask rejects non-claimable geeks tasks', () => {
+  const tasks = [
+    { id: 20, unit: 'geeks', ownerId: null, templateId: 'geeks_site_brief' }
+  ];
+
+  const store = createMockStore(tasks);
+
+  assert.throws(
+    () => claimTask(store, 20, 'member-20', { units: ['geeks'] }),
+    err => {
+      assert.equal(err.code, 'TASK_NOT_CLAIMABLE');
+      return true;
+    }
+  );
+});
+
+test('claimTask allows claimable geeks tasks', () => {
+  const tasks = [
+    { id: 21, unit: 'geeks', ownerId: null, templateId: 'geeks_site_frontend_build' }
+  ];
+
+  const store = createMockStore(tasks);
+
+  const result = claimTask(store, 21, 'member-21', { units: ['geeks'] });
+
+  assert.equal(result.ownerId, 'member-21');
+});

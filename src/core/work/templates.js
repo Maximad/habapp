@@ -34,13 +34,6 @@ const templates = [
 
   // ───── Media / الإعلام ─────
   {
-    id: 'media_ideas_round_10x3',
-    unit: 'media',
-    size: 'S',
-    titleAr: 'جولة أفكار نشر 10 أفكار واعتماد 3',
-    definitionAr: 'جدول منشور في #أفكار-النشر مع 10 أفكار و3 مختارة للتنفيذ.'
-  },
-  {
     id: 'media_quick_interview_qa',
     unit: 'media',
     size: 'S',

@@ -44,7 +44,13 @@ const productionTaskTemplates = [
     size: 'M',
     defaultOwnerFunc: 'producer',
     defaultChannelKey: 'production.shot_plans',
-    dueOffsetDays: -20
+    dueOffsetDays: -20,
+
+    ownerFunction: 'producer',
+    stage: 'planning',
+    dueFrom: 'shoot_date',
+    deadlineOffset: { from: 'shootDate', unit: 'days', value: -20 },
+    claimable: false
   },
   {
     id: 'prod.research.risk_check',
@@ -60,7 +66,13 @@ const productionTaskTemplates = [
     size: 'S',
     defaultOwnerFunc: 'field_ops',
     defaultChannelKey: 'production.shot_plans',
-    dueOffsetDays: -18
+    dueOffsetDays: -18,
+
+    ownerFunction: 'producer',
+    stage: 'planning',
+    dueFrom: 'shoot_date',
+    deadlineOffset: { from: 'shootDate', unit: 'days', value: -18 },
+    claimable: false
   },
 
   {
@@ -77,7 +89,13 @@ const productionTaskTemplates = [
     size: 'S',
     defaultOwnerFunc: 'producer',
     defaultChannelKey: 'production.crews',
-    dueOffsetDays: -15
+    dueOffsetDays: -15,
+
+    ownerFunction: 'producer',
+    stage: 'planning',
+    dueFrom: 'shoot_date',
+    deadlineOffset: { from: 'shootDate', unit: 'days', value: -15 },
+    claimable: false
   },
   {
     id: 'prod.prep.call_sheet',
@@ -93,7 +111,13 @@ const productionTaskTemplates = [
     size: 'S',
     defaultOwnerFunc: 'producer',
     defaultChannelKey: 'production.shot_plans',
-    dueOffsetDays: -5
+    dueOffsetDays: -5,
+
+    ownerFunction: 'producer',
+    stage: 'shoot',
+    dueFrom: 'shoot_date',
+    deadlineOffset: { from: 'shootDate', unit: 'days', value: -5 },
+    claimable: false
   },
   {
     id: 'prod.prep.location_permits',
@@ -109,7 +133,13 @@ const productionTaskTemplates = [
     size: 'S',
     defaultOwnerFunc: 'field_ops',
     defaultChannelKey: 'production.shot_plans',
-    dueOffsetDays: -7
+    dueOffsetDays: -7,
+
+    ownerFunction: 'producer',
+    stage: 'planning',
+    dueFrom: 'shoot_date',
+    deadlineOffset: { from: 'shootDate', unit: 'days', value: -7 },
+    claimable: false
   },
   {
     id: 'prod.prep.gear_thread',
@@ -125,7 +155,13 @@ const productionTaskTemplates = [
     size: 'S',
     defaultOwnerFunc: 'producer',
     defaultChannelKey: 'production.gear_log',
-    dueOffsetDays: -10
+    dueOffsetDays: -10,
+
+    ownerFunction: 'producer',
+    stage: 'planning',
+    dueFrom: 'shoot_date',
+    deadlineOffset: { from: 'shootDate', unit: 'days', value: -10 },
+    claimable: true
   },
   {
     id: 'prod.prep.emergency_plan',
@@ -141,7 +177,13 @@ const productionTaskTemplates = [
     size: 'S',
     defaultOwnerFunc: 'field_ops',
     defaultChannelKey: 'production.shot_plans',
-    dueOffsetDays: -5
+    dueOffsetDays: -5,
+
+    ownerFunction: 'producer',
+    stage: 'planning',
+    dueFrom: 'shoot_date',
+    deadlineOffset: { from: 'shootDate', unit: 'days', value: -5 },
+    claimable: false
   },
 
   {
@@ -158,7 +200,13 @@ const productionTaskTemplates = [
     size: 'S',
     defaultOwnerFunc: 'video',
     defaultChannelKey: 'production.shot_plans',
-    dueOffsetDays: -3
+    dueOffsetDays: -3,
+
+    ownerFunction: 'dop',
+    stage: 'shoot',
+    dueFrom: 'shoot_date',
+    deadlineOffset: { from: 'shootDate', unit: 'days', value: -3 },
+    claimable: true
   },
   {
     id: 'prod.shoot.daily_log',
@@ -174,7 +222,13 @@ const productionTaskTemplates = [
     size: 'S',
     defaultOwnerFunc: 'field_ops',
     defaultChannelKey: 'production.shot_plans',
-    dueOffsetDays: 0
+    dueOffsetDays: 0,
+
+    ownerFunction: 'assistant',
+    stage: 'shoot',
+    dueFrom: 'shoot_date',
+    deadlineOffset: { from: 'shootDate', unit: 'days', value: 0 },
+    claimable: true
   },
 
   {
@@ -191,7 +245,13 @@ const productionTaskTemplates = [
     size: 'M',
     defaultOwnerFunc: 'editor',
     defaultChannelKey: 'production.edit_pipeline',
-    dueOffsetDays: -10
+    dueOffsetDays: -10,
+
+    ownerFunction: 'post',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: -10 },
+    claimable: false
   },
   {
     id: 'prod.edit.rough_cut',
@@ -207,7 +267,13 @@ const productionTaskTemplates = [
     size: 'M',
     defaultOwnerFunc: 'editor',
     defaultChannelKey: 'production.edit_pipeline',
-    dueOffsetDays: -7
+    dueOffsetDays: -7,
+
+    ownerFunction: 'post',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: -7 },
+    claimable: false
   },
 
   {
@@ -224,7 +290,13 @@ const productionTaskTemplates = [
     size: 'S',
     defaultOwnerFunc: 'editor',
     defaultChannelKey: 'production.edit_pipeline',
-    dueOffsetDays: -3
+    dueOffsetDays: -3,
+
+    ownerFunction: 'post',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: -3 },
+    claimable: true
   },
   {
     id: 'prod.post.color_grade',
@@ -240,7 +312,13 @@ const productionTaskTemplates = [
     size: 'M',
     defaultOwnerFunc: 'video',
     defaultChannelKey: 'production.edit_pipeline',
-    dueOffsetDays: -2
+    dueOffsetDays: -2,
+
+    ownerFunction: 'post',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: -2 },
+    claimable: false
   },
   {
     id: 'prod.post.sound_mix',
@@ -256,7 +334,13 @@ const productionTaskTemplates = [
     size: 'M',
     defaultOwnerFunc: 'sound',
     defaultChannelKey: 'production.edit_pipeline',
-    dueOffsetDays: -2
+    dueOffsetDays: -2,
+
+    ownerFunction: 'sound',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: -2 },
+    claimable: true
   },
 
   {
@@ -273,7 +357,13 @@ const productionTaskTemplates = [
     size: 'S',
     defaultOwnerFunc: 'post_supervisor',
     defaultChannelKey: 'production.edit_pipeline',
-    dueOffsetDays: -3
+    dueOffsetDays: -3,
+
+    ownerFunction: 'post',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: -3 },
+    claimable: true
   },
   {
     id: 'prod.delivery.final_exports',
@@ -289,7 +379,13 @@ const productionTaskTemplates = [
     size: 'S',
     defaultOwnerFunc: 'post_supervisor',
     defaultChannelKey: 'production.exports',
-    dueOffsetDays: 0
+    dueOffsetDays: 0,
+
+    ownerFunction: 'post',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: 0 },
+    claimable: false
   },
   {
     id: 'prod.delivery.archive_metadata',
@@ -305,7 +401,13 @@ const productionTaskTemplates = [
     size: 'S',
     defaultOwnerFunc: 'producer',
     defaultChannelKey: 'production.edit_pipeline',
-    dueOffsetDays: 1
+    dueOffsetDays: 1,
+
+    ownerFunction: 'producer',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: 1 },
+    claimable: false
   },
   {
     id: 'prod.delivery.postmortem_report',
@@ -321,7 +423,13 @@ const productionTaskTemplates = [
     size: 'S',
     defaultOwnerFunc: 'producer',
     defaultChannelKey: 'production.crews',
-    dueOffsetDays: 3
+    dueOffsetDays: 3,
+
+    ownerFunction: 'producer',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: 3 },
+    claimable: false
   },
 
   {
@@ -342,7 +450,13 @@ const productionTaskTemplates = [
 
     pipelineKey: 'production.video_basic',
 
-    tags: ['طاقم', 'تنسيق', 'تصوير', 'إنتاج']
+    tags: ['طاقم', 'تنسيق', 'تصوير', 'إنتاج'],
+
+    ownerFunction: 'producer',
+    stage: 'planning',
+    dueFrom: 'shoot_date',
+    deadlineOffset: { from: 'shootDate', unit: 'days', value: -14 },
+    claimable: false
   },
   {
     id: 'prod_call_sheet',
@@ -362,7 +476,13 @@ const productionTaskTemplates = [
 
     pipelineKey: 'production.video_basic',
 
-    tags: ['نداء', 'تصوير', 'سلامة', 'تنسيق']
+    tags: ['نداء', 'تصوير', 'سلامة', 'تنسيق'],
+
+    ownerFunction: 'producer',
+    stage: 'shoot',
+    dueFrom: 'shoot_date',
+    deadlineOffset: { from: 'shootDate', unit: 'days', value: -2 },
+    claimable: false
   },
 
   {
@@ -383,7 +503,13 @@ const productionTaskTemplates = [
 
     pipelineKey: 'production.video_basic',
 
-    tags: ['موقع', 'موافقات', 'سلامة', 'إنتاج']
+    tags: ['موقع', 'موافقات', 'سلامة', 'إنتاج'],
+
+    ownerFunction: 'assistant',
+    stage: 'planning',
+    dueFrom: 'shoot_date',
+    deadlineOffset: { from: 'shootDate', unit: 'days', value: -7 },
+    claimable: true
   },
 
   {
@@ -404,7 +530,13 @@ const productionTaskTemplates = [
 
     pipelineKey: 'production.video_basic',
 
-    tags: ['معدّات', 'حجز', 'لوجستيات']
+    tags: ['معدّات', 'حجز', 'لوجستيات'],
+
+    ownerFunction: 'producer',
+    stage: 'planning',
+    dueFrom: 'shoot_date',
+    deadlineOffset: { from: 'shootDate', unit: 'days', value: -10 },
+    claimable: true
   },
 
   {
@@ -425,7 +557,13 @@ const productionTaskTemplates = [
 
     pipelineKey: 'production.support',
 
-    tags: ['اختبارات', 'كاميرا', 'LUT', 'فيديو']
+    tags: ['اختبارات', 'كاميرا', 'LUT', 'فيديو'],
+
+    ownerFunction: 'dop',
+    stage: 'planning',
+    dueFrom: 'shoot_date',
+    deadlineOffset: { from: 'shootDate', unit: 'days', value: -5 },
+    claimable: true
   },
 
   {
@@ -446,7 +584,13 @@ const productionTaskTemplates = [
 
     pipelineKey: 'production.video_basic',
 
-    tags: ['تقرير', 'تعلم', 'خطر', 'إنتاج']
+    tags: ['تقرير', 'تعلم', 'خطر', 'إنتاج'],
+
+    ownerFunction: 'producer',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: 2 },
+    claimable: false
   },
 
   {
@@ -467,7 +611,13 @@ const productionTaskTemplates = [
 
     pipelineKey: 'production.video_basic',
 
-    tags: ['مونتاج', 'خطة', 'مواعيد', 'ما بعد الإنتاج']
+    tags: ['مونتاج', 'خطة', 'مواعيد', 'ما بعد الإنتاج'],
+
+    ownerFunction: 'post',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: -7 },
+    claimable: false
   },
 
   {
@@ -488,7 +638,13 @@ const productionTaskTemplates = [
 
     pipelineKey: 'production.video_basic',
 
-    tags: ['مونتاج', 'فيديو', 'مراجعة']
+    tags: ['مونتاج', 'فيديو', 'مراجعة'],
+
+    ownerFunction: 'post',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: -5 },
+    claimable: false
   },
 
   {
@@ -509,7 +665,13 @@ const productionTaskTemplates = [
 
     pipelineKey: 'production.video_basic',
 
-    tags: ['ترجمة', 'ترجمات', 'وصول', 'فيديو']
+    tags: ['ترجمة', 'ترجمات', 'وصول', 'فيديو'],
+
+    ownerFunction: 'assistant',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: -4 },
+    claimable: true
   },
 
   {
@@ -530,7 +692,13 @@ const productionTaskTemplates = [
 
     pipelineKey: 'production.video_basic',
 
-    tags: ['لون', 'فيديو', 'مونتاج']
+    tags: ['لون', 'فيديو', 'مونتاج'],
+
+    ownerFunction: 'post',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: -3 },
+    claimable: true
   },
 
   {
@@ -551,7 +719,13 @@ const productionTaskTemplates = [
 
     pipelineKey: 'production.video_basic',
 
-    tags: ['صوت', 'مكس', 'تنظيف', 'فيديو']
+    tags: ['صوت', 'مكس', 'تنظيف', 'فيديو'],
+
+    ownerFunction: 'sound',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: -2 },
+    claimable: true
   },
 
   {
@@ -572,7 +746,13 @@ const productionTaskTemplates = [
 
     pipelineKey: 'production.video_basic',
 
-    tags: ['تسليم', 'ماستر', 'تصدير', 'فيديو']
+    tags: ['تسليم', 'ماستر', 'تصدير', 'فيديو'],
+
+    ownerFunction: 'producer',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: 0 },
+    claimable: false
   },
 
   {
@@ -593,7 +773,13 @@ const productionTaskTemplates = [
 
     pipelineKey: 'production.video_basic',
 
-    tags: ['أرشيف', 'بيانات وصفية', 'تنظيم']
+    tags: ['أرشيف', 'بيانات وصفية', 'تنظيم'],
+
+    ownerFunction: 'post',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: 1 },
+    claimable: false
   },
 
   {
@@ -614,7 +800,13 @@ const productionTaskTemplates = [
 
     pipelineKey: 'production.support',
 
-    tags: ['صوت', 'موسيقى', 'ترخيص', 'أرشيف']
+    tags: ['صوت', 'موسيقى', 'ترخيص', 'أرشيف'],
+
+    ownerFunction: 'sound',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: 5 },
+    claimable: true
   },
 
   {
@@ -635,7 +827,13 @@ const productionTaskTemplates = [
 
     pipelineKey: 'production.support',
 
-    tags: ['تصدير', 'Preset', 'مونتاج']
+    tags: ['تصدير', 'Preset', 'مونتاج'],
+
+    ownerFunction: 'post',
+    stage: 'post',
+    dueFrom: 'project_due',
+    deadlineOffset: { from: 'projectDue', unit: 'days', value: -3 },
+    claimable: true
   },
 
   {
@@ -656,7 +854,13 @@ const productionTaskTemplates = [
 
     pipelineKey: 'production.support',
 
-    tags: ['طوارئ', 'سلامة', 'إنتاج']
+    tags: ['طوارئ', 'سلامة', 'إنتاج'],
+
+    ownerFunction: 'producer',
+    stage: 'planning',
+    dueFrom: 'shoot_date',
+    deadlineOffset: { from: 'shootDate', unit: 'days', value: -3 },
+    claimable: false
   }
 ];
 
@@ -1162,32 +1366,13 @@ const mediaTaskTemplates = [
     dueOffsetDays: 0
   },
   {
-    id: 'media_ideas_round',
-    type: 'task',
-    unit: 'media',
-
-    label_ar: 'جولة أفكار نشر ١٠ أفكار واعتماد ٣',
-    description_ar: 'جلسة سريعة لجمع ١٠ أفكار ونقاشها واعتماد ٣ منها كبدايات مشاريع.',
-
-    size: 'S',
-    definitionOfDone_ar:
-      'جدول في قناة أفكار النشر يحتوي على ١٠ أفكار مختصرة، مع تحديد ٣ أفكار معتمدة ومذكور اسم المالك المبدئي لكل فكرة.',
-
-    defaultOwnerRole: 'editor',
-    defaultChannelKey: 'media.ideas',
-    defaultDueDays: 2,
-
-    pipelineKey: 'media.article_short',
-
-    tags: ['أفكار', 'نشر', 'تخطيط']
-  },
-  {
     id: 'media_assignment_memo',
     type: 'task',
     unit: 'media',
 
-    label_ar: 'مذكرة تكليف لمادة محددة',
-    description_ar: 'كتابة مذكرة تكليف واضحة لمادة واحدة مع تعريف الإنجاز والموعد والمالك.',
+    label_ar: 'مذكرة تحريرية للموضوع',
+    description_ar:
+      'مذكرة داخلية تلخص زاوية التغطية، الأسئلة الرئيسية، المصادر المقترحة، والروابط المرجعية للمحررين.',
 
     size: 'S',
     definitionOfDone_ar:
@@ -1196,10 +1381,121 @@ const mediaTaskTemplates = [
     defaultOwnerRole: 'editor',
     defaultChannelKey: 'media.assignment_desk',
     defaultDueDays: 1,
+    optional: true,
 
     pipelineKey: 'media.article_short',
 
     tags: ['تكليف', 'تحرير', 'إدارة مهام']
+  },
+  {
+    id: 'media_visual_direction',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'توجيه بصري للمادة واختيار نمط الصور',
+    description_ar: 'تحديد أسلوب بصري للمادة مع مراجع أو moodboard وتوجيهات للصور أو اللقطات المطلوبة.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'مذكرة أو لوحة مرئية تحدد النمط والألوان والعدسات أو زوايا التصوير المقترحة، متفق عليها مع الفريق.',
+
+    defaultOwnerFunc: 'designer',
+    ownerFunction: 'designer',
+    stage: 'planning',
+    defaultChannelKey: 'media.graphics',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['تصميم', 'صور', 'توجيه']
+  },
+  {
+    id: 'media_image_selection',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'اختيار الصور وتوجيه بصري للمادة',
+    description_ar: 'تجميع صور أو لقطات مقترحة مع ملاحظات التوجيه البصري ومصادر الملفات.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'قائمة صور مختارة مع روابط الملفات أو مجلدها، ملاحظات استخدام، ونص بديل أو تعليمات لكل صورة.',
+
+    defaultOwnerFunc: 'designer',
+    ownerFunction: 'designer',
+    stage: 'planning',
+    defaultChannelKey: 'media.graphics',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['صور', 'اختيار', 'تصميم']
+  },
+  {
+    id: 'media_image_editing',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'معالجة الصور وتصديرها بالمقاسات المعتمدة',
+    description_ar: 'توحيد الألوان والمقاسات وإعداد ملفات جاهزة للنشر مع تسميات واضحة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'مجموعة صور نهائية بمقاسات المنصات المطلوبة، مع نصوص بديلة وعناوين ملفات منظمة وجاهزة للنشر.',
+
+    defaultOwnerFunc: 'designer',
+    ownerFunction: 'designer',
+    stage: 'edit',
+    defaultChannelKey: 'media.graphics',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['صور', 'تصميم', 'معالجة']
+  },
+  {
+    id: 'media_cover_selection',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'اختيار صور الغلاف والصور المرافقة مع metadata',
+    description_ar: 'تجهيز صور الغلاف والمرافقة مع بيانات وصفية ونص بديل وتعليمات النشر.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'مجموعة صور مختارة مع نصوص بديلة وتسميات واضحة، وروابط أو مسارات ملفات جاهزة للنشر.',
+
+    defaultOwnerFunc: 'photo',
+    ownerFunction: 'photo',
+    stage: 'edit',
+    defaultChannelKey: 'media.photo_selection',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['صور', 'غلاف', 'بيانات وصفية']
+  },
+  {
+    id: 'media_color_consistency',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'معالجة لونية موحدة (presets / style guide)',
+    description_ar: 'تطبيق معالجة لونية متسقة وفق دليل الأسلوب أو إعدادات مسبقة للصور أو الفيديو.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ملفات معالجة أو Presets مطبقة على المادة مع عينات قبل/بعد وروابط للملفات الأصلية.',
+
+    defaultOwnerFunc: 'designer',
+    ownerFunction: 'designer',
+    stage: 'edit',
+    defaultChannelKey: 'media.graphics',
+    defaultDueDays: 2,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['لون', 'تصميم', 'اتساق']
   },
   {
     id: 'media_quick_interview',
@@ -1366,20 +1662,71 @@ const mediaTaskTemplates = [
     type: 'task',
     unit: 'media',
 
-    label_ar: 'إدخالات تصحيح خلفية',
-    description_ar: 'توثيق ٣ إلى ٥ عناصر خلفية أو تصحيحية في سجلّ مستقل.',
+    label_ar: 'نشر على الموقع',
+    description_ar:
+      'نشر المادة على ووردبرس/الموقع مع التأكد من العناوين والوصلات والنصوص المصاحبة، وضبط التصنيفات والروابط الدائمة.',
 
     size: 'S',
     definitionOfDone_ar:
-      '٣ إلى ٥ إدخالات جديدة في سجلّ التصحيحات أو سجل الخلفية، مع التاريخ، رابط المادة، وسبب التعديل أو التوضيح.',
+      'المادة منشورة على الموقع مع روابط سليمة، صور مناسبة، ونصوص مساعدة (Alt/Caption) وفق المعايير التحريرية.',
 
-    defaultOwnerRole: 'corrections_editor',
+    defaultOwnerFunc: 'desk_editor',
+    defaultOwnerRole: 'desk_editor',
+    ownerFunction: 'desk_editor',
+    stage: 'post',
+    channel: 'website',
     defaultChannelKey: 'media.corrections_log',
     defaultDueDays: 3,
 
     pipelineKey: 'media.article_short',
 
     tags: ['تصحيحات', 'توثيق', 'شفافية']
+  },
+  {
+    id: 'media_social_package',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'حزمة منصّات اجتماعية (بوست + ستوري)',
+    description_ar: 'تصميم نسخة نشر اجتماعية للمنصات الرئيسية مع نصوص بديلة وروابط.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'ملفات وصياغات جاهزة للنشر على فيسبوك/إنستغرام أو تويتر، مع نصوص وصفيّة وروابط متابعة.',
+
+    defaultOwnerFunc: 'designer',
+    ownerFunction: 'designer',
+    stage: 'post',
+    defaultChannelKey: 'media.social',
+    defaultDueDays: 2,
+    crossUnit: { people: true },
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['سوشال', 'تصميم', 'نشر']
+  },
+  {
+    id: 'media_archive_package',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'أرشفة المادة في الأرشيف المركزي (نصوص، صور، روابط)',
+    description_ar: 'تجميع ملفات المادة وروابطها في مجلد أو رابط موحد مع بيانات وصفية قصيرة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'مجلد أو رابط مركزي يحتوي على النص النهائي، الصور، الروابط الخارجية، وأي تراخيص أو ملاحظات وصول.',
+
+    defaultOwnerFunc: 'archive',
+    ownerFunction: 'archive',
+    stage: 'post',
+    defaultChannelKey: 'media.archive',
+    defaultDueDays: 2,
+    hasDocLink: true,
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['أرشفة', 'حفظ', 'توثيق']
   },
   {
     id: 'media_styleguide_update',
@@ -1406,14 +1753,18 @@ const mediaTaskTemplates = [
     type: 'task',
     unit: 'media',
 
-    label_ar: 'مراجعة الوصول الرقمي',
-    description_ar: 'فحص Alt للنصوص البديلة، تباين الألوان، والترجمات قبل النشر.',
+    label_ar: 'مراجعة الوصول الرقمي (ألوان، حجم خط، نصوص بديلة، وصف الصور)',
+    description_ar:
+      'فحص الوصول الرقمي شاملاً التباين، حجم الخط، النصوص البديلة للصور، التسميات الواضحة للروابط، وتجربة القراءة على الموبايل مع هاشتاغات مناسبة.',
 
     size: 'S',
     definitionOfDone_ar:
-      'بطاقة فحص منجزة للمادة تحتوي على حالة النص البديل، تباين الألوان، والترجمات، مع علامة واضحة بأن المادة جاهزة من ناحية الوصول.',
+      'بطاقة فحص منجزة للمادة تحتوي على حالة النص البديل، تباين الألوان، الترجمات، وتجربة القراءة على الموبايل مع رابط للتوثيق.',
 
     defaultOwnerRole: 'accessibility_editor',
+    defaultOwnerFunc: 'desk_editor',
+    ownerFunction: 'desk_editor',
+    stage: 'post',
     defaultChannelKey: 'media.accessibility',
     defaultDueDays: 1,
 
@@ -1502,6 +1853,66 @@ const mediaTaskTemplates = [
     tags: ['صوت', 'بودكاست', 'مونتاج']
   },
   {
+    id: 'media_podcast_series_plan',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'خطة السلسلة وجدول المواضيع',
+    description_ar: 'تحديد موضوعات الحلقات، الضيوف المحتملين، وهيكل السلسلة على مدى الموسم.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'مستند أو بطاقة تتضمن ٣–٦ حلقات مقترحة، الضيوف المحتملين، والمواعيد المبدئية لكل حلقة.',
+
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'media.audio',
+    defaultDueDays: 4,
+
+    pipelineKey: 'media.podcast_short',
+
+    tags: ['سلسلة', 'تخطيط', 'صوت']
+  },
+  {
+    id: 'media_podcast_publish_schedule',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'جدول نشر الحلقات وتوزيعها',
+    description_ar: 'تثبيت مواعيد النشر وقنوات التوزيع للحلقات المتتالية في السلسلة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'جدول يحدد تواريخ النشر لكل حلقة، القنوات الأساسية والبديلة، ومسؤول النشر والمتابعة.',
+
+    defaultOwnerFunc: 'producer',
+    defaultChannelKey: 'media.audio',
+    defaultDueDays: 5,
+
+    pipelineKey: 'media.podcast_short',
+
+    tags: ['جدولة', 'بودكاست', 'نشر']
+  },
+  {
+    id: 'media_podcast_episode_template',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'قالب الحلقة والبطاقات الوصفية',
+    description_ar: 'إعداد قالب نصي أو بنية متكررة للحلقات مع بطاقات وصفية جاهزة للتعبئة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'قالب موحد للحلقة (مقدمة، محاور، خاتمة) مع قسم لبطاقة وصف الحلقة والعناوين والهاشتاغات.',
+
+    defaultOwnerFunc: 'editor',
+    defaultChannelKey: 'media.audio',
+    defaultDueDays: 3,
+
+    pipelineKey: 'media.podcast_short',
+
+    tags: ['قالب', 'بودكاست', 'وصف']
+  },
+  {
     id: 'media_social_cut_3x',
     type: 'task',
     unit: 'media',
@@ -1514,12 +1925,104 @@ const mediaTaskTemplates = [
       'ثلاثة ملفات فيديو جاهزة (٩:١٦، ١:١، ١٦:٩) مع ترجمة إذا لزم، وعناوين ووصف مناسب لكل منصة.',
 
     defaultOwnerRole: 'social_editor',
+    defaultOwnerFunc: 'designer',
+    ownerFunction: 'designer',
+    stage: 'post',
     defaultChannelKey: 'media.social',
     defaultDueDays: 3,
+    crossUnit: { people: true },
 
     pipelineKey: 'media.short_video_social',
 
     tags: ['اجتماعي', 'فيديو', 'توزيع']
+  },
+  {
+    id: 'media_optional_reel',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'اقتراح/إنتاج ريل قصير داعم للمادة',
+    description_ar: 'اقتراح ريل أو تنفيذ مونتاج خفيف يدعم المادة الطويلة أو الموجز.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'مقترح واضح أو ملف ريل جاهز للنشر مع نص ووصف مختصر وروابط للمادة الأصلية.',
+
+    defaultOwnerFunc: 'video',
+    defaultChannelKey: 'media.video',
+    defaultDueDays: 3,
+    optional: true,
+
+    pipelineKey: 'media.article_long',
+
+    tags: ['ريل', 'فيديو', 'توزيع']
+  },
+  {
+    id: 'media_article_long_reel',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'اقتراح وإعداد ريل قصير مستوحى من المادة',
+    description_ar: 'مقترح أو تنفيذ ريل يختصر المادة الطويلة مع نص ووصف مناسب للنشر.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'مقترح واضح أو ملف ريل جاهز مع نص النشر وروابط للمادة الأصلية، ومخطط واضح للمنصات المستهدفة.',
+
+    defaultOwnerFunc: 'video',
+    ownerFunction: 'video',
+    stage: 'post',
+    defaultChannelKey: 'media.video',
+    defaultDueDays: 3,
+    optional: true,
+
+    pipelineKey: 'media.article_long',
+
+    tags: ['ريل', 'فيديو', 'مادة طويلة']
+  },
+  {
+    id: 'media_article_long_data_brief',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'اقتراح موجز بيانات (Data Brief) مرتبط بالمادة',
+    description_ar: 'تلخيص بيانات المادة وتحويلها إلى موجز بصري صغير مع رسم بياني أو خريطة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'نص مختصر ونموذج رسم بياني أو خريطة مع روابط مصادر واضحة يمكن نشرها كقطعة مستقلة مرافقة للمادة الطويلة.',
+
+    defaultOwnerFunc: 'data',
+    ownerFunction: 'data',
+    stage: 'post',
+    defaultChannelKey: 'media.data',
+    defaultDueDays: 4,
+    optional: true,
+
+    pipelineKey: 'media.article_long',
+
+    tags: ['بيانات', 'موجز', 'مادة طويلة']
+  },
+  {
+    id: 'media_optional_data_brief',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'اقتراح/إنتاج موجز بيانات بصري من المادة',
+    description_ar: 'تلخيص أبرز بيانات المادة وتحويلها إلى موجز بصري مختصر.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'مخطط أو نص موجز مع رسم بياني أو خريطة واحدة على الأقل وروابط مصادر واضحة يمكن نشرها كقطعة مستقلة.',
+
+    defaultOwnerFunc: 'data',
+    defaultChannelKey: 'media.data',
+    defaultDueDays: 4,
+    optional: true,
+
+    pipelineKey: 'media.article_long',
+
+    tags: ['بيانات', 'موجز', 'بصري']
   },
   {
     id: 'media_translation',
@@ -1608,6 +2111,218 @@ const mediaTaskTemplates = [
 // ==========================
 
 const peopleTaskTemplates = [
+  {
+    id: 'people_event_concept',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'تصور الفعالية ووصفها للنشر',
+    description_ar: 'صياغة وصف واضح بالعربية للفعالية، الجمهور المستهدف، والسعة الأساسية كمسودة إعلان.',
+
+    size: 'M',
+    definitionOfDone_ar: 'فقرة أو صفحتان تشمل الفكرة والمحور، الجمهور، المكان المقترح، وتاريخ مبدئي، منشورة لفريق التنظيم.',
+
+    pipelineKey: 'people.event_generic',
+
+    ownerFunction: 'people_programmer',
+    stage: 'planning',
+    claimable: false,
+    crossUnit: { media: true, geeks: false }
+  },
+  {
+    id: 'people_event_budget_check',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'ميزانية سريعة ولوازم المكان',
+    description_ar: 'تقدير الاحتياجات الأساسية (مكان، صوت، ضيافة، متطوعون) مع تكاليف تقريبية.',
+
+    size: 'M',
+    definitionOfDone_ar: 'قائمة موارد مع تقدير تكاليف وحد أدنى من البنود الأساسية، منشورة في خيط الفعالية.',
+
+    pipelineKey: 'people.event_generic',
+
+    ownerFunction: 'people_coordination',
+    stage: 'planning',
+    claimable: false
+  },
+  {
+    id: 'people_event_invite_list',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'قائمة الدعوات والجمهور المستهدف',
+    description_ar: 'إعداد قائمة مختصرة للمدعوين أو الفئات المستهدفة وخطة الوصول إليهم.',
+
+    size: 'S',
+    definitionOfDone_ar: 'قائمة أسماء/قنوات دعوة مع مسؤول لكل دفعة ودليل زمني للإرسال.',
+
+    pipelineKey: 'people.event_generic',
+
+    ownerFunction: 'people_coordination',
+    stage: 'planning',
+    claimable: false
+  },
+  {
+    id: 'people_event_poster',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'بوستر وهوية بصرية للفعالية',
+    description_ar: 'تصميم ملصق وبوست أساسي للفعالية أو السلسلة.',
+
+    size: 'S',
+    definitionOfDone_ar: 'نسخة PNG/Story جاهزة للنشر مع نصوص رئيسية، مرفقة بخيط الفعالية.',
+
+    pipelineKey: 'people.event_generic',
+
+    ownerFunction: 'designer',
+    stage: 'planning',
+    claimable: true,
+    crossUnit: { media: true, geeks: false }
+  },
+  {
+    id: 'people_event_social_launch',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'إعلان السوشال ميديا (بوست + ستوري)',
+    description_ar: 'نشر إعلان الفعالية على السوشال ميديا مع روابط التسجيل أو الدعوة.',
+
+    size: 'S',
+    definitionOfDone_ar: 'بوست وستوري منشوران مع روابط واضحة ووسوم مناسبة.',
+
+    pipelineKey: 'people.event_generic',
+
+    ownerFunction: 'designer',
+    stage: 'planning',
+    claimable: true,
+    crossUnit: { media: true, geeks: false }
+  },
+  {
+    id: 'people_event_social_reminder',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'تذكير قبل الفعالية (سوشال)',
+    description_ar: 'نشر تذكير سريع بالوقت والمكان قبل الفعالية بساعات أو يوم.',
+
+    size: 'S',
+    definitionOfDone_ar: 'ستوري/بوست تذكيري مع خريطة/رابط، مجدول أو منشور قبل الحدث.',
+
+    pipelineKey: 'people.event_generic',
+
+    ownerFunction: 'designer',
+    stage: 'planning',
+    claimable: true,
+    crossUnit: { media: true, geeks: false }
+  },
+  {
+    id: 'people_event_logistics',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'لوجستيات المكان والسلامة الأساسية',
+    description_ar: 'تأكيد الموقع، الكهرباء، الجلوس، الوصول، ومسؤولية الباب والضيافة.',
+
+    size: 'M',
+    definitionOfDone_ar: 'قائمة فحص مكان مفصّلة بأسماء المسؤولين وأرقامهم، منشورة للفريق.',
+
+    pipelineKey: 'people.event_generic',
+
+    ownerFunction: 'people_coordination',
+    stage: 'planning',
+    claimable: false
+  },
+  {
+    id: 'people_event_risk_review',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'مراجعة مخاطر وسلامة مختصرة',
+    description_ar: 'تقييم سريع للمخاطر (سلامة، تحرش، خروج طوارئ، موافقات تصوير).',
+
+    size: 'S',
+    definitionOfDone_ar: 'ملاحظة سلامة مختصرة مع قرارات واضحة حول التصوير، الخروج، ودور الطوارئ.',
+
+    pipelineKey: 'people.event_generic',
+
+    ownerFunction: 'ethics',
+    stage: 'planning',
+    claimable: false,
+    tag: 'safety_check'
+  },
+  {
+    id: 'people_event_recording_policy',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'سياسة التسجيل والتصوير',
+    description_ar: 'تحديد إن كان التصوير أو التسجيل مسموحاً وكيفية إعلام الحضور.',
+
+    size: 'S',
+    definitionOfDone_ar: 'قرار مكتوب حول التصوير/التسجيل ولافتة أو تنويه للحضور، مع مسؤول تطبيق.',
+
+    pipelineKey: 'people.event_generic',
+
+    ownerFunction: 'ethics',
+    stage: 'planning',
+    claimable: false
+  },
+  {
+    id: 'people_event_photo_doc',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'توثيق صور/فيديو للفعالية',
+    description_ar: 'التقاط صور أو فيديو قصير أثناء الفعالية مع تنظيم الملفات.',
+
+    size: 'M',
+    definitionOfDone_ar: 'مجلد صور/فيديو منظم مع تسميات واضحة وروابط محفوظة في خيط المشروع.',
+
+    pipelineKey: 'people.event_generic',
+
+    ownerFunction: 'media_documentation',
+    stage: 'shoot',
+    claimable: true,
+    crossUnit: { media: true, geeks: false }
+  },
+  {
+    id: 'people_event_archive_entry',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'أرشفة الفعالية والملفات',
+    description_ar: 'تنظيم مجلد الأرشيف (صور، ملفات، روابط) مع وصف بسيط.',
+
+    size: 'S',
+    definitionOfDone_ar: 'مجلد منظم مع نص قصير يشرح المحتوى وروابطه، مذكور في خيط المشروع.',
+
+    pipelineKey: 'people.event_generic',
+
+    ownerFunction: 'archive',
+    stage: 'post',
+    claimable: false,
+    tag: 'archive_entry'
+  },
+  {
+    id: 'people_log_talent',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'تسجيل الأسماء والطاقات المميزة لمتابعتها لاحقاً',
+    description_ar: 'تدوين المشاركين البارزين أو الضيوف المحتملين لمتابعات أو قصص مستقبلية.',
+
+    size: 'S',
+    definitionOfDone_ar: 'قائمة مختصرة بـ ٣ أسماء أو أكثر مع طريقة تواصل وملاحظة سبب الاهتمام.',
+
+    pipelineKey: 'people.event_generic',
+
+    ownerFunction: 'people_coordination',
+    stage: 'post',
+    claimable: true,
+    crossUnit: { media: true, geeks: false }
+  },
   {
     id: 'people_brief',
     type: 'task',
@@ -2663,72 +3378,209 @@ const geeksTaskTemplates = [
     type: 'task',
     unit: 'geeks',
 
-    label_ar: 'ملخص احتياج لموقع بسيط',
-    description_ar: 'كتابة ملخص احتياج لموقع بسيط (الجمهور، الأهداف، الصفحات الأساسية، اللغة).',
+    title_ar: 'ملخص احتياج لموقع بسيط',
+    description_ar:
+      'ملخص احتياج يحدد الجمهور، أهداف الموقع، الصفحات الأساسية، اللغات، والقيود التقنية (استضافة/دومين/ووردبريس).',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'وثيقة واضحة للجمهور والأهداف وهيكل أولي، مع رابط للهوية البصرية أو أي قيود تقنية، منشورة في خيط المشروع.',
+
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'planning',
+    claimable: false,
+    defaultChannelKey: 'geeks.web'
+  },
+  {
+    id: 'geeks_site_access_setup',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'ضبط الوصول والحسابات (استضافة، دومين، CMS)',
+    description_ar: 'تجميع أو طلب الوصولات (دومين، استضافة، ووردبريس/CMS، بريد إرسال)، وحفظها بشكل آمن.',
 
     size: 'S',
-    definitionOfDone_ar:
-      'وثيقة أو ملاحظة واحدة واضحة تلخص جمهور الموقع، هدفه، ٣ صفحات أساسية على الأقل، واللغة/اللغات المطلوبة، منشورة في خيط المشروع.',
-
-    defaultOwnerRole: 'web_lead',
-    defaultChannelKey: 'geeks.web',
-    defaultDueDays: 3,
-
-    tags: ['موقع', 'احتياج', 'تحليل']
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'planning',
+    claimable: false,
+    defaultChannelKey: 'geeks.web_ops'
   },
   {
     id: 'geeks_site_structure',
     type: 'task',
     unit: 'geeks',
 
-    label_ar: 'هيكل الصفحات والمحتوى',
-    description_ar: 'رسم هيكل الصفحات والقوائم والمحتوى الأساسي للموقع.',
+    title_ar: 'هيكل الصفحات والمحتوى (IA + wireframes)',
+    description_ar: 'رسم IA وwireframes أساسية للقائمة، الصفحات، ومناطق المحتوى المطلوبة.',
 
-    size: 'S',
+    size: 'M',
     definitionOfDone_ar:
-      'مخطط بسيط لهيكل الصفحات والقائمة، مع وصف قصير لكل صفحة، وجدول بالمحتوى المطلوب لكل صفحة، منشور في خيط المشروع.',
+      'مخطط للـIA مع wireframes أساسية وروابط أمثلة، منشورة في خيط المشروع مع ملاحظات المحتوى.',
 
-    defaultOwnerRole: 'web_lead',
-    defaultChannelKey: 'geeks.web',
-    defaultDueDays: 4,
+    ownerFunction: 'geeks_uiux',
+    stage: 'planning',
+    claimable: false,
+    defaultChannelKey: 'geeks.web'
+  },
+  {
+    id: 'geeks_site_visual_design',
+    type: 'task',
+    unit: 'geeks',
 
-    tags: ['موقع', 'هيكل', 'محتوى']
+    title_ar: 'تصميم بصري للشاشات الرئيسية (UI kit مختصر)',
+    description_ar: 'تصميم الهوية البصرية والـUI الأساسي (ألوان، خطوط، مكوّنات رئيسية، نماذج شاشات).',
+
+    size: 'M',
+    ownerFunction: 'geeks_uiux',
+    stage: 'planning',
+    claimable: true,
+    defaultChannelKey: 'geeks.web'
   },
   {
     id: 'geeks_site_setup',
     type: 'task',
     unit: 'geeks',
 
-    label_ar: 'إعداد الموقع (استضافة ونطاق/قالب)',
-    description_ar: 'تهيئة الاستضافة والنطاق والقالب الأساسي أو النظام المستخدم للموقع.',
+    title_ar: 'ضبط القالب/النظام الأساسي للموقع',
+    description_ar: 'تهيئة الاستضافة، النطاق، والثيم أو إطار العمل المستخدم، مع ضبط الإضافات الأساسية.',
 
     size: 'M',
     definitionOfDone_ar:
-      'موقع يعمل على عنوان مؤقت أو نهائي، مع إعداد القالب أو الثيم، وحسابات الوصول الأساسية موثقة في مكان آمن.',
+      'موقع يعمل على رابط تجريبي مع الثيم/القالب مهيأ، وإضافات أساسية منصبة، وتسجيل الإعدادات.',
 
-    defaultOwnerRole: 'web_engineer',
-    defaultChannelKey: 'geeks.web_ops',
-    defaultDueDays: 5,
+    ownerFunction: 'geeks_backend',
+    stage: 'build',
+    claimable: false,
+    defaultChannelKey: 'geeks.web_ops'
+  },
+  {
+    id: 'geeks_site_frontend_build',
+    type: 'task',
+    unit: 'geeks',
 
-    tags: ['استضافة', 'نطاق', 'ووردبريس', 'ويب']
+    title_ar: 'تنفيذ الواجهة الأمامية والصفحات',
+    description_ar: 'تكويد الصفحات بناء على الـIA والتصميم، وضبط المكوّنات التفاعلية.',
+
+    size: 'M',
+    ownerFunction: 'geeks_frontend',
+    stage: 'build',
+    claimable: true,
+    defaultChannelKey: 'geeks.web'
+  },
+  {
+    id: 'geeks_site_backend_setup',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'ضبط الـCMS / النماذج الخلفية',
+    description_ar: 'إعداد حقول المحتوى، النماذج، والأذونات داخل الـCMS أو الخلفية المستخدمة.',
+
+    size: 'M',
+    ownerFunction: 'geeks_backend',
+    stage: 'build',
+    claimable: false,
+    defaultChannelKey: 'geeks.web_ops'
   },
   {
     id: 'geeks_site_qc',
     type: 'task',
     unit: 'geeks',
 
-    label_ar: 'اختبار وتجربة الموقع',
-    description_ar: 'اختبار الموقع على عدة أجهزة ومتصفحات والتحقق من الروابط والمحتوى.',
+    title_ar: 'اختبارات وظيفية (روابط، نماذج، متصفحات)',
+    description_ar: 'اختبار الموقع على عدة أجهزة/متصفحات والتحقق من الروابط والنماذج.',
 
     size: 'S',
     definitionOfDone_ar:
-      'قائمة فحص مكتملة تغطي الروابط الأساسية، النماذج، التصفح من الموبايل والكمبيوتر، مع قائمة بالأخطاء التي تم إصلاحها قبل الإطلاق.',
+      'قائمة فحص مكتملة تغطي الروابط والنماذج من الموبايل والكمبيوتر مع إصلاحات للأخطاء الحرجة.',
 
-    defaultOwnerRole: 'qa_tester',
-    defaultChannelKey: 'geeks.qa',
-    defaultDueDays: 3,
+    ownerFunction: 'geeks_qa',
+    stage: 'test',
+    claimable: true,
+    defaultChannelKey: 'geeks.qa'
+  },
+  {
+    id: 'geeks_site_responsive_test',
+    type: 'task',
+    unit: 'geeks',
 
-    tags: ['اختبار', 'جودة', 'ويب']
+    title_ar: 'تجربة استجابة وتصميم متجاوب',
+    description_ar: 'مراجعة الواجهة على شاشات وأجهزة مختلفة لضبط المتجاوب (responsive).',
+
+    size: 'S',
+    ownerFunction: 'geeks_qa',
+    stage: 'test',
+    claimable: true,
+    defaultChannelKey: 'geeks.qa'
+  },
+  {
+    id: 'geeks_site_performance_check',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'تحسين أداء بسيط (سرعة، صور، كاش)',
+    description_ar: 'تشغيل فحص أداء بسيط (Lighthouse/شبكة) وضبط الصور والكاش/ضغط الملفات.',
+
+    size: 'S',
+    ownerFunction: 'geeks_qa',
+    stage: 'test',
+    claimable: true,
+    defaultChannelKey: 'geeks.qa'
+  },
+  {
+    id: 'geeks_site_staging_launch',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'نشر نسخة تجريبية (staging) وتأكيد الوصول',
+    description_ar: 'رفع النسخة إلى staging أو رابط مغلق، مشاركة بيانات الدخول للتجربة.',
+
+    size: 'S',
+    ownerFunction: 'geeks_frontend',
+    stage: 'launch',
+    claimable: false,
+    defaultChannelKey: 'geeks.web_ops'
+  },
+  {
+    id: 'geeks_site_launch_monitor',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'إطلاق الموقع ومراقبة أولية',
+    description_ar: 'تحويل الدومين للإطلاق، مراقبة الأخطاء الأساسية والـuptime في أول أيام.',
+
+    size: 'S',
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'launch',
+    claimable: false,
+    defaultChannelKey: 'geeks.web_ops'
+  },
+  {
+    id: 'geeks_site_docs_handover',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'توثيق سريع + إرشادات تعديل المحتوى',
+    description_ar: 'كتابة خطوات الدخول، الروابط، وكيفية تعديل المحتوى الأساسية، مع لقطات شاشة.',
+
+    size: 'S',
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'post',
+    claimable: true,
+    defaultChannelKey: 'admin.docs'
+  },
+  {
+    id: 'geeks_site_archive_snapshots',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'أرشفة لقطات وروابط النسخة النهائية',
+    description_ar: 'تجهيز لقطات شاشة/فيديو قصير وروابط نهائية + repo/حزمة تسليم، ووضعها في مجلد مشترك.',
+
+    size: 'S',
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'post',
+    claimable: true,
+    defaultChannelKey: 'admin.docs'
   },
   {
     id: 'geeks_site_launch_doc',
@@ -3565,6 +4417,566 @@ const geeksTaskTemplates = [
     tags: ['تطوير', 'تنفيذ']
   },
   {
+    id: 'geeks_story_brief',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'ملخص قصة/تجربة رقمية تفاعلية',
+    description_ar: 'متطلبات التجربة، الجمهور، القصة، الوسائط المطلوبة، والقيود التقنية أو الزمنية.',
+
+    size: 'M',
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'planning',
+    claimable: false,
+    defaultChannelKey: 'geeks.web'
+  },
+  {
+    id: 'geeks_story_access',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'الوصول إلى البيانات/الوسائط والتصاريح',
+    description_ar: 'تجميع مصادر البيانات والوسائط، وضبط التصاريح لاستخدام الصور/الفيديو/الخرائط.',
+
+    size: 'S',
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'planning',
+    claimable: false,
+    defaultChannelKey: 'geeks.web_ops'
+  },
+  {
+    id: 'geeks_story_user_flow',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'تدفق المستخدم وتجربة التفاعل',
+    description_ar: 'خرائط التدفق للمستخدم، النقاط التفاعلية، وأين تظهر الوسائط.',
+
+    size: 'M',
+    ownerFunction: 'geeks_uiux',
+    stage: 'planning',
+    claimable: false,
+    defaultChannelKey: 'geeks.web'
+  },
+  {
+    id: 'geeks_story_visual_system',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'تصميم بصري وتجهيز عناصر الواجهة للتجربة',
+    description_ar: 'تصميم الواجهة والخرائط/المخططات التفاعلية والـUI kit المخصص للتجربة.',
+
+    size: 'M',
+    ownerFunction: 'geeks_uiux',
+    stage: 'planning',
+    claimable: true,
+    defaultChannelKey: 'geeks.web'
+  },
+  {
+    id: 'geeks_story_frontend_build',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'تنفيذ الواجهة التفاعلية',
+    description_ar: 'بناء الواجهة التفاعلية والتأثيرات المطلوبة (scroll, map, timelines).',
+
+    size: 'L',
+    ownerFunction: 'geeks_frontend',
+    stage: 'build',
+    claimable: false,
+    defaultChannelKey: 'geeks.web'
+  },
+  {
+    id: 'geeks_story_backend_cms',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'ضبط محتوى البيانات/المقالات للتجربة',
+    description_ar: 'هيكلة بيانات المحتوى في CMS أو JSON، وضبط نقاط الإدخال والتحديث.',
+
+    size: 'M',
+    ownerFunction: 'geeks_backend',
+    stage: 'build',
+    claimable: false,
+    defaultChannelKey: 'geeks.web_ops'
+  },
+  {
+    id: 'geeks_story_integration',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'تكامل البيانات والوسائط (خرائط/فيديو/صوت)',
+    description_ar: 'ربط التجربة بالبيانات والوسائط والواجهات المطلوبة مثل الخرائط أو الفيديو.',
+
+    size: 'M',
+    ownerFunction: 'geeks_fullstack',
+    stage: 'build',
+    claimable: false,
+    defaultChannelKey: 'geeks.integrations'
+  },
+  {
+    id: 'geeks_story_qa',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'اختبارات تفاعلية (نقرات، سكرول، أجهزة مختلفة)',
+    description_ar: 'تشغيل سيناريوهات الاستخدام على أجهزة ومتصفحات متعددة للتأكد من التجربة.',
+
+    size: 'S',
+    ownerFunction: 'geeks_qa',
+    stage: 'test',
+    claimable: true,
+    defaultChannelKey: 'geeks.qa'
+  },
+  {
+    id: 'geeks_story_performance',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'تحسين أداء بسيط للتجربة (حجم ملفات، lazy load)',
+    description_ar: 'مراجعة أداء الموارد الثقيلة وتطبيق تحسينات تحميل وتحسين الصور.',
+
+    size: 'S',
+    ownerFunction: 'geeks_qa',
+    stage: 'test',
+    claimable: true,
+    defaultChannelKey: 'geeks.qa'
+  },
+  {
+    id: 'geeks_story_accessibility',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'مراجعة وصول/تفاعل (كيبورد، قارئ شاشة، تباين)',
+    description_ar: 'تطبيق فحص وصول أساسي للتجربة التفاعلية (كيبورد، تباين، نصوص بديلة).',
+
+    size: 'S',
+    ownerFunction: 'geeks_qa',
+    stage: 'test',
+    claimable: true,
+    defaultChannelKey: 'geeks.qa'
+  },
+  {
+    id: 'geeks_story_staging',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'نشر نسخة تفاعلية على staging/preview',
+    description_ar: 'إعداد نسخة preview ومشاركة بيانات الدخول مع الفريق للتجربة.',
+
+    size: 'S',
+    ownerFunction: 'geeks_frontend',
+    stage: 'launch',
+    claimable: false,
+    defaultChannelKey: 'geeks.web_ops'
+  },
+  {
+    id: 'geeks_story_launch',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'إطلاق التجربة ومراقبة أولية',
+    description_ar: 'نشر النسخة النهائية ومراقبة الأخطاء والـuptime والتحميلات في أول أيام.',
+
+    size: 'S',
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'launch',
+    claimable: false,
+    defaultChannelKey: 'geeks.web_ops'
+  },
+  {
+    id: 'geeks_story_docs',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'توثيق التجربة (روابط + كيفية التحديث)',
+    description_ar: 'مستند يشرح أين توجد البيانات وكيفية تحديثها وما هي الحزم أو الإعدادات الأساسية.',
+
+    size: 'S',
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'post',
+    claimable: true,
+    defaultChannelKey: 'admin.docs'
+  },
+  {
+    id: 'geeks_story_archive',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'أرشفة نسخة التجربة (screenshots + repo + فيديو قصير)',
+    description_ar: 'حفظ لقطات شاشة/فيديو قصير وروابط الريبو أو الحزمة النهائية في مجلد مشترك.',
+
+    size: 'S',
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'post',
+    claimable: true,
+    defaultChannelKey: 'admin.docs'
+  },
+  {
+    id: 'geeks_game_concept',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'فكرة اللعبة وسيناريو بسيط',
+    description_ar: 'موجز اللعبة، الجمهور المستهدف، أسلوب اللعب، والمرجعيات البصرية/الصوتية.',
+
+    size: 'M',
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'planning',
+    claimable: false,
+    defaultChannelKey: 'geeks.apps'
+  },
+  {
+    id: 'geeks_game_requirements',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'متطلبات تقنية وبنية مختصرة للعبة',
+    description_ar: 'تحديد المحرك/الإطار، المنصات المستهدفة، وأصول التصميم/الصوت المطلوبة.',
+
+    size: 'M',
+    ownerFunction: 'geeks_backend',
+    stage: 'planning',
+    claimable: false,
+    defaultChannelKey: 'geeks.apps'
+  },
+  {
+    id: 'geeks_game_prototype',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'بناء نموذج لعب قابل للتجربة',
+    description_ar: 'إخراج نسخة أولية قابلة للعب لاختبار الميكانيكيات الأساسية.',
+
+    size: 'L',
+    ownerFunction: 'geeks_frontend',
+    stage: 'build',
+    claimable: false,
+    defaultChannelKey: 'geeks.apps'
+  },
+  {
+    id: 'geeks_game_playdev',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'تطوير ميكانيكيات اللعب والمستويات',
+    description_ar: 'تنفيذ التفاصيل التفاعلية والمستويات أو التحديات الأساسية.',
+
+    size: 'L',
+    ownerFunction: 'geeks_frontend',
+    stage: 'build',
+    claimable: false,
+    defaultChannelKey: 'geeks.apps'
+  },
+  {
+    id: 'geeks_game_art_audio',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'دمج العناصر البصرية والصوتية',
+    description_ar: 'إضافة الأصول البصرية والصوتية وضبطها لتجربة اللعب.',
+
+    size: 'M',
+    ownerFunction: 'geeks_uiux',
+    stage: 'build',
+    claimable: true,
+    defaultChannelKey: 'geeks.apps'
+  },
+  {
+    id: 'geeks_game_playtest',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'اختبار لعب مع مجموعة صغيرة',
+    description_ar: 'جلسة لعب مع مشاركين وتسجيل الملاحظات حول التوازن والسهولة.',
+
+    size: 'M',
+    ownerFunction: 'geeks_qa',
+    stage: 'test',
+    claimable: true,
+    defaultChannelKey: 'geeks.qa'
+  },
+  {
+    id: 'geeks_game_bugfix',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'إصلاحات وتحسين بعد اختبار اللعب',
+    description_ar: 'إغلاق الأخطاء وموازنة اللعب بناء على ملاحظات الاختبار.',
+
+    size: 'M',
+    ownerFunction: 'geeks_frontend',
+    stage: 'test',
+    claimable: true,
+    defaultChannelKey: 'geeks.apps'
+  },
+  {
+    id: 'geeks_game_deploy',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'نشر اللعبة (ويب/موبايل) ومراقبة',
+    description_ar: 'رفع النسخة النهائية على المنصة المستهدفة ومراقبة الأخطاء الأولية.',
+
+    size: 'M',
+    ownerFunction: 'geeks_frontend',
+    stage: 'launch',
+    claimable: false,
+    defaultChannelKey: 'geeks.web_ops'
+  },
+  {
+    id: 'geeks_game_analytics',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'إعداد قياس بسيط (أحداث لعب/إنجازات)',
+    description_ar: 'ضبط تتبع أحداث اللعب الرئيسية والاحتفاظ، وإعداد لوحة بسيطة.',
+
+    size: 'S',
+    ownerFunction: 'geeks_analytics',
+    stage: 'launch',
+    claimable: true,
+    defaultChannelKey: 'geeks.analytics'
+  },
+  {
+    id: 'geeks_game_docs',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'توثيق وصيانة اللعبة',
+    description_ar: 'كتابة ملخص التثبيت، كيفية تعديل المراحل/الأصول، وقائمة الاعتماديات.',
+
+    size: 'S',
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'post',
+    claimable: true,
+    defaultChannelKey: 'admin.docs'
+  },
+  {
+    id: 'geeks_game_archive',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'أرشفة لقطات اللعبة ورابط الحزمة',
+    description_ar: 'تجهيز فيديو/لقطات، روابط repo أو الحزمة النهائية، وتخزينها في مجلد منظم.',
+
+    size: 'S',
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'post',
+    claimable: true,
+    defaultChannelKey: 'admin.docs'
+  },
+  {
+    id: 'geeks_ads_brief',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'موجز حملة إعلانية (هدف، جمهور، ميزانية)',
+    description_ar: 'تحديد الهدف، الجمهور، المنصات، الميزانية، والرسائل الأساسية.',
+
+    size: 'S',
+    ownerFunction: 'geeks_analytics',
+    stage: 'planning',
+    claimable: false,
+    defaultChannelKey: 'geeks.analytics'
+  },
+  {
+    id: 'geeks_ads_tracking',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'إعداد التتبع (Pixels/Tags) والتحقق',
+    description_ar: 'تنصيب البكسل/التاغ، إعداد أحداث التحويل، والتحقق من الإشارات.',
+
+    size: 'M',
+    ownerFunction: 'geeks_analytics',
+    stage: 'planning',
+    claimable: false,
+    defaultChannelKey: 'geeks.analytics'
+  },
+  {
+    id: 'geeks_ads_structure',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'تصميم هيكل الحملة (حملات/Ad sets/إعلانات)',
+    description_ar: 'إنشاء الهيكل والميزانيات المبدئية ومطابقة الرسائل للجمهور.',
+
+    size: 'M',
+    ownerFunction: 'geeks_analytics',
+    stage: 'planning',
+    claimable: false,
+    defaultChannelKey: 'geeks.analytics'
+  },
+  {
+    id: 'geeks_ads_creatives',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'استلام/تهيئة التصاميم والنصوص للإعلانات',
+    description_ar: 'تنسيق رفع التصاميم والنصوص وضبط الصيغ المطلوبة لكل منصة.',
+
+    size: 'S',
+    ownerFunction: 'geeks_uiux',
+    stage: 'planning',
+    claimable: true,
+    defaultChannelKey: 'geeks.analytics'
+  },
+  {
+    id: 'geeks_ads_launch',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'إطلاق الحملة والتحقق من التتبع',
+    description_ar: 'تشغيل الحملة، التأكد من استلام البيانات، وضبط ميزانية البداية.',
+
+    size: 'S',
+    ownerFunction: 'geeks_analytics',
+    stage: 'launch',
+    claimable: false,
+    defaultChannelKey: 'geeks.analytics'
+  },
+  {
+    id: 'geeks_ads_monitoring',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'مراقبة يومية/أسبوعية للأداء',
+    description_ar: 'مراجعة النتائج، إيقاف الإعلانات الضعيفة، وتسجيل الملاحظات.',
+
+    size: 'S',
+    ownerFunction: 'geeks_analytics',
+    stage: 'post',
+    claimable: true,
+    defaultChannelKey: 'geeks.analytics'
+  },
+  {
+    id: 'geeks_ads_optimize',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'تحسينات هيكل/استهداف/رسائل',
+    description_ar: 'تجربة تحسينات معقولة بناء على البيانات (تعديلات جمهور/رسائل/ميزانية).',
+
+    size: 'S',
+    ownerFunction: 'geeks_analytics',
+    stage: 'post',
+    claimable: true,
+    defaultChannelKey: 'geeks.analytics'
+  },
+  {
+    id: 'geeks_ads_report',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'تقرير ختامي (ملخص أداء + توصيات)',
+    description_ar: 'تجميع النتائج في تقرير مختصر مع توصيات للحملات القادمة.',
+
+    size: 'S',
+    ownerFunction: 'geeks_analytics',
+    stage: 'post',
+    claimable: true,
+    defaultChannelKey: 'geeks.analytics'
+  },
+  {
+    id: 'geeks_ads_handover',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'تسليم الوصول والتوثيق الأساسي للحملة',
+    description_ar: 'توثيق الحسابات، التقارير، وأي إعدادات تخص التتبع، مع لقطات شاشة.',
+
+    size: 'S',
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'post',
+    claimable: true,
+    defaultChannelKey: 'admin.docs'
+  },
+  {
+    id: 'geeks_support_intake',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'استقبال طلب الدعم وتحديد النطاق',
+    description_ar: 'تجميع تفاصيل طلب الشريك، النطاق والمهل الزمنية، وما إذا كان دعم مستمر أو إصلاح سريع.',
+
+    size: 'S',
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'planning',
+    claimable: false,
+    defaultChannelKey: 'geeks.apps'
+  },
+  {
+    id: 'geeks_support_access',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'ضبط الوصول والحسابات للشريك',
+    description_ar: 'تجميع حسابات ووردبريس/Analytics/استضافة وتأمينها.',
+
+    size: 'S',
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'planning',
+    claimable: false,
+    defaultChannelKey: 'geeks.apps'
+  },
+  {
+    id: 'geeks_support_audit',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'تدقيق سريع (أداء/أمان/إضافات)',
+    description_ar: 'فحص سريع لمشاكل الأداء/الأمان والإضافات المسببة للبطء.',
+
+    size: 'M',
+    ownerFunction: 'geeks_fullstack',
+    stage: 'planning',
+    claimable: false,
+    defaultChannelKey: 'geeks.web_ops'
+  },
+  {
+    id: 'geeks_support_fixes',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'إصلاحات عاجلة وتحسينات صغيرة',
+    description_ar: 'تنفيذ إصلاحات عاجلة أو تحسينات صغيرة متفق عليها، وتسجيل ما تم تغييره.',
+
+    size: 'M',
+    ownerFunction: 'geeks_fullstack',
+    stage: 'build',
+    claimable: true,
+    defaultChannelKey: 'geeks.web_ops'
+  },
+  {
+    id: 'geeks_support_monitor',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'مراقبة ومتابعة لمدة قصيرة',
+    description_ar: 'مراقبة الأخطاء/الأداء خلال فترة الدعم والرد على أي تنبيهات.',
+
+    size: 'S',
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'post',
+    claimable: true,
+    defaultChannelKey: 'geeks.web_ops'
+  },
+  {
+    id: 'geeks_support_docs',
+    type: 'task',
+    unit: 'geeks',
+
+    title_ar: 'توثيق وحفظ اللقطات وروابط الدعم',
+    description_ar: 'كتابة موجز لما تم، تحديث الروابط/الوصول، وتجهيز لقطات شاشة/فيديو قصير للتسليم.',
+
+    size: 'S',
+    ownerFunction: 'geeks_tech_pm',
+    stage: 'post',
+    claimable: true,
+    defaultChannelKey: 'admin.docs'
+  },
+  {
     id: 'geeks_review',
     type: 'task',
     unit: 'geeks',
@@ -3621,12 +5033,120 @@ const geeksTaskTemplates = [
 // Public API
 // ==========================
 
+const peopleStageOverrides = {
+  people_feedback: 'post',
+  people_event_feedback_form: 'post',
+  people_event_debrief: 'post',
+  people_event_photo_doc: 'shoot',
+  people_event_archive_entry: 'post',
+  people_live_notes_capture: 'shoot',
+  people_live_notes_summary: 'post',
+  people_event_visual_assets: 'planning',
+  people_event_access_guide: 'planning',
+  people_event_poster: 'planning',
+  people_event_social_launch: 'planning',
+  people_event_social_reminder: 'planning',
+  people_event_logistics: 'planning',
+  people_event_risk_review: 'planning',
+  people_event_recording_policy: 'planning',
+  people_event_concept: 'planning',
+  people_event_budget_check: 'planning',
+  people_event_invite_list: 'planning',
+  people_log_talent: 'post',
+  people_accessibility_checklist_event: 'planning'
+};
+
+const peopleCrossUnitOverrides = {
+  people_tech_rehearsal: { media: false, geeks: true },
+  people_event_access_guide: { media: false, geeks: true },
+  people_event_visual_assets: { media: true, geeks: false },
+  people_event_feedback_form: { media: false, geeks: false },
+  'people.music.tech_and_safety_plan': { media: true, geeks: true },
+  'people.music.digital_coordination': { media: true, geeks: true },
+  'people.openmic.signup_system': { media: false, geeks: true },
+  'people.openmic.safety_roles': { media: true, geeks: false },
+  'people.exhibit.digital_coordination': { media: true, geeks: true },
+  'people.shihan.tech_rider_master': { media: true, geeks: true },
+  'people.shihan.documentation_plan': { media: true, geeks: true }
+};
+
+const geeksStageOverrides = {
+  'geeks_site_setup': 'build',
+  'geeks_site_frontend_build': 'build',
+  'geeks_site_backend_setup': 'build',
+  'geeks_site_qc': 'test',
+  'geeks_site_responsive_test': 'test',
+  'geeks_site_performance_check': 'test',
+  'geeks_site_staging_launch': 'launch',
+  'geeks_site_launch_monitor': 'launch',
+  'geeks_site_docs_handover': 'post',
+  'geeks_site_archive_snapshots': 'post',
+  'geeks_site_launch_doc': 'post',
+  'geeks.app.discovery': 'planning',
+  'geeks.app.spec': 'planning',
+  'geeks.app.milestone_mvp': 'build',
+  'geeks.app.field_test': 'test',
+  'geeks.app.deploy': 'launch',
+  'geeks.app.handover_maintain': 'post',
+  'geeks.stack.intake_prioritize': 'planning',
+  'geeks.stack.flow_design': 'planning',
+  'geeks.stack.implementation': 'build',
+  'geeks.stack.sandbox_test': 'test',
+  'geeks.stack.rollout': 'launch',
+  'geeks.stack.docs': 'post',
+  'geeks.discord.audit_current': 'planning',
+  'geeks.discord.new_structure_design': 'planning',
+  'geeks.discord.staging_setup': 'build',
+  'geeks.discord.migration_plan': 'build',
+  'geeks.discord.habapp_integration': 'build',
+  'geeks.discord.moderator_guide': 'post',
+  geeks_app_brief: 'planning',
+  geeks_app_architecture_note: 'planning',
+  geeks_app_prototype: 'build',
+  geeks_app_internal_test: 'test',
+  geeks_app_launch_note: 'launch',
+  geeks_app_maintenance_log: 'post',
+  geeks_accessibility_audit: 'planning',
+  geeks_accessibility_fix_plan: 'planning',
+  geeks_accessibility_fix_round: 'build',
+  geeks_accessibility_user_test: 'test',
+  geeks_app_maintenance: 'post',
+  geeks_app_maintenance_log: 'post',
+  geeks_implementation: 'build',
+  geeks_review: 'post',
+  geeks_test: 'test',
+  geeks_launch: 'launch'
+};
+
+const normalizedGeeksTaskTemplates = geeksTaskTemplates.map(template => ({
+  ...template,
+  ownerFunction:
+    template.ownerFunction ||
+    template.defaultOwnerFunc ||
+    template.defaultOwnerRole ||
+    'geeks_tech_pm',
+  stage: template.stage || geeksStageOverrides[template.id] || 'planning',
+  claimable: typeof template.claimable === 'boolean' ? template.claimable : false
+}));
+
+const normalizedPeopleTaskTemplates = peopleTaskTemplates.map(template => ({
+  ...template,
+  ownerFunction:
+    template.ownerFunction ||
+    template.defaultOwnerFunc ||
+    template.defaultOwnerRole ||
+    'people_coordination',
+  stage: template.stage || peopleStageOverrides[template.id] || 'planning',
+  claimable: typeof template.claimable === 'boolean' ? template.claimable : false,
+  crossUnit: template.crossUnit || peopleCrossUnitOverrides[template.id]
+}));
+
 const taskTemplates = [
   ...productionTaskTemplates,
   ...thinkTaskTemplates,
   ...mediaTaskTemplates,
-  ...peopleTaskTemplates,
-  ...geeksTaskTemplates
+  ...normalizedPeopleTaskTemplates,
+  ...normalizedGeeksTaskTemplates
   // لاحقاً: نضيف media / think / people / geeks / academy / admin هنا
 ];
 
