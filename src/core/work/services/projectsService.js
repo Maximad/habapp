@@ -348,6 +348,19 @@ function resolveTemplateListForPipeline(pipeline) {
 function resolveTaskDueDateFromTemplate(template, project) {
   const projectDue = project?.dueDate || project?.due || null;
   const shootDate = project?.shootDate || null;
+
+  const metaOffset =
+    template?.meta && typeof template.meta.offsetDays === 'number'
+      ? template.meta.offsetDays
+      : null;
+  if (projectDue && metaOffset !== null) {
+    const base = new Date(projectDue);
+    if (!Number.isNaN(base.valueOf())) {
+      base.setUTCDate(base.getUTCDate() + metaOffset);
+      return base.toISOString().slice(0, 10);
+    }
+  }
+
   const offset =
     (template.deadlineOffset && typeof template.deadlineOffset.value === 'number'
       ? template.deadlineOffset.value
@@ -588,13 +601,41 @@ function createProjectWithScaffold({
 
   const createdTasks = templates.map(t => {
     const templateUnit = resolveTemplateUnit(t, pipeline, unit || (project.units && project.units[0]));
-    const ownerId = pickTaskOwner(
-      members,
-      templateUnit,
-      t.defaultOwnerFunc || t.defaultOwnerRole || null
-    );
-    const due = resolveTaskDueDateFromTemplate(t, project);
+    const skipOwnerAssignment =
+      (pipeline?.key === 'media.article_short' || project.pipelineKey === 'media.article_short') &&
+      t.pipelineKey === 'media.article_short';
+    const ownerId = skipOwnerAssignment
+      ? null
+      : pickTaskOwner(
+        members,
+        templateUnit,
+        t.defaultOwnerFunc || t.defaultOwnerRole || null
+      );
+    let due = resolveTaskDueDateFromTemplate(t, project);
     const definitionOfDone = t.definitionOfDone_ar || null;
+
+    const projectDueDate = project?.dueDate || project?.due || null;
+    if ((pipeline?.key === 'media.article_short' || project.pipelineKey === 'media.article_short') && projectDueDate) {
+      const baseDate = new Date(projectDueDate);
+      let dueDateObj = due ? new Date(due) : null;
+      const isArchive = t.functionKey === 'media_archive';
+      if (!Number.isNaN(baseDate.valueOf())) {
+        const clampTarget = isArchive ? null : baseDate;
+        if (clampTarget && dueDateObj && !Number.isNaN(dueDateObj.valueOf()) && dueDateObj > clampTarget) {
+          const safeDate = new Date(clampTarget);
+          dueDateObj.setTime(safeDate.getTime());
+        }
+        if (!isArchive && !dueDateObj) {
+          dueDateObj = new Date(baseDate);
+        }
+        if (t.functionKey === 'media_web' && (!dueDateObj || dueDateObj > baseDate)) {
+          dueDateObj = new Date(baseDate);
+        }
+        if (dueDateObj && !Number.isNaN(dueDateObj.valueOf())) {
+          due = dueDateObj.toISOString().slice(0, 10);
+        }
+      }
+    }
 
     const { task } = createTask(project.slug, {
       title: t.label_ar,

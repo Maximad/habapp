@@ -1366,6 +1366,153 @@ const mediaTaskTemplates = [
     dueOffsetDays: 0
   },
   {
+    id: 'media_article_short_interview',
+    type: 'task',
+    unit: 'media',
+
+    // استجابة سريعة لجمع المادة من مقابلة قصيرة أو متابعة ميدانية.
+    label_ar: 'مقابلة سريعة وجمع المادة',
+    description_ar: 'خطوة سريعة لإجراء مقابلة أو جمع المادة الخام اللازمة لكتابة المقال القصير.',
+
+    size: 'M',
+    functionKey: 'media_writer',
+    claimable: true,
+    meta: { offsetDays: -4 },
+
+    defaultChannelKey: 'media.assignments',
+    pipelineKey: 'media.article_short',
+
+    tags: ['مقابلة', 'جمع مادة', 'نص']
+  },
+  {
+    id: 'media_article_short_write',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'كتابة المقال القصير',
+    description_ar: 'صياغة مسودة المقال القصير بالاستناد إلى المادة المجموعة والمصادر المتاحة.',
+
+    size: 'M',
+    functionKey: 'media_writer',
+    claimable: true,
+    meta: { offsetDays: -3 },
+
+    defaultChannelKey: 'media.drafts',
+    pipelineKey: 'media.article_short',
+
+    tags: ['مقال', 'نص', 'تحرير']
+  },
+  {
+    id: 'media_article_short_photo_select',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'اختيار صور المادة وتوثيق الحقوق وصورة الغلاف والمعالجة الأولية',
+    description_ar: 'تجهيز حزمة صور المادة مع توثيق الاعتمادات والمعالجة الأولية وضبط صورة الغلاف.',
+
+    size: 'M',
+    functionKey: 'media_photo',
+    claimable: true,
+    meta: { offsetDays: -3 },
+
+    defaultChannelKey: 'media.photo_selection',
+    pipelineKey: 'media.article_short',
+
+    tags: ['صور', 'حقوق', 'غلاف']
+  },
+  {
+    id: 'media_article_short_photo_edit',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'تحرير مجموعة الصور ومعالجة اللون وفق دليل الهوية البصرية',
+    description_ar: 'تحرير الحزمة المختارة من الصور ومعالجة اللون بما يتماشى مع دليل الهوية.',
+
+    size: 'S',
+    functionKey: 'media_photo',
+    claimable: true,
+    meta: { offsetDays: -2 },
+
+    defaultChannelKey: 'media.graphics',
+    pipelineKey: 'media.article_short',
+
+    tags: ['صور', 'تحرير', 'هوية']
+  },
+  {
+    id: 'media_article_short_readability',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'مراجعة سهولة القراءة والوصول للمادة',
+    description_ar: 'مراجعة القراءة والوصول للتأكد من وضوح العناوين والنصوص البديلة والتنسيق المناسب.',
+
+    size: 'S',
+    functionKey: 'media_editor',
+    claimable: true,
+    meta: { offsetDays: -2 },
+
+    defaultChannelKey: 'media.accessibility',
+    pipelineKey: 'media.article_short',
+
+    tags: ['وصول', 'تحرير', 'قراءة']
+  },
+  {
+    id: 'media_article_short_social',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'حزمة منصات اجتماعية للمادة (بوست + ستوري + ٣ تقطيعات)',
+    description_ar: 'تجهيز حزمة نشر اجتماعية كاملة للمادة تشمل بوست، ستوري، وثلاث تقطيعات.',
+
+    size: 'M',
+    functionKey: 'media_social',
+    claimable: true,
+    meta: { offsetDays: -1 },
+
+    defaultChannelKey: 'media.social',
+    pipelineKey: 'media.article_short',
+
+    tags: ['سوشال', 'تصميم', 'نشر']
+  },
+  {
+    id: 'media_article_short_publish',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'نشر على الموقع',
+    description_ar:
+      'نشر المادة على الموقع أو الـ CMS مع التأكد من العنوان والـ slug، الترويسة والوصف وحقول SEO، التصنيفات/الوسوم، الروابط الداخلية والخارجية، والنصوص المصاحبة/البديلة للصور.',
+
+    size: 'S',
+    functionKey: 'media_web',
+    claimable: true,
+    meta: { offsetDays: 0 },
+
+    defaultChannelKey: 'media.corrections_log',
+    pipelineKey: 'media.article_short',
+
+    tags: ['نشر', 'موقع', 'CMS']
+  },
+  {
+    id: 'media_article_short_archive',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'أرشفة المادة والملفات المرافقة',
+    description_ar:
+      'تجميع ملفات المادة وروابطها في مجلد أو رابط موحد مع بيانات وصفية قصيرة (تاريخ، نوع، مؤلف/تصوير، روابط Doc/Drive).',
+
+    size: 'S',
+    functionKey: 'media_archive',
+    claimable: true,
+    meta: { offsetDays: 1 },
+
+    defaultChannelKey: 'media.archive',
+    pipelineKey: 'media.article_short',
+
+    tags: ['أرشفة', 'حفظ', 'توثيق']
+  },
+  {
     id: 'media_visual_direction',
     type: 'task',
     unit: 'media',
