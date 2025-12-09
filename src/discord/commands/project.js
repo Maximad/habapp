@@ -4,6 +4,7 @@ const {
   resolveProjectByQuery,
   buildProjectSnapshot,
   listProjectTasksForView,
+  listProjectsForView,
   validateUnitPipeline,
 } = require('../../core/work/services/projectsService');
 const {
@@ -47,6 +48,7 @@ function safeEditOrReply(interaction, payload) {
 }
 
 function formatStage(stage) {
+  const normalized = stage ? String(stage).toLowerCase() : null;
   const map = {
     planning: 'التخطيط',
     shooting: 'التصوير',
@@ -54,7 +56,39 @@ function formatStage(stage) {
     review: 'المراجعة',
     archived: 'مؤرشف',
   };
-  return map[stage] || stage || 'غير محدد';
+  return map[normalized] || stage || 'غير محدد';
+}
+
+function formatUnitLabel(unitKey) {
+  const unit = unitKey ? getUnitByKey(unitKey) : null;
+  return unit?.name_ar || unitKey || 'غير محدد';
+}
+
+function formatPipelineLabel(pipelineKey) {
+  if (!pipelineKey) return '—';
+  const pipeline = getPipelineByKey(pipelineKey);
+  return pipeline?.name_ar || pipeline?.key || pipelineKey;
+}
+
+function formatStatusLabel(status) {
+  const normalized = status ? String(status).toLowerCase() : 'active';
+  const map = {
+    active: 'نشطة',
+    archived: 'مؤرشفة',
+    all: 'الكل',
+  };
+  return map[normalized] || map.active;
+}
+
+function formatProjectLine(view) {
+  const title = view.titleAr || view.title || view.slug || 'بدون عنوان';
+  const pipelineLabel = formatPipelineLabel(view.pipelineKey);
+  const dueLabel = view.dueDate || 'بدون موعد محدد';
+  const stageLabel = formatStage(view.stageNormalized || view.stage);
+  const counts = view.taskCounts || { open: 0, done: 0, total: 0 };
+  const total = counts.total || counts.open + counts.done || 0;
+  const countsLabel = `مهام مفتوحة: ${counts.open || 0}/${total}`;
+  return `• ${title} — ${pipelineLabel} — الموعد: ${dueLabel} — المرحلة: ${stageLabel} — ${countsLabel} — المعرّف: ${view.slug}`;
 }
 
 function formatTaskLine(task) {
@@ -355,6 +389,67 @@ async function handleTasks(interaction) {
   }
 }
 
+async function handleList(interaction) {
+  try {
+    const unitKey = interaction.options.getString('unit');
+    const status = interaction.options.getString('status') || 'active';
+    const allowed = ['active', 'archived', 'all'];
+    const normalizedStatus = allowed.includes(status) ? status : 'active';
+
+    const projects = listProjectsForView({ unitKey, status: normalizedStatus });
+
+    if (!projects.length) {
+      const emptyMessage = 'لا توجد مشاريع مطابقة للمعايير الحالية. جرّب إزالة بعض الفلاتر أو إنشاء مشروع جديد بـ /project create.';
+      return interaction.reply({ content: emptyMessage, ephemeral: true });
+    }
+
+    const grouped = new Map();
+    projects.forEach(project => {
+      const key = project.unitKey || 'other';
+      if (!grouped.has(key)) grouped.set(key, []);
+      grouped.get(key).push(project);
+    });
+
+    const lines = [];
+    const MAX_TOTAL = 30;
+    const MAX_PER_UNIT = 10;
+    let renderedCount = 0;
+
+    const unitsToRender = unitKey ? [unitKey] : Array.from(grouped.keys());
+    const statusLabel = formatStatusLabel(normalizedStatus);
+
+    for (const unit of unitsToRender) {
+      const list = grouped.get(unit) || [];
+      if (!list.length) continue;
+
+      const unitLabel = formatUnitLabel(unit);
+      lines.push(`المشاريع (${statusLabel}) للوحدة: ${unitLabel}`);
+
+      for (const project of list.slice(0, MAX_PER_UNIT)) {
+        if (renderedCount >= MAX_TOTAL) break;
+        lines.push(formatProjectLine(project));
+        renderedCount += 1;
+      }
+
+      lines.push('');
+      if (renderedCount >= MAX_TOTAL) break;
+    }
+
+    if (renderedCount < projects.length) {
+      lines.push('... تم إخفاء بعض المشاريع لتبسيط العرض.');
+    }
+
+    const content = lines.filter(Boolean).join('\n');
+    return interaction.reply({ content, ephemeral: true });
+  } catch (err) {
+    console.error('[HabApp][project-list]', err);
+    return interaction.reply({
+      content: 'تعذر عرض قائمة المشاريع حالياً. حاول مرة أخرى أو أبلغ فريق HabApp.',
+      ephemeral: true,
+    });
+  }
+}
+
 async function handleProject(interaction) {
   const sub = interaction.options.getSubcommand();
 
@@ -371,11 +466,7 @@ async function handleProject(interaction) {
   }
 
   if (sub === 'list') {
-    return interaction.reply({
-      content:
-        'عرض قائمة المشاريع النشطة قيد التطوير. مؤقتاً استخدم /project open باسم المشروع لمراجعة التفاصيل.',
-      ephemeral: true,
-    });
+    return handleList(interaction);
   }
 
   return interaction.reply({
@@ -387,9 +478,56 @@ async function handleProject(interaction) {
 // Minimal autocomplete to keep Discord happy, but we rely on dropdowns.
 async function handleProjectAutocomplete(interaction) {
   try {
-    if (typeof interaction.respond === 'function') {
-      await interaction.respond([]);
+    const focused = interaction.options.getFocused(true);
+    if (!focused || typeof interaction.respond !== 'function') {
+      return;
     }
+
+    if (focused.name === 'pipeline') {
+      const query = String(focused.value || '').toLowerCase();
+      const unitKey = interaction.options.getString('unit');
+
+      let list = pipelines.filter(p => !p.hidden);
+      if (unitKey) {
+        list = list.filter(p => p.unitKey === unitKey);
+      }
+
+      if (query) {
+        list = list.filter(p => {
+          const label = `${p.name_ar || ''} ${p.key}`.toLowerCase();
+          return label.includes(query);
+        });
+      }
+
+      const choices = list.slice(0, 25).map(p => ({
+        name: `${p.name_ar || p.key} (${p.key})`,
+        value: p.key,
+      }));
+      return interaction.respond(choices);
+    }
+
+    if (focused.name === 'project') {
+      const query = String(focused.value || '').toLowerCase();
+      const projects = listProjectsForView({ status: 'active' });
+
+      const matches = projects.filter(project => {
+        const title = `${project.title || ''} ${project.titleAr || ''}`.toLowerCase();
+        const slug = (project.slug || '').toLowerCase();
+        return title.includes(query) || slug.includes(query);
+      });
+
+      const choices = matches.slice(0, 25).map(p => {
+        const unitLabel = formatUnitLabel(p.unitKey);
+        const name = p.titleAr || p.title || p.slug;
+        return {
+          name: `${name} – [${unitLabel}] (${p.slug})`,
+          value: p.slug,
+        };
+      });
+      return interaction.respond(choices);
+    }
+
+    return interaction.respond([]);
   } catch (err) {
     console.error('[HabApp][autocomplete][project] error:', err);
   }

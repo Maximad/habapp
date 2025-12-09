@@ -100,9 +100,17 @@ const data = new SlashCommandBuilder()
       .setDescription('نشر مهمة لقبولها من أعضاء الوحدة')
       .addStringOption(o =>
         o
-          .setName('task_id')
-          .setDescription('معرّف المهمة المطلوب عرضها')
+          .setName('project')
+          .setDescription('اسم المشروع أو جزء منه')
           .setRequired(true)
+          .setAutocomplete(true)
+      )
+      .addStringOption(o =>
+        o
+          .setName('task')
+          .setDescription('اسم المهمة داخل المشروع (اختياري)')
+          .setRequired(false)
+          .setAutocomplete(true)
       )
   );
 

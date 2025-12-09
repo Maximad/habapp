@@ -1366,26 +1366,6 @@ const mediaTaskTemplates = [
     dueOffsetDays: 0
   },
   {
-    id: 'media_assignment_memo',
-    type: 'task',
-    unit: 'media',
-
-    label_ar: 'ملف تكليف / Brief للمادة (سياق، أهداف، روابط مرجعية)',
-    description_ar: 'كتابة موجز تكليف واضح للمادة يشمل السياق، الأهداف، الروابط المرجعية، وتعريف الإنجاز.',
-
-    size: 'S',
-    definitionOfDone_ar:
-      'خيط واحد في #assignment-desk يضم ملخص الفكرة، تعريف الإنجاز، المالك، الموعد، ورابط مشروع HabApp إن وجد.',
-
-    defaultOwnerRole: 'editor',
-    defaultChannelKey: 'media.assignment_desk',
-    defaultDueDays: 1,
-
-    pipelineKey: 'media.article_short',
-
-    tags: ['تكليف', 'تحرير', 'إدارة مهام']
-  },
-  {
     id: 'media_visual_direction',
     type: 'task',
     unit: 'media',
@@ -1410,14 +1390,16 @@ const mediaTaskTemplates = [
     type: 'task',
     unit: 'media',
 
-    label_ar: 'اختيار صور الغلاف والصور المرافقة مع metadata',
-    description_ar: 'تجهيز صور الغلاف والمرافقة مع بيانات وصفية ونص بديل وتعليمات النشر.',
+    label_ar: 'اختيار صورة غلاف ومعالجة أولية',
+    description_ar:
+      'اختيار صورة غلاف قوية للمادة وإجراء معالجة أولية (قص، تعريض، توازن ألوان) مع نصوص بديلة واضحة وتعليمات نشر.',
 
     size: 'S',
     definitionOfDone_ar:
       'مجموعة صور مختارة مع نصوص بديلة وتسميات واضحة، وروابط أو مسارات ملفات جاهزة للنشر.',
 
-    defaultOwnerFunc: 'photo_editor',
+    defaultOwnerFunc: 'designer',
+    ownerFunction: 'designer',
     defaultChannelKey: 'media.photo_selection',
     defaultDueDays: 2,
 
@@ -1444,6 +1426,51 @@ const mediaTaskTemplates = [
     pipelineKey: 'media.article_short',
 
     tags: ['لون', 'تصميم', 'اتساق']
+  },
+  {
+    id: 'media_image_selection',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'اختيار صور المادة وتوثيق الحقوق',
+    description_ar: 'اختيار صور الغلاف والمادة مع نصوص بديلة، اعتمادات واضحة، ومسارات ملفات منظمة.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'مجموعة صور أو لقطات مختارة مع نصوص بديلة واعتمادات/حقوق واضحة وروابط للملفات الأصلية.',
+
+    defaultOwnerFunc: 'designer',
+    ownerFunction: 'designer',
+    defaultChannelKey: 'media.photo_selection',
+    defaultDueDays: 2,
+    stage: 'edit',
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['صور', 'غلاف', 'بيانات وصفية']
+  },
+  {
+    id: 'media_image_editing',
+    type: 'task',
+    unit: 'media',
+
+    label_ar: 'تحرير مجموعة الصور وفق دليل الهوية البصرية',
+    description_ar:
+      'تحرير مجموعة الصور المختارة كحزمة واحدة مع توحيد التباين والألوان والمقاسات وتصدير الملفات بأسماء ومسارات منظمة.',
+
+    size: 'M',
+    definitionOfDone_ar:
+      'ملفات صور أو لقطات جاهزة للنشر بمعالجة لونية متسقة ومقاسات مناسبة للمنصات المطلوبة مع روابط التخزين.',
+
+    defaultOwnerFunc: 'designer',
+    ownerFunction: 'designer',
+    defaultChannelKey: 'media.graphics',
+    defaultDueDays: 2,
+    stage: 'edit',
+
+    pipelineKey: 'media.article_short',
+
+    tags: ['تصميم', 'صور', 'تحرير']
   },
   {
     id: 'media_quick_interview',
@@ -1611,16 +1638,19 @@ const mediaTaskTemplates = [
     unit: 'media',
 
     label_ar: 'نشر على الموقع',
-    description_ar: 'نشر المادة على الموقع مع التأكد من العناوين والوصلات والنصوص المصاحبة.',
+    description_ar:
+      'نشر المادة على الموقع أو الـ CMS مع التأكد من العنوان والـ slug، الترويسة والوصف وحقول SEO، التصنيفات/الوسوم، الروابط الداخلية والخارجية، والنصوص المصاحبة/البديلة للصور.',
 
     size: 'S',
     definitionOfDone_ar:
-      'المادة منشورة على الموقع مع روابط سليمة، صور مناسبة، ونصوص مساعدة (Alt/Caption) وفق المعايير التحريرية.',
+      'المادة منشورة على الموقع مع روابط سليمة، صور مناسبة، نصوص بديلة وعناوين فرعية، وحقول SEO/تصنيفات مكتملة مع فحص عرض الصفحة.',
 
     defaultOwnerFunc: 'desk_editor',
+    ownerFunction: 'desk_editor',
     defaultOwnerRole: 'desk_editor',
     defaultChannelKey: 'media.corrections_log',
     defaultDueDays: 3,
+    stage: 'post',
 
     pipelineKey: 'media.article_short',
 
@@ -1638,9 +1668,11 @@ const mediaTaskTemplates = [
     definitionOfDone_ar:
       'ملفات وصياغات جاهزة للنشر على فيسبوك/إنستغرام أو تويتر، مع نصوص وصفيّة وروابط متابعة.',
 
-    defaultOwnerFunc: 'designer_social',
+    defaultOwnerFunc: 'designer',
+    ownerFunction: 'designer',
     defaultChannelKey: 'media.social',
     defaultDueDays: 2,
+    stage: 'post',
 
     pipelineKey: 'media.article_short',
 
@@ -1651,17 +1683,20 @@ const mediaTaskTemplates = [
     type: 'task',
     unit: 'media',
 
-    label_ar: 'أرشفة المادة في الأرشيف المركزي (نصوص، صور، روابط)',
-    description_ar: 'تجميع ملفات المادة وروابطها في مجلد أو رابط موحد مع بيانات وصفية قصيرة.',
+    label_ar: 'أرشفة المادة والملفات المرافقة',
+    description_ar:
+      'تجميع ملفات المادة وروابطها في مجلد أو رابط موحد مع بيانات وصفية قصيرة (تاريخ، نوع، مؤلف/تصوير، روابط Doc/Drive).',
 
     size: 'S',
     definitionOfDone_ar:
-      'مجلد أو رابط مركزي يحتوي على النص النهائي، الصور، الروابط الخارجية، وأي تراخيص أو ملاحظات وصول.',
+      'مجلد أو رابط مركزي يحتوي على النص النهائي، الصور، الروابط الخارجية، وأي تراخيص أو ملاحظات وصول، مع حفظ رابط المستند الرئيسي ورابط مجلد Drive.',
 
-    defaultOwnerFunc: 'archives',
+    defaultOwnerFunc: 'desk_editor',
+    ownerFunction: 'desk_editor',
     defaultChannelKey: 'media.archive',
     defaultDueDays: 2,
     hasDocLink: true,
+    stage: 'post',
 
     pipelineKey: 'media.article_short',
 
@@ -1694,16 +1729,18 @@ const mediaTaskTemplates = [
 
     label_ar: 'مراجعة الوصول الرقمي',
     description_ar:
-      'فحص الوصول الرقمي بما يشمل نصوص بديلة وصور ذات تباين مناسب، تخطيط مقروء على الموبايل، وروابط موصوفة بوضوح قبل النشر.',
+      'فحص الوصول الرقمي بما يشمل نصوص بديلة وصور ذات تباين مناسب، عناوين وروابط موصوفة بوضوح، ترجمة أو تسميات، وتأكد من ملاءمة القراءة على الموبايل وقارئ الشاشة.',
 
     size: 'S',
     definitionOfDone_ar:
       'بطاقة فحص منجزة للمادة تحتوي على حالة النص البديل، تباين الألوان، الترجمات، وتجربة القراءة على الموبايل مع رابط للتوثيق.',
 
-    defaultOwnerRole: 'accessibility_editor',
-    defaultOwnerFunc: 'accessibility',
+    defaultOwnerRole: 'desk_editor',
+    defaultOwnerFunc: 'desk_editor',
+    ownerFunction: 'desk_editor',
     defaultChannelKey: 'media.accessibility',
     defaultDueDays: 1,
+    stage: 'post',
 
     pipelineKey: 'media.article_short',
 
@@ -1795,11 +1832,12 @@ const mediaTaskTemplates = [
     unit: 'media',
 
     label_ar: 'خطة السلسلة وجدول المواضيع',
-    description_ar: 'تحديد موضوعات الحلقات، الضيوف المحتملين، وهيكل السلسلة على مدى الموسم.',
+    description_ar:
+      'تحديد موضوعات الحلقات، الضيوف المحتملين، وهيكل السلسلة على مدى الموسم مع إنشاء مستند/مجلد مشترك للسكريبتات والملفات.',
 
     size: 'S',
     definitionOfDone_ar:
-      'مستند أو بطاقة تتضمن ٣–٦ حلقات مقترحة، الضيوف المحتملين، والمواعيد المبدئية لكل حلقة.',
+      'مستند أو بطاقة تتضمن ٣–٦ حلقات مقترحة، الضيوف المحتملين، المواعيد المبدئية لكل حلقة، ورابط للمجلد/المستند المشترك.',
 
     defaultOwnerFunc: 'producer',
     defaultChannelKey: 'media.audio',
@@ -2065,6 +2103,46 @@ const peopleTaskTemplates = [
     stage: 'planning',
     claimable: false,
     crossUnit: { media: true, geeks: false }
+  },
+  {
+    id: 'people_event_media_request',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'طلب تغطية إعلامية من وحدة الإعلام',
+    description_ar:
+      'التنسيق مع وحدة الإعلام لمواد التغطية (صور، فيديو، مقال أو موجز) مع مشاركة المواعيد والرسائل الرئيسية وخلفية الفعالية.',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'رسالة طلب واضحة تتضمن تاريخ/مكان الفعالية، الجمهور، الرسائل الأساسية، واقتراح نوع التغطية، مع رابط خيط أو مستند مشترك.',
+
+    pipelineKey: 'people.event_generic',
+
+    ownerFunction: 'people_coordination',
+    stage: 'planning',
+    claimable: false,
+    crossUnit: { targetUnit: 'media', suggestion: true, media: true }
+  },
+  {
+    id: 'people_event_geeks_request',
+    type: 'task',
+    unit: 'people',
+
+    label_ar: 'طلب دعم تقني من وحدة الجيكس',
+    description_ar:
+      'التنسيق مع الجيكس لاحتياجات التسجيل/البث أو صفحة/نموذج التسجيل وأي دعم تقني (تذاكر، شاشات، صوت).',
+
+    size: 'S',
+    definitionOfDone_ar:
+      'طلب واضح يحدد احتياجات الدعم التقني وتواريخ التسليم ومسؤول المتابعة، مع رابط خيط أو وثيقة تنظيمية.',
+
+    pipelineKey: 'people.event_generic',
+
+    ownerFunction: 'people_coordination',
+    stage: 'planning',
+    claimable: false,
+    crossUnit: { targetUnit: 'geeks', suggestion: true, geeks: true }
   },
   {
     id: 'people_event_budget_check',

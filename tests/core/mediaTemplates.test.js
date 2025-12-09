@@ -28,8 +28,10 @@ test('media pipelines visibility, program/series flags, and podcast recurrence',
 
   const podcast = getPipelineByKey('media.podcast_short');
   assert.strictEqual(podcast.series, true);
+  assert.strictEqual(podcast.isSeries, true);
   assert.strictEqual(podcast.kind, 'series');
   assert.deepStrictEqual(podcast.recurrence?.type, 'series');
+  assert.ok(podcast.defaultTemplateIds.includes('media_podcast_series_plan'));
 });
 
 test('media templates cleaned and memo/prompt tasks removed from defaults', () => {
@@ -45,8 +47,7 @@ test('media templates cleaned and memo/prompt tasks removed from defaults', () =
   });
 
   const memo = getTaskTemplateById('media_assignment_memo');
-  assert.ok(memo);
-  assert.strictEqual(memo.optional, true);
+  assert.strictEqual(memo, null);
 });
 
 test('accessibility, publishing, archiving, and social tasks carry ownership', () => {
@@ -61,11 +62,13 @@ test('accessibility, publishing, archiving, and social tasks carry ownership', (
   assert.strictEqual(publishTemplate.label_ar, 'نشر على الموقع');
   assert.strictEqual(publishTemplate.ownerFunction, 'desk_editor');
   assert.strictEqual(publishTemplate.stage, 'post');
+  assert.ok(publishTemplate.description_ar.includes('SEO'));
 
   const archiveTemplate = getTaskTemplateById('media_archive_package');
   assert.ok(archiveTemplate);
-  assert.strictEqual(archiveTemplate.ownerFunction, 'archive');
+  assert.strictEqual(archiveTemplate.ownerFunction, 'desk_editor');
   assert.strictEqual(archiveTemplate.stage, 'post');
+  assert.ok(archiveTemplate.description_ar.includes('Drive'));
 
   const social = getTaskTemplateById('media_social_package');
   assert.ok(social);
@@ -84,6 +87,10 @@ test('media pipelines include art direction, social, and archiving tasks', () =>
     assert.ok(pipeline.defaultTemplateIds.includes('media_image_selection'));
     assert.ok(pipeline.defaultTemplateIds.includes('media_image_editing'));
     assert.ok(pipeline.defaultTemplateIds.includes('media_visual_direction'));
+    const coverTask = getTaskTemplateById('media_cover_selection');
+    assert.ok(coverTask);
+    assert.ok(coverTask.label_ar.includes('غلاف'));
+    assert.strictEqual(coverTask.ownerFunction, 'designer');
   });
 
   mediaPipelineKeys.forEach(key => {
@@ -95,6 +102,9 @@ test('media pipelines include art direction, social, and archiving tasks', () =>
   const social = getTaskTemplateById('media_social_package');
   assert.ok(social);
   assert.strictEqual(social.defaultOwnerFunc, 'designer');
+
+  const editing = getTaskTemplateById('media_image_editing');
+  assert.strictEqual(editing.size, 'M');
 });
 
 test('optional cross-format and series planning tasks are marked', () => {

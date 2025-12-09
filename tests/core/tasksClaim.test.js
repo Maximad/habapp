@@ -1,7 +1,18 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+
+const { createStore } = require('../../src/core/store');
 const { claimTask } = require('../../src/core/work/tasks');
+const { listClaimableTasksForProject } = require('../../src/core/work/services/projectsService');
+
+function createTempStore() {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'habapp-claimable-tasks-'));
+  return { store: createStore({ dataDir: dir }), dir };
+}
 
 function createMockStore(tasks) {
   return {
@@ -107,4 +118,46 @@ test('claimTask allows claimable geeks tasks', () => {
   const result = claimTask(store, 21, 'member-21', { units: ['geeks'] });
 
   assert.equal(result.ownerId, 'member-21');
+});
+
+test('listClaimableTasksForProject returns only open unowned claimable tasks', t => {
+  const { store, dir } = createTempStore();
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  store.write('projects', [
+    {
+      slug: 'demo-project',
+      unit: 'media',
+      tasks: [
+        { id: 1, title: 'Ready', status: 'open', claimable: true, ownerId: null },
+        { id: 2, title: 'Owned', status: 'open', claimable: true, ownerId: 'x' },
+        { id: 3, title: 'Closed', status: 'done', claimable: true, ownerId: null },
+        { id: 4, title: 'Locked', status: 'open', claimable: false, ownerId: null },
+      ],
+    },
+  ]);
+
+  const tasks = listClaimableTasksForProject({ projectSlug: 'demo-project' }, store);
+  assert.equal(tasks.length, 1);
+  assert.equal(tasks[0].id, 1);
+});
+
+test('listClaimableTasksForProject filters by size when provided', t => {
+  const { store, dir } = createTempStore();
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  store.write('projects', [
+    {
+      slug: 'demo-project',
+      unit: 'media',
+      tasks: [
+        { id: 1, title: 'Small', status: 'open', claimable: true, ownerId: null, size: 's' },
+        { id: 2, title: 'Medium', status: 'open', claimable: true, ownerId: null, size: 'm' },
+      ],
+    },
+  ]);
+
+  const tasks = listClaimableTasksForProject({ projectSlug: 'demo-project', size: 'm' }, store);
+  assert.equal(tasks.length, 1);
+  assert.equal(tasks[0].id, 2);
 });

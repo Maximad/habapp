@@ -212,6 +212,7 @@ const pipelines = [
     name_ar: 'برنامج حبق لاب 90 للإعلام المدني',
     description_ar: 'برنامج لمدة ٩٠ يوماً لتدريب المشاركين على الصحافة العامة التشاركية وتشغيل ثلاث ديسكات إنتاجية.',
     hidden: true,
+    kind: 'program',
     stages: [
       { key: 'recruit', name_ar: 'استقطاب واختيار' },
       { key: 'train_clinics', name_ar: 'عيادات النزاهة والمهارات' },
@@ -316,8 +317,9 @@ const pipelines = [
     typical_length_words: [800, 1200],
     typical_turnaround_days: 5,
     defaultTaskTemplateIds: [
-      'media_assignment_memo',
       'media_visual_direction',
+      'media_image_selection',
+      'media_image_editing',
       'media_cover_selection',
       'media_color_consistency',
       'media_quick_interview',
@@ -330,8 +332,9 @@ const pipelines = [
       'media_archive_package'
     ],
     defaultTemplateIds: [
-      'media_assignment_memo',
       'media_visual_direction',
+      'media_image_selection',
+      'media_image_editing',
       'media_cover_selection',
       'media_color_consistency',
       'media_quick_interview',
@@ -371,8 +374,9 @@ const pipelines = [
     typical_length_words: [1500, 2200],
     typical_turnaround_days: 10,
     defaultTaskTemplateIds: [
-      'media_assignment_memo',
       'media_visual_direction',
+      'media_image_selection',
+      'media_image_editing',
       'media_cover_selection',
       'media_color_consistency',
       'media_research_background',
@@ -385,8 +389,9 @@ const pipelines = [
       'media_archive_package'
     ],
     defaultTemplateIds: [
-      'media_assignment_memo',
       'media_visual_direction',
+      'media_image_selection',
+      'media_image_editing',
       'media_cover_selection',
       'media_color_consistency',
       'media_research_background',
@@ -425,8 +430,9 @@ const pipelines = [
     typical_length_words: [400, 800],
     typical_turnaround_days: 6,
     defaultTaskTemplateIds: [
-      'media_assignment_memo',
       'media_visual_direction',
+      'media_image_selection',
+      'media_image_editing',
       'media_cover_selection',
       'media_color_consistency',
       'media_photo_story_package',
@@ -437,8 +443,9 @@ const pipelines = [
       'media_archive_package'
     ],
     defaultTemplateIds: [
-      'media_assignment_memo',
       'media_visual_direction',
+      'media_image_selection',
+      'media_image_editing',
       'media_cover_selection',
       'media_color_consistency',
       'media_photo_story_package',
@@ -475,7 +482,6 @@ const pipelines = [
     typical_length_words: [600, 1200],
     typical_turnaround_days: 7,
     defaultTaskTemplateIds: [
-      'media_assignment_memo',
       'media_visual_direction',
       'media_cover_selection',
       'media_color_consistency',
@@ -488,7 +494,6 @@ const pipelines = [
       'media_archive_package'
     ],
     defaultTemplateIds: [
-      'media_assignment_memo',
       'media_visual_direction',
       'media_cover_selection',
       'media_color_consistency',
@@ -526,7 +531,6 @@ const pipelines = [
     typical_length_seconds: [60, 120],
     typical_turnaround_days: 5,
     defaultTaskTemplateIds: [
-      'media_assignment_memo',
       'media_visual_direction',
       'media_cover_selection',
       'media_color_consistency',
@@ -539,7 +543,6 @@ const pipelines = [
       'media_archive_package'
     ],
     defaultTemplateIds: [
-      'media_assignment_memo',
       'media_visual_direction',
       'media_cover_selection',
       'media_color_consistency',
@@ -575,6 +578,7 @@ const pipelines = [
     ],
     suggestedStages: ['idea', 'assignment', 'outline', 'record', 'edit', 'review', 'publish', 'archive'],
     series: true,
+    isSeries: true,
     typical_length_minutes: [5, 8],
     typical_turnaround_days: 10,
     kind: 'series',
@@ -584,7 +588,7 @@ const pipelines = [
       suggestedCount: 6
     },
     defaultTaskTemplateIds: [
-      'media_assignment_memo',
+      'media_podcast_series_plan',
       'media_podcast_outline',
       'media_podcast_edit',
       'media_visual_direction',
@@ -595,7 +599,7 @@ const pipelines = [
       'media_archive_package'
     ],
     defaultTemplateIds: [
-      'media_assignment_memo',
+      'media_podcast_series_plan',
       'media_podcast_outline',
       'media_podcast_edit',
       'media_visual_direction',
@@ -758,6 +762,8 @@ const pipelines = [
       'people_event_access_guide',
       'people_tech_rehearsal',
       'people_event_concept',
+      'people_event_media_request',
+      'people_event_geeks_request',
       'people_event_budget_check',
       'people_event_invite_list',
       'people_event_poster',
@@ -781,6 +787,8 @@ const pipelines = [
       'people_event_access_guide',
       'people_tech_rehearsal',
       'people_event_concept',
+      'people_event_media_request',
+      'people_event_geeks_request',
       'people_event_budget_check',
       'people_event_invite_list',
       'people_event_poster',
@@ -827,6 +835,8 @@ const pipelines = [
       'people_event_access_guide',
       'people_tech_rehearsal',
       'people_event_concept',
+      'people_event_media_request',
+      'people_event_geeks_request',
       'people_event_budget_check',
       'people_event_invite_list',
       'people_event_poster',
@@ -849,6 +859,8 @@ const pipelines = [
       'people_event_access_guide',
       'people_tech_rehearsal',
       'people_event_concept',
+      'people_event_media_request',
+      'people_event_geeks_request',
       'people_event_budget_check',
       'people_event_invite_list',
       'people_event_poster',
@@ -895,6 +907,8 @@ const pipelines = [
       'people_event_access_guide',
       'people_tech_rehearsal',
       'people_event_concept',
+      'people_event_media_request',
+      'people_event_geeks_request',
       'people_event_budget_check',
       'people_event_invite_list',
       'people_event_poster',
@@ -918,6 +932,8 @@ const pipelines = [
       'people_event_access_guide',
       'people_tech_rehearsal',
       'people_event_concept',
+      'people_event_media_request',
+      'people_event_geeks_request',
       'people_event_budget_check',
       'people_event_invite_list',
       'people_event_poster',
@@ -965,6 +981,8 @@ const pipelines = [
       'people.music.run_sheet_cycle',
       'people.music.revenue_split_report',
       'people_event_concept',
+      'people_event_media_request',
+      'people_event_geeks_request',
       'people_event_budget_check',
       'people_event_invite_list',
       'people_event_poster',
@@ -1005,6 +1023,8 @@ const pipelines = [
       'people.openmic.event_log',
       'people.openmic.talent_followup',
       'people_event_concept',
+      'people_event_media_request',
+      'people_event_geeks_request',
       'people_event_poster',
       'people_event_social_launch',
       'people_event_social_reminder',
@@ -1045,6 +1065,8 @@ const pipelines = [
       'people.exhibit.digital_coordination',
       'people.exhibit.wrap_report',
       'people_event_concept',
+      'people_event_media_request',
+      'people_event_geeks_request',
       'people_event_poster',
       'people_event_social_launch',
       'people_event_social_reminder',
@@ -1084,6 +1106,8 @@ const pipelines = [
       'people_event_feedback_form',
       'people_event_debrief',
       'people_event_concept',
+      'people_event_media_request',
+      'people_event_geeks_request',
       'people_event_budget_check',
       'people_event_invite_list',
       'people_event_poster',
@@ -1103,6 +1127,8 @@ const pipelines = [
       'people_event_feedback_form',
       'people_event_debrief',
       'people_event_concept',
+      'people_event_media_request',
+      'people_event_geeks_request',
       'people_event_budget_check',
       'people_event_invite_list',
       'people_event_poster',
@@ -1179,6 +1205,8 @@ const pipelines = [
       'people_event_risk_review',
       'people_event_logistics',
       'people_event_concept',
+      'people_event_media_request',
+      'people_event_geeks_request',
       'people_event_archive_entry',
       'people_log_talent'
     ],
@@ -1199,6 +1227,8 @@ const pipelines = [
       'people_event_risk_review',
       'people_event_logistics',
       'people_event_concept',
+      'people_event_media_request',
+      'people_event_geeks_request',
       'people_event_archive_entry',
       'people_log_talent'
     ],
@@ -1219,6 +1249,8 @@ const pipelines = [
       'people_event_risk_review',
       'people_event_logistics',
       'people_event_concept',
+      'people_event_media_request',
+      'people_event_geeks_request',
       'people_event_archive_entry',
       'people_log_talent'
     ],
