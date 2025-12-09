@@ -19,6 +19,36 @@
     "geeks.web": "1423837153762476265"
   },
 
+  "_taskRoutingNote": "Routing used to send new claimable tasks to the correct Discord channels with role mentions by unit and functionKey.",
+  "taskRouting": {
+    "media": {
+      "media_writer": {
+        "channelId": "TO_FILL_MEDIA_WRITERS_CHANNEL",
+        "roleIds": ["TO_FILL_MEDIA_WRITERS_ROLE"]
+      },
+      "media_photo": {
+        "channelId": "TO_FILL_MEDIA_PHOTO_CHANNEL",
+        "roleIds": ["TO_FILL_MEDIA_PHOTOGRAPHERS_ROLE"]
+      },
+      "media_editor": {
+        "channelId": "TO_FILL_MEDIA_EDITORS_CHANNEL",
+        "roleIds": ["TO_FILL_MEDIA_EDITORS_ROLE"]
+      },
+      "media_social": {
+        "channelId": "TO_FILL_MEDIA_SOCIAL_CHANNEL",
+        "roleIds": ["TO_FILL_MEDIA_DESIGNERS_ROLE"]
+      },
+      "media_web": {
+        "channelId": "TO_FILL_MEDIA_WEB_CHANNEL",
+        "roleIds": ["TO_FILL_MEDIA_DESK_ROLE"]
+      },
+      "media_archive": {
+        "channelId": "TO_FILL_MEDIA_ARCHIVE_CHANNEL",
+        "roleIds": ["TO_FILL_MEDIA_ARCHIVE_ROLE"]
+      }
+    }
+  },
+
 
 
   "forum": {

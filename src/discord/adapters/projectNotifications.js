@@ -1,11 +1,13 @@
 const cfg = require('../../../config.json');
-const { getChannelIdByKey, postToChannel } = require('../utils/channels');
+const { resolveChannelKey: resolveDiscordChannel } = require('../utils/channels');
+const channelKeyMap = require('../config/channelKeys');
 const { getPipelineByKey } = require('../../core/work/units');
+const { publishClaimableTasksByFunction } = require('./tasks');
 const { formatProjectSummary } = require('../utils/formatters');
 
 const unitMainChannelKey = {
-  production: 'production.crew_roster',
-  media: 'media.assignments',
+  production: cfg.channels?.production?.crewRosterId,
+  media: cfg.channels?.media?.assignmentsId,
   people: null,
   geeks: null
 };
@@ -15,18 +17,23 @@ function buildUnitPing(unitKey) {
   return roleId ? `<@&${roleId}>` : '';
 }
 
-function resolveChannelKey(project, pipeline) {
+function resolveProjectChannelKey(project, pipeline) {
   const unitKey = (project.units && project.units[0]) || project.unit || pipeline?.unitKey || null;
   if (unitKey && unitMainChannelKey[unitKey]) return unitMainChannelKey[unitKey];
-  return pipeline?.defaultChannelKey || null;
+  const defaultKey = pipeline?.defaultChannelKey || null;
+  if (defaultKey && channelKeyMap[defaultKey]) return channelKeyMap[defaultKey];
+  return defaultKey;
 }
 
 async function notifyProjectCreated({ interaction, project, tasks }) {
   const guild = interaction?.guild;
   const pipeline = project?.pipelineKey ? getPipelineByKey(project.pipelineKey) : null;
-  const channelKey = resolveChannelKey(project, pipeline);
-  const channelId = getChannelIdByKey(channelKey);
-  if (!channelId || !guild) return null;
+  const channelKey = resolveProjectChannelKey(project, pipeline);
+  if (!channelKey || !guild) return null;
+
+  const client = guild?.client || interaction?.client || guild;
+  const channel = await resolveDiscordChannel(client, channelKey);
+  if (!channel) return null;
 
   const mentions = Array.from(new Set((tasks || []).map(t => t.ownerId).filter(Boolean)))
     .map(id => `<@${id}>`)
@@ -41,7 +48,15 @@ async function notifyProjectCreated({ interaction, project, tasks }) {
     'تم إنشاء مشروع جديد\n' +
     `${summary}${mentions ? `\nتنويه: ${mentions}` : ''}`;
 
-  return postToChannel(guild, channelId, content);
+  const message = await channel.send({ content });
+
+  try {
+    await publishClaimableTasksByFunction({ client: guild?.client, project, tasks });
+  } catch (err) {
+    console.error('[HabApp][project notify] Failed to publish claimable tasks', err);
+  }
+
+  return message;
 }
 
-module.exports = { notifyProjectCreated, resolveChannelKey };
+module.exports = { notifyProjectCreated, resolveChannelKey: resolveProjectChannelKey };

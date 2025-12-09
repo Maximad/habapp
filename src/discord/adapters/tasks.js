@@ -1,8 +1,9 @@
+const config = require('../../../config.json');
 const { buildErrorMessage } = require('../i18n/messages');
 const { listProjects } = require('../../core/work/projects');
 const { getUnitByKey, getPipelineByKey } = require('../../core/work/units');
-const { resolveChannelKey } = require('./projectNotifications');
-const { getChannelIdByKey } = require('../utils/channels');
+const channelKeyMap = require('../config/channelKeys');
+const { resolveChannelKey } = require('../utils/channels');
 const {
   resolveProjectByQuery,
   listClaimableTasksForProject,
@@ -31,6 +32,42 @@ async function handleTaskDelete(interaction) {
 
 async function handleTaskList(interaction) {
   return replyLegacy(interaction);
+}
+
+function resolveFallbackChannelKey(project, pipeline) {
+  const unitKey = (project.units && project.units[0]) || project.unit || pipeline?.unitKey || null;
+
+  const unitMainChannelId = {
+    production: config.channels?.production?.crewRosterId,
+    media: config.channels?.media?.assignmentsId,
+    people: null,
+    geeks: null,
+  };
+
+  if (unitKey && unitMainChannelId[unitKey]) {
+    return unitMainChannelId[unitKey];
+  }
+
+  if (pipeline?.defaultChannelKey) {
+    return channelKeyMap[pipeline.defaultChannelKey] || pipeline.defaultChannelKey;
+  }
+
+  return null;
+}
+
+async function resolveTaskChannel(client, routeConfig, fallbackKey) {
+  // routeConfig is something like { channelId, roleIds }
+  if (routeConfig && routeConfig.channelId) {
+    const channel = await resolveChannelKey(client, routeConfig.channelId);
+    if (channel) return channel;
+  }
+
+  if (fallbackKey) {
+    const channel = await resolveChannelKey(client, fallbackKey);
+    if (channel) return channel;
+  }
+
+  return null;
 }
 
 async function handleTaskOffer(interaction, options = {}) {
@@ -117,18 +154,20 @@ async function handleTaskOffer(interaction, options = {}) {
     const channelResolver = typeof findChannelForProject === 'function'
       ? findChannelForProject
       : async () => {
-          const channelKey = resolveChannelKey(project, pipeline);
-          const channelId = channelKey ? getChannelIdByKey(channelKey) : null;
-          return channelId
-            ? await interaction.guild.channels.fetch(channelId).catch(() => null)
-            : null;
+          const fallbackKey = resolveFallbackChannelKey(project, pipeline);
+          return resolveTaskChannel(interaction.client, null, fallbackKey);
         };
 
     const channel = await channelResolver(project, pipeline);
 
     if (!channel) {
+      console.warn('[HabApp][task offer] No channel configured for route', {
+        unit: project.units?.[0] || project.unit,
+        pipeline: project.pipelineKey,
+        fallbackKey: resolveFallbackChannelKey(project, pipeline),
+      });
       return interaction.reply({
-        content: 'تعذر نشر المهمة لعدم وجود قناة مفعّلة لهذه الوحدة.',
+        content: 'لا توجد قناة مهيّأة لنشر هذه المهمة بعد. اطلب من مسؤول HabApp ضبط الإعدادات.',
         ephemeral: true,
       });
     }
@@ -268,11 +307,94 @@ async function handleTaskAutocomplete(interaction, options = {}) {
   }
 }
 
+async function publishClaimableTasksByFunction({ client, project, tasks } = {}) {
+  const routing = config.taskRouting || {};
+  if (!client || !project) return null;
+
+  const projectUnit = (project.units && project.units[0]) || project.unit || null;
+  if (!projectUnit) return null;
+
+  const normalizedUnit = String(projectUnit).toLowerCase();
+  const tasksByGroup = new Map();
+
+  (tasks || []).forEach(task => {
+    if (!task || !task.claimable) return;
+    if (!task.functionKey) return;
+    const taskUnit = (task.unit || projectUnit || '').toString().toLowerCase();
+    if (taskUnit !== normalizedUnit) return;
+
+    const key = `${taskUnit}::${task.functionKey}`;
+    if (!tasksByGroup.has(key)) {
+      tasksByGroup.set(key, { unit: taskUnit, functionKey: task.functionKey, tasks: [] });
+    }
+    tasksByGroup.get(key).tasks.push(task);
+  });
+
+  for (const group of tasksByGroup.values()) {
+    const unitRouting = routing[group.unit] || {};
+    const destination = unitRouting[group.functionKey];
+
+    if (!destination) {
+      console.warn('[HabApp][task routing] No routing config for', { unit: group.unit, functionKey: group.functionKey });
+      continue;
+    }
+
+    const channel = await resolveTaskChannel(client, destination, null);
+    if (!channel || typeof channel.send !== 'function') {
+      console.warn('[HabApp][task routing] Could not resolve channel for', { unit: group.unit, functionKey: group.functionKey, channelId: destination.channelId });
+      continue;
+    }
+
+    const roleIds = Array.isArray(destination.roleIds)
+      ? destination.roleIds.filter(id => !id.startsWith('TO_FILL_'))
+      : [];
+
+    const roleMentions = roleIds.length ? roleIds.map(id => `<@&${id}>`).join(' ') : '';
+
+    const projectName = project.title || project.name || project.slug || 'مشروع بدون اسم';
+    const lines = group.tasks.map(task => {
+      const sizeLabel = `[${String(task.size || '—').toUpperCase()}]`;
+      const title = task.title_ar || task.title || 'بدون عنوان';
+      const due = task.due || task.dueDate || 'غير محدد';
+      return `• ${sizeLabel} ${title} – الموعد: ${due}`;
+    });
+
+    const buttons = group.tasks.map(task => ({
+      type: 2,
+      style: 1,
+      custom_id: `task:claim:${task.id}`,
+      label: 'استلام المهمة',
+    }));
+
+    const components = [];
+    for (let i = 0; i < buttons.length; i += 5) {
+      components.push({ type: 1, components: buttons.slice(i, i + 5) });
+    }
+
+    const content = [
+      roleMentions,
+      `مهام قابلة للاستلام – المشروع: ${projectName}`,
+      `نوع العمل: ${group.functionKey}`,
+      lines.join('\n')
+    ].filter(Boolean).join('\n');
+
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      await channel.send({ content, components });
+    } catch (err) {
+      console.error('[HabApp][task routing] Failed to send claimable tasks message', { unit: group.unit, functionKey: group.functionKey, error: err });
+    }
+  }
+
+  return true;
+}
+
 module.exports = {
   handleTaskAdd,
   handleTaskComplete,
   handleTaskDelete,
   handleTaskList,
   handleTaskOffer,
-  handleTaskAutocomplete
+  handleTaskAutocomplete,
+  publishClaimableTasksByFunction
 };

@@ -1,36 +1,59 @@
-const cfg = require('../../../config.json');
-const channelKeyMap = require('../config/channelKeys');
+const config = require('../../../config.json');
 
-const channelMap = {
-  'production.crew_roster': cfg.channels?.production?.crewRosterId,
-  'production.gear_log': cfg.channels?.production?.gearLogId,
-  'production.post_pipeline': cfg.channels?.production?.postPipelineId,
-  'production.location': cfg.channels?.production?.gearLogId,
-  'production.tests': cfg.channels?.production?.postPipelineId,
-  'production.post_mortem': cfg.channels?.production?.postPipelineId,
-  'production.archive': cfg.channels?.production?.postPipelineId,
-  'production.sound_library': cfg.channels?.production?.postPipelineId,
-  'media.assignments': cfg.channels?.media?.assignmentsId,
-  'media.edits': cfg.channels?.media?.editsId,
-  'media.factcheck': cfg.channels?.media?.factCheckId,
-  'media.photo': cfg.channels?.media?.photoId,
-  'media.video': cfg.channels?.media?.videoId,
-  'media.graphics': cfg.channels?.media?.graphicsId,
-  'media.sound': cfg.channels?.media?.soundId,
-  'media.exports': cfg.channels?.media?.exportsId,
-  'admin.emergency': null,
-  ...channelKeyMap
-};
-
-function getChannelIdByKey(channelKey) {
-  return channelMap[channelKey] || null;
+function isDiscordId(value) {
+  return typeof value === 'string' && /^[0-9]{17,22}$/.test(value);
 }
 
-async function postToChannel(guild, channelId, content) {
-  if (!channelId) return null;
-  const ch = await guild.channels.fetch(channelId).catch(() => null);
-  if (!ch) return null;
-  return ch.send({ content });
+function isPlaceholder(value) {
+  return typeof value === 'string' && value.startsWith('TO_FILL_');
 }
 
-module.exports = { postToChannel, getChannelIdByKey };
+/**
+ * Resolve a logical channel key or raw channel ID to a Discord channel.
+ *
+ * - If `keyOrId` is a snowflake, fetch that channel.
+ * - Otherwise, look up `config.channels[keyOrId]` (if such a mapping exists).
+ * - If the value in config looks like a placeholder ("TO_FILL_..."), return null.
+ * - Never throw if the channel cannot be found, just return null.
+ */
+async function resolveChannelKey(client, keyOrId) {
+  if (!keyOrId) return null;
+
+  // Raw ID
+  if (isDiscordId(keyOrId)) {
+    try {
+      return await client.channels.fetch(keyOrId);
+    } catch {
+      return null;
+    }
+  }
+
+  // Logical key in config.channels, if that structure exists
+  const channelsConfig = config.channels || {};
+  const mapped = channelsConfig[keyOrId];
+
+  if (!mapped || isPlaceholder(mapped)) {
+    return null;
+  }
+
+  if (isDiscordId(mapped)) {
+    try {
+      return await client.channels.fetch(mapped);
+    } catch {
+      return null;
+    }
+  }
+
+  // Fallback, treat original key as best-effort ID
+  if (!isPlaceholder(keyOrId)) {
+    try {
+      return await client.channels.fetch(keyOrId);
+    } catch {
+      return null;
+    }
+  }
+
+  return null;
+}
+
+module.exports = { resolveChannelKey };
