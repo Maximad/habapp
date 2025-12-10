@@ -166,7 +166,9 @@ async function handleTaskOffer(interaction, options = {}) {
       });
     }
 
-    const claimable = listClaimableTasks({ projectSlug: project.slug }) || [];
+    const claimable = (listClaimableTasks({ projectSlug: project.slug }) || []).filter(
+      task => task && task.claimable === true
+    );
 
     if (!claimable.length) {
       return interaction.reply({

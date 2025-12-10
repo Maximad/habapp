@@ -332,7 +332,8 @@ function claimTask(store, taskId, memberId, memberProfile) {
     throw error;
   }
 
-  if (!isTaskClaimable(task)) {
+  const claimableFlag = isTaskClaimable(task);
+  if (!claimableFlag) {
     const error = new Error('TASK_NOT_CLAIMABLE');
     error.code = 'TASK_NOT_CLAIMABLE';
     throw error;

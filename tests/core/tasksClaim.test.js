@@ -140,6 +140,7 @@ test('listClaimableTasksForProject returns only open unowned claimable tasks', t
   const tasks = listClaimableTasksForProject({ projectSlug: 'demo-project' }, store);
   assert.equal(tasks.length, 1);
   assert.equal(tasks[0].id, 1);
+  assert.equal(tasks[0].claimable, true);
 });
 
 test('listClaimableTasksForProject filters by size when provided', t => {

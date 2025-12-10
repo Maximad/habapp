@@ -574,7 +574,11 @@ function listClaimableTasksForProject(
       if (normalizedSize && String(task.size || '').toUpperCase() !== normalizedSize) return false;
       return true;
     })
-    .map(task => normalizeTaskForView(task))
+    .map(task => {
+      const normalized = normalizeTaskForView(task);
+      if (!normalized) return null;
+      return { ...normalized, claimable: true };
+    })
     .filter(Boolean);
 }
 

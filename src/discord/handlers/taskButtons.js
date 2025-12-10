@@ -160,6 +160,13 @@ async function handleTaskButton(interaction, deps = {}) {
       client: interaction.client
     });
   } catch (err) {
+    if (err.code === 'TASK_NOT_CLAIMABLE') {
+      console.info('[HabApp][task claim] task not claimable');
+      return interaction.reply({
+        content: 'هذه المهمة لا يمكن حجزها عبر الزر. يجب على المنتج او المحرر تعيينها يدويا.',
+        ephemeral: true
+      });
+    }
     if (err.code === 'TASK_ALREADY_TAKEN') {
       return interaction.reply({
         content: 'تم قبول هذه المهمة من قبل شخص آخر.',
