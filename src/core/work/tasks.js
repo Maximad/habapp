@@ -4,6 +4,29 @@ const { getTaskTemplateById } = require('./templates/task-templates');
 const { getPipelineByKey } = require('./units');
 const { defaultStore } = require('../store');
 
+function clampTaskDueDate({ taskDue, projectDue, now = new Date() }) {
+  const normalize = value => {
+    if (!value) return null;
+    const date = value instanceof Date ? new Date(value) : new Date(value);
+    if (Number.isNaN(date.valueOf())) return null;
+    date.setUTCHours(0, 0, 0, 0);
+    return date;
+  };
+
+  const taskDate = normalize(taskDue);
+  if (!taskDate) return null;
+
+  const today = normalize(now);
+  let result = taskDate < today ? today : taskDate;
+
+  const projectDate = normalize(projectDue);
+  if (projectDate && result > projectDate) {
+    result = projectDate;
+  }
+
+  return result.toISOString().slice(0, 10);
+}
+
 function getNextTaskId(project) {
   if (!Array.isArray(project.tasks) || project.tasks.length === 0) return 1;
   return (
@@ -66,7 +89,16 @@ function addTaskToProject(project, fields) {
 function createTask(slug, fields, store) {
   const { projects, project, index } = ensureProject(slug, store);
 
-  const task = addTaskToProject(project, fields);
+  const clampedDue = clampTaskDueDate({
+    taskDue: fields.due,
+    projectDue: project?.dueDate || project?.due,
+  });
+  const enrichedFields = {
+    ...fields,
+    due: clampedDue || fields.due || null,
+  };
+
+  const task = addTaskToProject(project, enrichedFields);
   projects[index] = project;
   saveProjects(projects, store);
 
@@ -188,11 +220,17 @@ function resolveTaskDueDate(template, project) {
   if (typeof template.defaultDueDays === 'number') {
     const base = new Date();
     base.setDate(base.getDate() + template.defaultDueDays);
-    return base.toISOString().slice(0, 10);
+    return clampTaskDueDate({
+      taskDue: base,
+      projectDue: project?.dueDate || project?.due,
+    });
   }
 
   if (project?.dueDate || project?.due) {
-    return (project.dueDate || project.due).toString();
+    return clampTaskDueDate({
+      taskDue: project.dueDate || project.due,
+      projectDue: project?.dueDate || project?.due,
+    });
   }
 
   return null;
@@ -294,7 +332,8 @@ function claimTask(store, taskId, memberId, memberProfile) {
     throw error;
   }
 
-  if (!isTaskClaimable(task)) {
+  const claimableFlag = isTaskClaimable(task);
+  if (!claimableFlag) {
     const error = new Error('TASK_NOT_CLAIMABLE');
     error.code = 'TASK_NOT_CLAIMABLE';
     throw error;
@@ -324,5 +363,6 @@ module.exports = {
   createTasksFromTemplates,
   canMemberTakeTask,
   claimTask,
-  isTaskClaimable
+  isTaskClaimable,
+  clampTaskDueDate,
 };

@@ -50,8 +50,8 @@ test('task offer publishes claimable tasks for a project', async () => {
   await handleTaskOffer(interaction, {
     resolveProject: () => ({ project: fakeProject, matches: [{ project: fakeProject, score: 100 }] }),
     listClaimableTasks: () => [
-      { id: 1, title: 'مهمة ١', size: 's' },
-      { id: 2, title: 'مهمة ٢', size: 'm' },
+      { id: 1, title: 'مهمة ١', size: 's', claimable: true },
+      { id: 2, title: 'مهمة ٢', size: 'm', claimable: true },
     ],
     findChannelForProject: async () => ({
       send: async payload => interaction.getSentMessages().push(payload),
@@ -66,6 +66,36 @@ test('task offer publishes claimable tasks for a project', async () => {
   const messages = interaction.getSentMessages();
   assert.equal(messages.length, 2);
   assert.ok(messages[0].content.includes('مهمة جديدة'));
+});
+
+test('task offer ignores non-claimable tasks', async () => {
+  const interaction = createInteraction({ project: 'demo-project' });
+
+  const fakeProject = {
+    slug: 'demo-project',
+    title: 'مشروع تجريبي',
+    pipelineKey: 'media.article_short',
+    units: ['media'],
+  };
+
+  await handleTaskOffer(interaction, {
+    resolveProject: () => ({ project: fakeProject, matches: [{ project: fakeProject, score: 100 }] }),
+    listClaimableTasks: () => [
+      { id: 1, title: 'مهمة ١', size: 's', claimable: true },
+      { id: 2, title: 'مهمة ٢', size: 'm', claimable: false },
+    ],
+    findChannelForProject: async () => ({
+      send: async payload => interaction.getSentMessages().push(payload),
+    }),
+  });
+
+  const messages = interaction.getSentMessages();
+  assert.equal(messages.length, 1);
+  assert.ok(messages[0].content.includes('مهمة جديدة'));
+
+  const replies = interaction.getReplies();
+  assert.equal(replies.length, 1);
+  assert.equal(replies[0].ephemeral, true);
 });
 
 test('task offer shows empty state when no claimable tasks exist', async () => {

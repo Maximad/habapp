@@ -44,7 +44,9 @@ function applyProjectDefaults(project) {
     mainDocUrl,
     docUrl,
     shootDate,
-    metadata: normalizedMetadata
+    metadata: normalizedMetadata,
+    forumThreadId: project.forumThreadId || null,
+    forumChannelId: project.forumChannelId || null
   };
 }
 

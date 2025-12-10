@@ -9,6 +9,7 @@ const {
   listClaimableTasksForProject,
   searchProjectsByQuery,
 } = require('../../core/work/services/projectsService');
+const { findProject } = require('../../core/work/projects');
 
 async function replyLegacy(interaction) {
   const message = buildErrorMessage('tasks_command_legacy');
@@ -70,6 +71,60 @@ async function resolveTaskChannel(client, routeConfig, fallbackKey) {
   return null;
 }
 
+function buildTaskOfferPayload({ project, task, unitNameAr }) {
+  const due = task.due || task.dueDate || 'غير محدد';
+  const sizeLabel = `[${(task.size || '—').toString().toUpperCase()}]`;
+  const title = task.title_ar || task.title || 'بدون عنوان';
+
+  return {
+    content:
+      `مهمة جديدة:\n` +
+      `العنوان: ${title}\n` +
+      `المشروع: ${project.title || project.name || project.slug}\n` +
+      `الوحدة: ${unitNameAr}\n` +
+      `الموعد: ${due}\n` +
+      `الحجم: ${sizeLabel}`,
+    components: [
+      {
+        type: 1,
+        components: [
+          {
+            type: 2,
+            style: 1,
+            custom_id: `task:claim:${task.id}`,
+            label: 'قبول المهمة',
+          },
+        ],
+      },
+    ],
+  };
+}
+
+async function postTaskUpdateToProjectThread(projectSlug, content, options = {}) {
+  const { client = null, fetchChannel = null, projectOverride = null } = options;
+  const project = projectOverride || findProject(projectSlug);
+  if (!project || !project.forumThreadId) return null;
+
+  const fetcher =
+    typeof fetchChannel === 'function'
+      ? fetchChannel
+      : client && client.channels && client.channels.fetch
+        ? id => client.channels.fetch(id)
+        : null;
+
+  if (!fetcher) return null;
+
+  try {
+    const thread = await fetcher(project.forumThreadId).catch(() => null);
+    if (!thread || typeof thread.send !== 'function') return null;
+    await thread.send({ content });
+    return true;
+  } catch (err) {
+    console.warn('[HabApp][task update] failed to post to forum thread', err?.code || err?.message || err);
+    return null;
+  }
+}
+
 async function handleTaskOffer(interaction, options = {}) {
   const {
     resolveProject = resolveProjectByQuery,
@@ -111,7 +166,9 @@ async function handleTaskOffer(interaction, options = {}) {
       });
     }
 
-    const claimable = listClaimableTasks({ projectSlug: project.slug }) || [];
+    const claimable = (listClaimableTasks({ projectSlug: project.slug }) || []).filter(
+      task => task && task.claimable === true
+    );
 
     if (!claimable.length) {
       return interaction.reply({
@@ -177,34 +234,9 @@ async function handleTaskOffer(interaction, options = {}) {
     const unit = unitKey ? getUnitByKey(unitKey) : null;
     const unitNameAr = unit?.name_ar || unitKey || '—';
 
-    const payloads = tasksToOffer.slice(0, 10).map(task => {
-      const due = task.due || task.dueDate || 'غير محدد';
-      const sizeLabel = `[${(task.size || '—').toString().toUpperCase()}]`;
-      const title = task.title_ar || task.title || 'بدون عنوان';
-
-      return {
-        content:
-          `مهمة جديدة:\n` +
-          `العنوان: ${title}\n` +
-          `المشروع: ${project.title || project.name || project.slug}\n` +
-          `الوحدة: ${unitNameAr}\n` +
-          `الموعد: ${due}\n` +
-          `الحجم: ${sizeLabel}`,
-        components: [
-          {
-            type: 1,
-            components: [
-              {
-                type: 2,
-                style: 1,
-                custom_id: `task:claim:${task.id}`,
-                label: 'قبول المهمة',
-              },
-            ],
-          },
-        ],
-      };
-    });
+    const payloads = tasksToOffer.slice(0, 10).map(task =>
+      buildTaskOfferPayload({ project, task, unitNameAr })
+    );
 
     for (const payload of payloads) {
       // eslint-disable-next-line no-await-in-loop
@@ -384,5 +416,9 @@ module.exports = {
   handleTaskList,
   handleTaskOffer,
   handleTaskAutocomplete,
-  publishClaimableTasksByFunction
+  publishClaimableTasksByFunction,
+  postTaskUpdateToProjectThread,
+  buildTaskOfferPayload,
+  resolveTaskChannel,
+  resolveFallbackChannelKey
 };
