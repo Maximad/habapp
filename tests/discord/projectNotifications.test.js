@@ -1,7 +1,9 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 
-const { notifyProjectCreated } = require('../../src/discord/adapters/projectNotifications');
+const { ChannelType } = require('discord.js');
+const { notifyProjectCreated, createForumThreadForProject } = require('../../src/discord/adapters/projectNotifications');
+const { postTaskUpdateToProjectThread } = require('../../src/discord/adapters/tasks');
 const cfg = require('../../config.json');
 
 function createMockGuild(sentMessages) {
@@ -45,4 +47,53 @@ test('notifyProjectCreated posts summary to the unit main channel', async () => 
   assert.match(sent[0].content, /الخطة التحريرية/);
   assert.match(sent[0].content, /<@222>/);
   assert.match(sent[0].content, /المهمات:/);
+});
+
+test('createForumThreadForProject opens forum thread when configured', async () => {
+  const created = [];
+  const persisted = [];
+  const posted = [];
+  const client = {
+    channels: {
+      fetch: async id => ({
+        id,
+        type: ChannelType.GuildForum,
+        threads: {
+          create: async ({ name, message }) => {
+            created.push({ name, message });
+            return { id: 'thread-99' };
+          }
+        }
+      })
+    }
+  };
+
+  const project = { slug: 'demo', unit: 'media', title: 'مشروع المنتدى', dueDate: '2024-10-10' };
+  await createForumThreadForProject({
+    client,
+    project,
+    pipeline: { key: 'media.production', name_ar: 'إعلام' },
+    persistProject: p => persisted.push(p),
+    postUpdate: async (slug, content) => posted.push({ slug, content })
+  });
+
+  assert.equal(created.length, 1);
+  assert.equal(created[0].name, 'مشروع المنتدى');
+  assert.equal(persisted[0].forumThreadId, 'thread-99');
+  assert.equal(posted.length, 1);
+});
+
+test('postTaskUpdateToProjectThread sends when thread exists and no-ops without', async () => {
+  const sent = [];
+  await postTaskUpdateToProjectThread('demo', 'hello', {
+    projectOverride: { slug: 'demo', forumThreadId: '123' },
+    fetchChannel: async id => ({ send: async payload => sent.push({ id, payload }) })
+  });
+  assert.equal(sent.length, 1);
+  assert.equal(sent[0].id, '123');
+
+  const noop = await postTaskUpdateToProjectThread('demo', 'ignored', {
+    projectOverride: { slug: 'demo' }
+  });
+  assert.equal(noop, null);
 });
