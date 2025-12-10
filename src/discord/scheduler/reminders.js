@@ -15,14 +15,27 @@ async function sendReminder(client, reminder) {
   const projectLabel = project.title || project.name || project.slug || 'المشروع';
   const dueLabel = task.dueDate || task.due || 'بدون موعد محدد';
 
+  const taskActions = new ActionRowBuilder().addComponents(
+    new ButtonBuilder()
+      .setCustomId(`task:complete:REMINDER:${task.id}`)
+      .setLabel('✔️ إنجاز المهمة')
+      .setStyle(ButtonStyle.Success),
+    new ButtonBuilder()
+      .setCustomId(`task:offer:REMINDER:${task.id}`)
+      .setLabel('↩️ عرض على الآخرين')
+      .setStyle(ButtonStyle.Secondary)
+  );
+
   if (type === 'main') {
-    await user.send(
-      `🔔 تذكير بالمهمة القادمة:\n` +
-      `• المهمة: ${task.title}\n` +
-      `• المشروع: ${projectLabel}\n` +
-      `• الموعد: ${dueLabel}\n\n` +
-      'إذا احتجت مساعدة أو تعديل، أخبر الفريق في قناة المشروع مبكراً ليتمكن أحد من الدعم.'
-    ).catch(() => null);
+    await user.send({
+      content:
+        `🔔 تذكير بالمهمة القادمة:\n` +
+        `• المهمة: ${task.title}\n` +
+        `• المشروع: ${projectLabel}\n` +
+        `• الموعد: ${dueLabel}\n\n` +
+        'إذا احتجت مساعدة أو تعديل، أخبر الفريق في قناة المشروع مبكراً ليتمكن أحد من الدعم.',
+      components: [taskActions]
+    }).catch(() => null);
     return true;
   }
 
@@ -44,7 +57,7 @@ async function sendReminder(client, reminder) {
       `• المشروع: ${projectLabel}\n` +
       `• الموعد: ${dueLabel}\n\n` +
       'إذا لن تتمكن من إنهائها في الوقت المناسب، اضغط "أحتاج من يستلمها عني" لنمنح الوقت لشخص آخر قبل الموعد.',
-    components: [row]
+    components: [row, taskActions]
   }).catch(() => null);
   return true;
 }

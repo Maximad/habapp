@@ -15,7 +15,7 @@ const {
 const { upsertMember } = require('../../src/core/people/memberStore');
 const { getPipelineByKey, pipelines } = require('../../src/core/work/units');
 const { getTaskTemplateById, taskTemplates } = require('../../src/core/work/templates/task-templates');
-const { createTask, completeTask } = require('../../src/core/work/tasks');
+const { createTask, completeTask, clampTaskDueDate } = require('../../src/core/work/tasks');
 const { loadProjects, saveProjects } = require('../../src/core/work/projects');
 
 function createTempStore() {
@@ -64,7 +64,8 @@ test('createProjectWithScaffold builds tasks with owners and Arabic text', t => 
     assert.strictEqual(task.definitionOfDone_ar, tpl.definitionOfDone_ar || null);
     assert.strictEqual(task.defaultChannelKey, tpl.defaultChannelKey || null);
     const expectedDue = resolveTaskDueDateFromTemplate(tpl, project);
-    assert.strictEqual(task.due, expectedDue);
+    const clampedDue = clampTaskDueDate({ taskDue: expectedDue, projectDue: project.dueDate, now: new Date() });
+    assert.strictEqual(task.due, clampedDue || expectedDue);
     assert.strictEqual(task.ownerId, ownerMap[task.templateId]);
   }
 });
@@ -116,7 +117,8 @@ test('createProjectWithScaffold respects due offsets and defaultOwnerFunc', t =>
   const task = tasks[0];
   assert.strictEqual(task.templateId, customTemplate.id);
   assert.strictEqual(task.ownerId, '555');
-  assert.strictEqual(task.due, '2024-10-08');
+  const clamped = clampTaskDueDate({ taskDue: '2024-10-08', projectDue: '2024-10-10', now: new Date() });
+  assert.strictEqual(task.due, clamped || '2024-10-08');
   assert.strictEqual(task.defaultChannelKey, customTemplate.defaultChannelKey);
   assert.strictEqual(task.definitionOfDone_ar, customTemplate.definitionOfDone_ar);
 });
