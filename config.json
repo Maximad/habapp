@@ -3,6 +3,11 @@
   "guildId": "1423826407271825441",
   "token": "",
 
+  "reminders": {
+    "enabled": true,
+    "intervalMinutes": 10
+  },
+
   
   "unitRoleIds": {
     "media": "1423836304520515614",

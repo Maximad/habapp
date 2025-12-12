@@ -44,6 +44,10 @@ function getDueReminders(now = new Date(), store = defaultStore) {
   const due = [];
 
   for (const project of projects) {
+    const stage = String(project.stage || project.status || '').toLowerCase();
+    const isArchived = project.archived === true || stage === 'archived';
+    if (isArchived) continue;
+
     const tasks = Array.isArray(project.tasks) ? project.tasks : [];
     for (const rawTask of tasks) {
       const task = normalizeTask(rawTask);

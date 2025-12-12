@@ -1,8 +1,9 @@
 // src/discord/scheduler/reminders.js
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { getDueReminders, markReminderSent } = require('../../core/reminders/reminderService');
+const config = require('../../../config.json');
 
-const REMINDER_INTERVAL_MS = 10 * 60 * 1000;
+const DEFAULT_INTERVAL_MINUTES = 10;
 
 async function sendReminder(client, reminder) {
   const { task, project, type } = reminder;
@@ -50,7 +51,7 @@ async function sendReminder(client, reminder) {
       .setStyle(ButtonStyle.Secondary)
   );
 
-  await user.send({
+  const sent = await user.send({
     content:
       `⏰ موعد المهمة قريب جداً:\n` +
       `• المهمة: ${task.title}\n` +
@@ -59,25 +60,50 @@ async function sendReminder(client, reminder) {
       'إذا لن تتمكن من إنهائها في الوقت المناسب، اضغط "أحتاج من يستلمها عني" لنمنح الوقت لشخص آخر قبل الموعد.',
     components: [row, taskActions]
   }).catch(() => null);
-  return true;
+  return Boolean(sent);
 }
 
-function startReminderScheduler(client) {
-  setInterval(async () => {
+function resolveReminderSettings(rawConfig = config) {
+  const remindersConfig = rawConfig?.reminders || {};
+  const enabled = remindersConfig.enabled !== false;
+  const intervalMinutes =
+    typeof remindersConfig.intervalMinutes === 'number' && remindersConfig.intervalMinutes > 0
+      ? remindersConfig.intervalMinutes
+      : DEFAULT_INTERVAL_MINUTES;
+
+  return { enabled, intervalMinutes };
+}
+
+function startReminderScheduler(client, options = {}) {
+  const { enabled, intervalMinutes } = resolveReminderSettings(options.config || config);
+  const setIntervalFn = options.setIntervalFn || setInterval;
+  const getDueRemindersFn = options.getDueRemindersFn || getDueReminders;
+  const markReminderSentFn = options.markReminderSentFn || markReminderSent;
+
+  if (!enabled) {
+    console.log('[HabApp] Reminder scheduler disabled via config.');
+    return null;
+  }
+
+  const REMINDER_INTERVAL_MS = intervalMinutes * 60 * 1000;
+
+  const timer = setIntervalFn(async () => {
     try {
-      const reminders = await getDueReminders(new Date());
+      const reminders = await getDueRemindersFn(new Date());
       if (!reminders.length) return;
 
       for (const reminder of reminders) {
         const sent = await sendReminder(client, reminder);
         if (sent) {
-          await markReminderSent(reminder.task.id, reminder.type, new Date());
+          await markReminderSentFn(reminder.task.id, reminder.type, new Date());
         }
       }
     } catch (err) {
       console.error('[HabApp] Reminder scheduler error', err);
     }
   }, REMINDER_INTERVAL_MS);
+
+  return timer;
 }
 
-module.exports = { startReminderScheduler, sendReminder };
+module.exports = { startReminderScheduler, sendReminder, resolveReminderSettings };
