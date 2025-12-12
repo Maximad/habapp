@@ -124,7 +124,6 @@ const data = new SlashCommandBuilder()
         o
           .setName('project')
           .setDescription('اسم المشروع أو آخر مشروع للوحدة عند تركه فارغاً')
-          .setRequired(false)
           .setAutocomplete(true),
       )
       .addStringOption(o =>

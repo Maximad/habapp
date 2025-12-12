@@ -11,31 +11,31 @@ const data = new SlashCommandBuilder()
         opt
           .setName('project')
           .setDescription('اسم المشروع (اختياري)')
-          .setRequired(false)
+          
       )
       .addStringOption(opt =>
         opt
           .setName('title')
           .setDescription('عنوان المهمة (اختياري إذا اخترت قالب)')
-          .setRequired(false)
+          
       )
       .addUserOption(opt =>
         opt
           .setName('owner')
           .setDescription('الشخص المكلّف بالمهمة (اختياري)')
-          .setRequired(false)
+          
       )
       .addStringOption(opt =>
         opt
           .setName('due')
           .setDescription('تاريخ الاستحقاق (مثال 2025-12-01 أو اتركه فارغاً)')
-          .setRequired(false)
+          
       )
       .addStringOption(opt =>
         opt
           .setName('template')
           .setDescription('اختيار قالب مهمة (اختياري)')
-          .setRequired(false)
+          
       )
   )
   .addSubcommand(sub =>
@@ -46,13 +46,13 @@ const data = new SlashCommandBuilder()
         opt
           .setName('project')
           .setDescription('اسم المشروع المطلوب')
-          .setRequired(false)
+          
       )
       .addStringOption(opt =>
         opt
           .setName('status')
           .setDescription('حالة المهام')
-          .setRequired(false)
+          
           .addChoices(
             { name: 'مفتوحة', value: 'open' },
             { name: 'منجزة', value: 'done' },
@@ -74,7 +74,7 @@ const data = new SlashCommandBuilder()
         opt
           .setName('project')
           .setDescription('اسم المشروع (اختياري)')
-          .setRequired(false)
+          
       )
   )
   .addSubcommand(sub =>
@@ -91,7 +91,7 @@ const data = new SlashCommandBuilder()
         opt
           .setName('project')
           .setDescription('اسم المشروع (اختياري)')
-          .setRequired(false)
+          
       )
   )
   .addSubcommand(sub =>
@@ -109,7 +109,7 @@ const data = new SlashCommandBuilder()
         o
           .setName('task')
           .setDescription('اسم المهمة داخل المشروع (اختياري)')
-          .setRequired(false)
+          
           .setAutocomplete(true)
       )
   );
