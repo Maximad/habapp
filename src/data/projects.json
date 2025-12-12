@@ -230,7 +230,7 @@
         "definitionOfDone": "رابط نسخة مونتاج أولي في خيط المشروع وقناة مسار المونتاج مع قائمة قصيرة من نقاط المراجعة، ووقت تقريبي للفيديو، وملاحظات القيادة/العميل.",
         "definitionOfDone_ar": "رابط نسخة مونتاج أولي في خيط المشروع وقناة مسار المونتاج مع قائمة قصيرة من نقاط المراجعة، ووقت تقريبي للفيديو، وملاحظات القيادة/العميل.",
         "unit": "production",
-        "ownerId": null,
+        "ownerId": "886172468870541353",
         "defaultOwnerFunc": "editor",
         "defaultOwnerRole": "editor",
         "defaultChannelKey": "production.post_pipeline",
@@ -243,8 +243,8 @@
         "quality": null,
         "ethics": null,
         "reminders": {
-          "mainSentAt": "2025-12-12T11:53:37.823Z",
-          "handoverSentAt": "2025-12-12T11:53:37.471Z"
+          "mainSentAt": "2025-12-12T12:03:37.250Z",
+          "handoverSentAt": "2025-12-12T12:03:36.827Z"
         }
       },
       {
@@ -269,7 +269,7 @@
         "quality": null,
         "ethics": null,
         "reminders": {
-          "mainSentAt": "2025-12-12T11:53:38.115Z",
+          "mainSentAt": "2025-12-12T12:03:37.686Z",
           "handoverSentAt": null
         }
       },
