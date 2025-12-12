@@ -32,6 +32,12 @@ async function handleInteraction(interaction, handler) {
           'حدث خطأ غير متوقع أثناء تنفيذ الأمر. \nإذا استمر الخطأ، أخبر فريق HabApp مع تفاصيل الأمر.'
         );
       } catch (replyErr) {
+        if (replyErr?.code === 10062) {
+          console.warn(
+            '[HabApp][interaction] Skipping error reply due to Unknown interaction (10062)'
+          );
+          return;
+        }
         console.error('[HabApp][interaction] Failed to send error reply', replyErr);
       }
       return;
@@ -45,6 +51,12 @@ async function handleInteraction(interaction, handler) {
         flags: 64 // EPHEMERAL
       });
     } catch (replyErr) {
+      if (replyErr?.code === 10062) {
+        console.warn(
+          '[HabApp][interaction] Skipping error reply due to Unknown interaction (10062)'
+        );
+        return;
+      }
       console.error('[HabApp][interaction] Failed to send error reply', replyErr);
     }
   }
