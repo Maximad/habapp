@@ -264,6 +264,7 @@ function createProject({
 }, store) {
   const dueDate = normalizeDueDate(due);
   const resolvedSlug = resolveProjectSlug({ name, slug }, store);
+  const normalizedDescription = (description || '').trim() || null;
 
   const template = templateCode ? getProductionTemplate(templateCode) : null;
   if (slug) {
@@ -287,7 +288,7 @@ function createProject({
   const project = applyProjectDefaults({
     slug: resolvedSlug,
     name,
-    description,
+    description: normalizedDescription,
     due: dueDate,
     dueDate,
     stage: 'planning',

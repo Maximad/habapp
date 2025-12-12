@@ -44,9 +44,11 @@ async function createForumThreadForProject({ client, project, pipeline, persistP
 
   const title = project.title || project.name || project.slug || 'مشروع جديد';
   const due = project.dueDate || project.due || '—';
+  const desc = (project.description || '').trim();
   const summary = [
     `الوحدة: ${unitKey || '—'}`,
     pipeline ? `المسار: ${pipeline.name_ar || pipeline.key}` : null,
+    desc ? `الوصف: ${desc}` : null,
     `الاستحقاق: ${due}`,
     `المعرّف: ${project.slug}`
   ].filter(Boolean).join('\n');
