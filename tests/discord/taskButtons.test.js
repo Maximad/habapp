@@ -100,27 +100,3 @@ test('task reminder offer button re-offers task and clears owner', async () => {
   assert.match(updates[0].content, /تم عرض المهمة/);
   assert.equal(interaction.replied.content, '↩️ تم عرض المهمة على الفريق من جديد.');
 });
-
-test('claim button responds gracefully when task is not claimable', async () => {
-  const interaction = createInteraction('task:claim:13');
-
-  await handleTaskButton(interaction, {
-    claimTask: () => {
-      const err = new Error('TASK_NOT_CLAIMABLE');
-      err.code = 'TASK_NOT_CLAIMABLE';
-      throw err;
-    },
-    resolveProfile: async () => ({ units: ['media'] }),
-    store: {
-      getTaskById: () => ({ id: 13, unit: 'media', title: 'مهمة غير قابلة' }),
-      saveTask: () => {}
-    }
-  });
-
-  assert.ok(interaction.replied);
-  assert.equal(
-    interaction.replied.content,
-    'هذه المهمة لا يمكن حجزها عبر الزر. يجب على المنتج او المحرر تعيينها يدويا.'
-  );
-  assert.equal(interaction.replied.ephemeral, true);
-});

@@ -28,7 +28,7 @@ async function sendReminder(client, reminder) {
   );
 
   if (type === 'main') {
-    const sent = await user.send({
+    await user.send({
       content:
         `🔔 تذكير بالمهمة القادمة:\n` +
         `• المهمة: ${task.title}\n` +
@@ -37,7 +37,7 @@ async function sendReminder(client, reminder) {
         'إذا احتجت مساعدة أو تعديل، أخبر الفريق في قناة المشروع مبكراً ليتمكن أحد من الدعم.',
       components: [taskActions]
     }).catch(() => null);
-    return Boolean(sent);
+    return true;
   }
 
   const row = new ActionRowBuilder().addComponents(

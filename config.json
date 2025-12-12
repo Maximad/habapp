@@ -11,16 +11,17 @@
   
   "unitRoleIds": {
     "media": "1423836304520515614",
+    "think": "1423836330420473856",
     "people": "1423836567587520592",
     "production": "1423836491221827735",
     "geeks": "1423836535962337442"
   },
   "unitForumChannelIds": {
-    "media": "FORUM_CHANNEL_ID_HERE",
-    "production": "FORUM_CHANNEL_ID_HERE",
-    "people": "FORUM_CHANNEL_ID_HERE",
-    "think": "FORUM_CHANNEL_ID_HERE",
-    "geeks": "FORUM_CHANNEL_ID_HERE"
+    "media": "1448260097439694909",
+    "production": "1441833861540741331",
+    "people": "1448272565175844894",
+    "think": "1441833879139913853",
+    "geeks": "1448261103653093528"
   },
   "functionRoleIds": {
     "media.photo": "1423836759418212453",
