@@ -87,16 +87,18 @@
       "managing-editor",
       "post-supervisor",
       "producer",
+      "designer",
       "desk-editor",
       "reporter",
       "graphics",
       "researcher",
       "photo",
       "developer",
-      "video"
+      "video",
+      "data-analyst"
     ],
     "identityMode": "unknown",
-    "state": "guest",
+    "state": "trial",
     "languages": [],
     "availability": null,
     "bio": null,
@@ -115,31 +117,88 @@
     "recommendedState": "guest",
     "status": null,
     "createdAt": "2025-11-28T20:11:17.247Z",
-    "updatedAt": "2025-12-06T08:27:03.676Z",
+    "updatedAt": "2025-12-12T11:54:42.398Z",
     "roles": [
       "@everyone",
       "[UNIT] Think",
       "[FUNC] Editor in Chief",
       "[FUNC] Sound",
+      "[STATE] Trial",
+      "[TAG] CodeOfConduct OK",
       "[STATE] Guest",
       "[FUNC] Field Ops",
       "[UNIT] Production",
       "[UNIT] Media",
+      "[TAG] Avoid Heavy Content",
       "[UNIT] Geeks",
       "[FUNC] Event Host",
       "[FUNC] Managing Editor",
       "[FUNC] Post Supervisor",
+      "[TAG] Mentor Candidate",
       "[ORG] Safety Lead",
       "[FUNC] Producer",
+      "[FUNC] Designer",
       "[UNIT] People",
       "[FUNC] Desk Editor",
       "[ORG] Owner (Administrator)",
       "[FUNC] Reporter",
       "[FUNC] Graphics",
+      "Verified",
       "[FUNC] Researcher",
       "[FUNC] Photo",
+      "[TAG] Ethics Aware",
       "[FUNC] Developer",
-      "[FUNC] Video"
+      "[FUNC] Video",
+      "[FUNC] Data Analyst"
+    ],
+    "skills": [],
+    "learningInterests": []
+  },
+  {
+    "id": "1425243355729887273",
+    "discordId": "1425243355729887273",
+    "userId": "1425243355729887273",
+    "username": "ronqabbani",
+    "displayName": "rona",
+    "units": [
+      "media"
+    ],
+    "functions": [
+      "designer",
+      "reporter",
+      "field-ops",
+      "graphics"
+    ],
+    "identityMode": "unknown",
+    "state": "trial",
+    "languages": [],
+    "availability": null,
+    "bio": null,
+    "stats": {
+      "tasksCompleted": 0,
+      "quality": {
+        "reviews": 0,
+        "avgScore": 0
+      },
+      "ethics": {
+        "ok": 0,
+        "needsDiscussion": 0,
+        "violation": 0
+      }
+    },
+    "recommendedState": "guest",
+    "status": null,
+    "createdAt": "2025-12-09T22:42:11.983Z",
+    "updatedAt": "2025-12-09T22:42:11.983Z",
+    "roles": [
+      "@everyone",
+      "Verified",
+      "[STATE] Trial",
+      "[FUNC] Designer",
+      "[FUNC] Reporter",
+      "[FUNC] Field Ops",
+      "[FUNC] Graphics",
+      "[UNIT] Media"
     ],
     "skills": [],
     "learningInterests": []
