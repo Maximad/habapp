@@ -26,7 +26,7 @@ const data = new SlashCommandBuilder()
   .setName('project')
   .setDescription('أوامر إدارة المشاريع في حبق')
 
-  // /project create
+    // /project create
   .addSubcommand(sub =>
     sub
       .setName('create')
@@ -35,18 +35,13 @@ const data = new SlashCommandBuilder()
         o
           .setName('title')
           .setDescription('عنوان المشروع')
-          .setRequired(true),
-      )
-      .addStringOption(o =>
-        o
-          .setName('description')
-          .setDescription('نبذة مختصرة عن المشروع (اختياري)'),
+          .setRequired(true)
       )
       .addStringOption(o =>
         o
           .setName('due')
           .setDescription('تاريخ التسليم (YYYY-MM-DD)')
-          .setRequired(true),
+          .setRequired(true)
       )
       .addStringOption(o => {
         o
@@ -63,7 +58,7 @@ const data = new SlashCommandBuilder()
         o
           .setName('pipeline')
           .setDescription(
-            'اختر مسار العمل من القائمة أو اكتب المفتاح يدوياً (مثل production.video_doc_interviews)',
+            'اختر مسار العمل من القائمة أو اكتب المفتاح يدوياً (مثل production.video_doc_interviews)'
           )
           .setRequired(true);
 
@@ -71,8 +66,15 @@ const data = new SlashCommandBuilder()
           o.addChoices(choice);
         }
         return o;
-      }),
+      })
+      .addStringOption(o =>
+        o
+          .setName('description')
+          .setDescription('وصف قصير للمشروع (اختياري)')
+          .setRequired(false)
+      )
   )
+
 
   // /project list
   .addSubcommand(sub =>
