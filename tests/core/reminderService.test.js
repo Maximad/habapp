@@ -68,3 +68,51 @@ test('getDueReminders handles handover and markReminderSent persists', t => {
   const [updatedProject] = store.read('projects', []);
   assert.ok(updatedProject.tasks[0].reminders.handoverSentAt);
 });
+
+test('reminders are only returned once per window after being marked sent', t => {
+  const { store, dir } = createTempStore();
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  const project = {
+    slug: 'repeat-check',
+    title: 'مشروع',
+    tasks: [{ id: 6, title: 'مرة واحدة', size: 'M', due: '2024-01-11', status: 'open' }]
+  };
+
+  saveProjects([project], store);
+
+  const now = new Date('2024-01-10T00:00:00Z');
+  const first = getDueReminders(now, store);
+  assert.ok(first.some(r => r.task.id === 6 && r.type === 'main'));
+
+  markReminderSent(6, 'main', now, store);
+
+  const second = getDueReminders(now, store);
+  assert.ok(!second.some(r => r.task.id === 6 && r.type === 'main'));
+});
+
+test('completed or archived projects do not produce reminders', t => {
+  const { store, dir } = createTempStore();
+  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+
+  const projects = [
+    {
+      slug: 'done-project',
+      title: 'مغلق',
+      tasks: [{ id: 7, title: 'منتهية', size: 'S', due: '2024-01-10', status: 'done' }]
+    },
+    {
+      slug: 'archived',
+      title: 'مؤرشف',
+      stage: 'archived',
+      tasks: [{ id: 8, title: 'مؤرشف', size: 'S', due: '2024-01-10', status: 'open' }]
+    }
+  ];
+
+  saveProjects(projects, store);
+
+  const now = new Date('2024-01-09T00:00:00Z');
+  const due = getDueReminders(now, store);
+
+  assert.strictEqual(due.length, 0);
+});

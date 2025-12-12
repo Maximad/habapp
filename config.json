@@ -3,12 +3,24 @@
   "guildId": "1423826407271825441",
   "token": "",
 
+  "reminders": {
+    "enabled": true,
+    "intervalMinutes": 10
+  },
+
   
   "unitRoleIds": {
     "media": "1423836304520515614",
     "people": "1423836567587520592",
     "production": "1423836491221827735",
     "geeks": "1423836535962337442"
+  },
+  "unitForumChannelIds": {
+    "media": "FORUM_CHANNEL_ID_HERE",
+    "production": "FORUM_CHANNEL_ID_HERE",
+    "people": "FORUM_CHANNEL_ID_HERE",
+    "think": "FORUM_CHANNEL_ID_HERE",
+    "geeks": "FORUM_CHANNEL_ID_HERE"
   },
   "functionRoleIds": {
     "media.photo": "1423836759418212453",
