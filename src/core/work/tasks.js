@@ -141,6 +141,9 @@ function deleteTask(slug, taskId, store) {
   projects[index] = project;
   saveProjects(projects, store);
 
+  // Note: when adding a user-facing delete flow, also post an update to the
+  // project forum thread via postTaskUpdateToProjectThread to keep the
+  // discussion in sync.
   return true;
 }
 

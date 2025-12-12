@@ -41,6 +41,7 @@ function formatProjectSummary(project = {}, tasks = [], options = {}) {
   const unitLabel = unitMeta?.name_ar || unitKey || '—';
   const pipelineLabel = pipeline?.name_ar || project.pipelineKey || '—';
   const dueLabel = project.dueDate || project.due || 'غير محدد';
+  const desc = (project.description || '').trim();
 
   const heading = options.heading || 'ملخص المشروع:';
   const showOwner = options.showOwner !== false;
@@ -49,6 +50,7 @@ function formatProjectSummary(project = {}, tasks = [], options = {}) {
   const parts = [
     heading,
     `العنوان: **${project.name || project.title || 'بدون عنوان'}**`,
+    desc ? `الوصف: ${desc}` : null,
     `الوحدة: ${unitLabel}`,
     `المسار: ${pipelineLabel}`,
     `تاريخ التسليم: ${dueLabel}`,

@@ -1,6 +1,7 @@
 // src/discord/scheduler/reminders.js
 const { ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const { getDueReminders, markReminderSent } = require('../../core/reminders/reminderService');
+const { postTaskUpdateToProjectThread } = require('../adapters/tasks');
 const config = require('../../../config.json');
 
 const DEFAULT_INTERVAL_MINUTES = 10;
@@ -13,8 +14,11 @@ async function sendReminder(client, reminder) {
   const user = await client.users.fetch(ownerId).catch(() => null);
   if (!user) return false;
 
-  const projectLabel = project.title || project.name || project.slug || 'المشروع';
+  const projectLabel = project.title || project.name || 'المشروع';
   const dueLabel = task.dueDate || task.due || 'بدون موعد محدد';
+  const sizeLabel = task.size ? `[${String(task.size).toUpperCase()}]` : '[—]';
+  const ownerMention = ownerId ? `<@${ownerId}>` : 'غير معيّن بعد';
+  const taskTitle = task.title || task.title_ar || 'مهمة';
 
   const taskActions = new ActionRowBuilder().addComponents(
     new ButtonBuilder()
@@ -28,16 +32,29 @@ async function sendReminder(client, reminder) {
   );
 
   if (type === 'main') {
-    await user.send({
+    const sent = await user.send({
       content:
-        `🔔 تذكير بالمهمة القادمة:\n` +
-        `• المهمة: ${task.title}\n` +
+        `🔔 بس تذكير بالمهمة الجاية:\n` +
+        `• المهمة: ${taskTitle}\n` +
         `• المشروع: ${projectLabel}\n` +
         `• الموعد: ${dueLabel}\n\n` +
         'إذا احتجت مساعدة أو تعديل، أخبر الفريق في قناة المشروع مبكراً ليتمكن أحد من الدعم.',
       components: [taskActions]
     }).catch(() => null);
-    return true;
+    if (sent) {
+      await postTaskUpdateToProjectThread({
+        client,
+        project,
+        task,
+        content:
+          '⏰ تذكير لطيف بالمهمة:\n' +
+          `المشروع: ${projectLabel}\n` +
+          `المهمة: ${taskTitle} (${sizeLabel})\n` +
+          `الموكَّل إلى: ${ownerMention}\n` +
+          `الموعد: ${dueLabel}`,
+      });
+    }
+    return Boolean(sent);
   }
 
   const row = new ActionRowBuilder().addComponents(
@@ -53,13 +70,26 @@ async function sendReminder(client, reminder) {
 
   const sent = await user.send({
     content:
-      `⏰ موعد المهمة قريب جداً:\n` +
-      `• المهمة: ${task.title}\n` +
+      `⚠️ تذكير بنقل المهمة (handover):\n` +
+      `• المهمة: ${taskTitle}\n` +
       `• المشروع: ${projectLabel}\n` +
       `• الموعد: ${dueLabel}\n\n` +
       'إذا لن تتمكن من إنهائها في الوقت المناسب، اضغط "أحتاج من يستلمها عني" لنمنح الوقت لشخص آخر قبل الموعد.',
     components: [row, taskActions]
   }).catch(() => null);
+  if (sent) {
+    await postTaskUpdateToProjectThread({
+      client,
+      project,
+      task,
+      content:
+        '⚠️ تذكير بنقل المهمة (handover):\n' +
+        `المشروع: ${projectLabel}\n` +
+        `المهمة: ${taskTitle} (${sizeLabel})\n` +
+        `الموكَّل إلى: ${ownerMention}\n` +
+        `الموعد: ${dueLabel}`,
+    });
+  }
   return Boolean(sent);
 }
 

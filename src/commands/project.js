@@ -70,8 +70,9 @@ const data = new SlashCommandBuilder()
       .addStringOption(o =>
         o
           .setName('description')
-          .setDescription('وصف قصير للمشروع (اختياري)')
+          .setDescription('وصف مختصر للمشروع (اختياري)')
           .setRequired(false)
+          .setMaxLength(512)
       )
   )
 

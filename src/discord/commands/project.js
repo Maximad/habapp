@@ -81,14 +81,18 @@ function formatStatusLabel(status) {
 }
 
 function formatProjectLine(view) {
-  const title = view.titleAr || view.title || view.slug || 'بدون عنوان';
+  const title = view.titleAr || view.title || 'مشروع بدون اسم';
   const pipelineLabel = formatPipelineLabel(view.pipelineKey);
   const dueLabel = view.dueDate || 'بدون موعد محدد';
   const stageLabel = formatStage(view.stageNormalized || view.stage);
   const counts = view.taskCounts || { open: 0, done: 0, total: 0 };
   const total = counts.total || counts.open + counts.done || 0;
   const countsLabel = `مهام مفتوحة: ${counts.open || 0}/${total}`;
-  return `• ${title} — ${pipelineLabel} — الموعد: ${dueLabel} — المرحلة: ${stageLabel} — ${countsLabel} — المعرّف: ${view.slug}`;
+  const shortDesc = (view.description || '').trim();
+  const descSnippet = shortDesc
+    ? ` — ${shortDesc.slice(0, 60)}${shortDesc.length > 60 ? '…' : ''}`
+    : '';
+  return `• ${title} — ${pipelineLabel} — الموعد: ${dueLabel} — المرحلة: ${stageLabel} — ${countsLabel}${descSnippet}`;
 }
 
 function formatTaskLine(task) {
@@ -100,18 +104,18 @@ function formatTaskLine(task) {
     task?.reminders?.mainSentAt || task?.reminders?.handoverSentAt,
   );
   const reminderBadge = hasReminder ? ' 🔔' : '';
-  return `${size} ${title} — ${owner} — ${due}${reminderBadge}`;
+  return `${size} ${title} — الموكَّل إلى: ${owner} — الموعد: ${due}${reminderBadge}`;
 }
 
 function buildAmbiguousMessage(matches = []) {
   const list = matches
     .slice(0, 5)
-    .map(m => `• ${m.project.name || m.project.title} (${m.project.slug})`);
+    .map(m => `• ${m.project.name || m.project.title}`);
   return [
     'وجدنا أكثر من مشروع بهذا الاسم. وضّح أكثر:',
     ...list,
     '',
-    'أعد المحاولة بكتابة كلمة مميزة من العنوان أو استخدم المعرّف (slug).',
+    'أعد المحاولة بكتابة كلمة مميزة من العنوان أو اختَر من القائمة.',
   ]
     .filter(Boolean)
     .join('\n');
@@ -120,6 +124,7 @@ function buildAmbiguousMessage(matches = []) {
 function formatProjectSummary(snapshot) {
   const { project, pipeline, unit, openTasks } = snapshot;
   const due = project?.dueDate || project?.due || 'بدون موعد محدد';
+  const desc = (project.description || '').trim();
   const taskPreview =
     openTasks && openTasks.length > 0
       ? openTasks
@@ -129,7 +134,8 @@ function formatProjectSummary(snapshot) {
       : 'لا توجد مهام مفتوحة حالياً.';
 
   return [
-    `**${project.name || project.title || project.slug}**`,
+    `**${project.name || project.title || 'المشروع'}**`,
+    desc ? `الوصف: ${desc}` : null,
     `الوحدة: ${unit?.name_ar || unit?.key || project.unit || 'غير محددة'}`,
     `المسار: ${
       (pipeline && (pipeline.name_ar || pipeline.key)) ||
@@ -138,8 +144,6 @@ function formatProjectSummary(snapshot) {
     }`,
     `الموعد النهائي: ${due}`,
     `المرحلة: ${formatStage(project.stage)}`,
-    project.description ? `الوصف: ${project.description}` : null,
-    `المعرّف: ${project.slug}`,
     '',
     'المهام المفتوحة البارزة:',
     taskPreview,
@@ -152,27 +156,28 @@ async function handleCreate(interaction) {
   try {
     const rawTitle = interaction.options.getString('title');
     const title = rawTitle ? rawTitle.trim() : '';
-    const description = interaction.options.getString('description');
+    const rawDescription = interaction.options.getString('description');
+    const description = rawDescription ? rawDescription.trim() : '';
     const unitKey = interaction.options.getString('unit');
     const pipelineKey = interaction.options.getString('pipeline');
     const due = interaction.options.getString('due');
 
     if (!title) {
-      return interaction.reply({
+      return safeEditOrReply(interaction, {
         content: 'عنوان المشروع مطلوب. اكتب اسماً واضحاً للمشروع.',
         ephemeral: true,
       });
     }
 
     if (!unitKey) {
-      return interaction.reply({
+      return safeEditOrReply(interaction, {
         content: 'يجب اختيار الوحدة المسؤولة عن المشروع.',
         ephemeral: true,
       });
     }
 
     if (!pipelineKey) {
-      return interaction.reply({
+      return safeEditOrReply(interaction, {
         content: 'اختر مسار عمل صالح للمشروع.',
         ephemeral: true,
       });
@@ -180,13 +185,11 @@ async function handleCreate(interaction) {
 
     const dueValidation = validateDueDate(due);
     if (!dueValidation.ok) {
-      return interaction.reply({
+      return safeEditOrReply(interaction, {
         content: dueValidation.error,
         ephemeral: true,
       });
     }
-
-    await interaction.deferReply({ ephemeral: true });
 
     const normalizedDue = dueValidation.date.toISOString().slice(0, 10);
 
@@ -203,16 +206,18 @@ async function handleCreate(interaction) {
       if (!unit) {
         const validUnits =
           'الإنتاج، الإعلام، فِكر، الناس، الجيكس';
-        return interaction.editReply(
-          `الوحدة المحددة غير معروفة. اختر من القائمة: ${validUnits}`,
-        );
+        return safeEditOrReply(interaction, {
+          content: `الوحدة المحددة غير معروفة. اختر من القائمة: ${validUnits}`,
+          ephemeral: true,
+        });
       }
 
       if (!pipeline) {
         const validPipelines = formatPipelineList(unit.key);
-        return interaction.editReply(
-          `المسار غير معروف لهذه الوحدة. المسارات المتاحة:\n${validPipelines}`,
-        );
+        return safeEditOrReply(interaction, {
+          content: `المسار غير معروف لهذه الوحدة. المسارات المتاحة:\n${validPipelines}`,
+          ephemeral: true,
+        });
       }
 
       result = createProjectWithScaffold({
@@ -225,27 +230,34 @@ async function handleCreate(interaction) {
       });
     } catch (err) {
       if (err.code === 'PROJECT_EXISTS') {
-        return interaction.editReply(
-          'يوجد مشروع آخر بنفس العنوان. غيّر الاسم أو راجع قائمة المشاريع.',
-        );
+        return safeEditOrReply(interaction, {
+          content:
+            'يوجد مشروع آخر بنفس العنوان. غيّر الاسم أو راجع قائمة المشاريع.',
+          ephemeral: true,
+        });
       }
       if (err.code === 'INVALID_DUE_DATE') {
-        return interaction.editReply(dueValidation.error);
+        return safeEditOrReply(interaction, {
+          content: dueValidation.error,
+          ephemeral: true,
+        });
       }
       if (err.code === 'UNIT_NOT_FOUND') {
         const validUnits =
           'الإنتاج، الإعلام، فِكر، الناس، الجيكس';
-        return interaction.editReply(
-          `الوحدة غير موجودة في النظام. اختر من القائمة: ${validUnits}`,
-        );
+        return safeEditOrReply(interaction, {
+          content: `الوحدة غير موجودة في النظام. اختر من القائمة: ${validUnits}`,
+          ephemeral: true,
+        });
       }
       if (err.code === 'PIPELINE_NOT_FOUND') {
         const valid = unitKey
           ? formatPipelineList(unitKey)
           : 'لا توجد مسارات متاحة.';
-        return interaction.editReply(
-          `المسار المحدد غير معروف. المسارات المتاحة للوحدة المختارة:\n${valid}`,
-        );
+        return safeEditOrReply(interaction, {
+          content: `المسار المحدد غير معروف. المسارات المتاحة للوحدة المختارة:\n${valid}`,
+          ephemeral: true,
+        });
       }
       if (
         err.code === 'UNIT_NOT_FOUND' ||
@@ -256,9 +268,10 @@ async function handleCreate(interaction) {
         const hint = valid
           ? `المسارات المتاحة لهذه الوحدة:\n${valid}`
           : 'تأكد من اختيار وحدة صحيحة ثم جرّب مرة أخرى.';
-        return interaction.editReply(
-          `المسار لا يتوافق مع الوحدة المختارة. ${hint}`,
-        );
+        return safeEditOrReply(interaction, {
+          content: `المسار لا يتوافق مع الوحدة المختارة. ${hint}`,
+          ephemeral: true,
+        });
       }
       throw err;
     }
@@ -272,10 +285,10 @@ async function handleCreate(interaction) {
     const dueLabel = result?.project?.dueDate || normalizedDue;
     const sizeLine = summarizeSizes(result.tasks);
     const response = [
-      '✅ تم إنشاء المشروع:',
+      '✅ مشروعك جاهز:',
       `العنوان: ${title}`,
       `الوحدة: ${unit.name_ar || unit.key}`,
-      `المسار: ${pipeline.name_ar || pipeline.key} (${pipeline.key})`,
+      `المسار: ${pipeline.name_ar || pipeline.key}`,
       `تاريخ التسليم: ${dueLabel}`,
       '',
       sizeLine,
@@ -283,11 +296,11 @@ async function handleCreate(interaction) {
       .filter(Boolean)
       .join('\n');
 
-    return interaction.editReply(response);
+    return safeEditOrReply(interaction, { content: response, ephemeral: true });
   } catch (err) {
     console.error('[HabApp][project]', err);
     const fallback =
-      'حدث خطأ غير متوقع أثناء إنشاء المشروع. \nجرّب مرة أخرى، وإذا استمر الخطأ، أرسل لقطة شاشة لفريق HabApp.';
+      'صار خطأ غير متوقع أثناء إنشاء المشروع.\nلو تكرّر، خبر فريق HabApp مع توضيح بسيط.';
     return safeEditOrReply(interaction, {
       content: fallback,
       ephemeral: true,
@@ -305,25 +318,32 @@ async function handleOpen(interaction) {
       });
     }
 
-    await interaction.deferReply({ ephemeral: true });
     const { project, matches } = resolveProjectByQuery(query);
 
     if (!project && (!matches || matches.length === 0)) {
-      return interaction.editReply(
-        'ما قدرنا نلاقي مشروع بهذا الوصف. جرّب /project list أو اكتب جزء أوضح من الاسم.',
-      );
+      return safeEditOrReply(interaction, {
+        content:
+          'ما قدرنا نلاقي مشروع بهذا الوصف. جرّب /project list أو اكتب جزء أوضح من الاسم.',
+        ephemeral: true,
+      });
     }
 
     if (!project && matches && matches.length > 0) {
-      return interaction.editReply(buildAmbiguousMessage(matches));
+      return safeEditOrReply(interaction, {
+        content: buildAmbiguousMessage(matches),
+        ephemeral: true,
+      });
     }
 
     const snapshot = buildProjectSnapshot(project.slug);
-    return interaction.editReply(formatProjectSummary(snapshot));
+    return safeEditOrReply(interaction, {
+      content: formatProjectSummary(snapshot),
+      ephemeral: true,
+    });
   } catch (err) {
     console.error('[HabApp][project-open]', err);
     const fallback =
-      'حدث خطأ أثناء جلب بيانات المشروع. حاول مرة ثانية أو تواصل مع فريق HabApp.';
+      'صار خطأ أثناء جلب بيانات المشروع. حاول مرة ثانية أو تواصل مع فريق HabApp.';
     return safeEditOrReply(interaction, {
       content: fallback,
       ephemeral: true,
@@ -343,17 +363,21 @@ async function handleTasks(interaction) {
       });
     }
 
-    await interaction.deferReply({ ephemeral: true });
     const { project, matches } = resolveProjectByQuery(query);
 
     if (!project && (!matches || matches.length === 0)) {
-      return interaction.editReply(
-        'ما وجدنا مشروع يطابق النص المدخل. تأكد من الاسم أو استخدم /project list.',
-      );
+      return safeEditOrReply(interaction, {
+        content:
+          'ما وجدنا مشروع يطابق النص المدخل. تأكد من الاسم أو استخدم /project list.',
+        ephemeral: true,
+      });
     }
 
     if (!project && matches && matches.length > 0) {
-      return interaction.editReply(buildAmbiguousMessage(matches));
+      return safeEditOrReply(interaction, {
+        content: buildAmbiguousMessage(matches),
+        ephemeral: true,
+      });
     }
 
     const view = listProjectTasksForView({ projectSlug: project.slug, status });
@@ -362,8 +386,8 @@ async function handleTasks(interaction) {
     const sections = [];
 
     const header = `المهام للمشروع **${
-      project.name || project.title || project.slug
-    }** (${project.slug})`;
+      project.name || project.title || 'المشروع'
+    }**`;
     sections.push(header);
 
     const groupsToRender =
@@ -380,7 +404,10 @@ async function handleTasks(interaction) {
       }
     }
 
-    return interaction.editReply(sections.filter(Boolean).join('\n'));
+    return safeEditOrReply(interaction, {
+      content: sections.filter(Boolean).join('\n'),
+      ephemeral: true,
+    });
   } catch (err) {
     console.error('[HabApp][project-tasks]', err);
     const fallback =
@@ -447,7 +474,7 @@ async function handleList(interaction) {
   } catch (err) {
     console.error('[HabApp][project-list]', err);
     return interaction.reply({
-      content: 'تعذر عرض قائمة المشاريع حالياً. حاول مرة أخرى أو أبلغ فريق HabApp.',
+      content: 'تعذر عرض قائمة المشاريع حالياً. جرّب بعد قليل أو أبلغ فريق HabApp.',
       ephemeral: true,
     });
   }
@@ -523,7 +550,7 @@ async function handleProjectAutocomplete(interaction) {
         const unitLabel = formatUnitLabel(p.unitKey);
         const name = p.titleAr || p.title || p.slug;
         return {
-          name: `${name} – [${unitLabel}] (${p.slug})`,
+          name: `${name} – [${unitLabel}]`,
           value: p.slug,
         };
       });
