@@ -39,6 +39,11 @@ const data = new SlashCommandBuilder()
       )
       .addStringOption(o =>
         o
+          .setName('description')
+          .setDescription('نبذة مختصرة عن المشروع (اختياري)'),
+      )
+      .addStringOption(o =>
+        o
           .setName('due')
           .setDescription('تاريخ التسليم (YYYY-MM-DD)')
           .setRequired(true),

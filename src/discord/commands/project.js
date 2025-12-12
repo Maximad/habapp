@@ -138,6 +138,7 @@ function formatProjectSummary(snapshot) {
     }`,
     `الموعد النهائي: ${due}`,
     `المرحلة: ${formatStage(project.stage)}`,
+    project.description ? `الوصف: ${project.description}` : null,
     `المعرّف: ${project.slug}`,
     '',
     'المهام المفتوحة البارزة:',
@@ -151,6 +152,7 @@ async function handleCreate(interaction) {
   try {
     const rawTitle = interaction.options.getString('title');
     const title = rawTitle ? rawTitle.trim() : '';
+    const description = interaction.options.getString('description');
     const unitKey = interaction.options.getString('unit');
     const pipelineKey = interaction.options.getString('pipeline');
     const due = interaction.options.getString('due');
@@ -215,6 +217,7 @@ async function handleCreate(interaction) {
 
       result = createProjectWithScaffold({
         title,
+        description,
         unit: unit.key,
         pipelineKey: pipeline.key,
         dueDate: normalizedDue,

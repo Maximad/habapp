@@ -25,6 +25,10 @@ function applyProjectDefaults(project) {
   const pipelineKey = typeof project.pipelineKey === 'string' && project.pipelineKey.length > 0 ? project.pipelineKey : null;
   const tasks = Array.isArray(project.tasks) ? project.tasks.map(applyTaskDefaults) : project.tasks;
   const metadata = project.metadata && typeof project.metadata === 'object' ? project.metadata : {};
+  const description =
+    typeof project.description === 'string' && project.description.trim().length > 0
+      ? project.description.trim()
+      : null;
   const driveFolderUrl = project.driveFolderUrl || metadata.driveFolderUrl || null;
   const mainDocUrl = project.mainDocUrl || metadata.mainDocUrl || null;
   const docUrl = project.docUrl || metadata.docUrl || mainDocUrl || null;
@@ -40,6 +44,7 @@ function applyProjectDefaults(project) {
     units,
     pipelineKey,
     tasks,
+    description,
     driveFolderUrl,
     mainDocUrl,
     docUrl,

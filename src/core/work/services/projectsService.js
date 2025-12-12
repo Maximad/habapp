@@ -253,6 +253,7 @@ function createProject({
   name,
   slug,
   due = null,
+  description = null,
   createdBy,
   threadId = null,
   templateCode = null,
@@ -286,6 +287,7 @@ function createProject({
   const project = applyProjectDefaults({
     slug: resolvedSlug,
     name,
+    description,
     due: dueDate,
     dueDate,
     stage: 'planning',
@@ -588,11 +590,13 @@ function createProjectWithScaffold({
   pipelineKey,
   dueDate,
   createdByDiscordId,
+  description = null,
   shootDate = null
 }, store) {
   const { project } = createProject({
     name: title,
     due: dueDate,
+    description,
     unit,
     pipelineKey,
     createdBy: createdByDiscordId,
