@@ -40,6 +40,29 @@ async function createForumThreadForProject({ client, project, pipeline, persistP
     persistProject,
   });
 
+  if (!forumChannel || forumChannel.type !== ChannelType.GuildForum || !forumChannel.threads?.create) {
+    console.warn('[HabApp][project notify] invalid forum channel for unit', { unitKey, forumId });
+    return null;
+  }
+
+  const title = project.title || project.name || project.slug || 'مشروع جديد';
+  const due = project.dueDate || project.due || '—';
+  const desc = (project.description || '').trim();
+  const summary = [
+    `الوحدة: ${unitKey || '—'}`,
+    pipeline ? `المسار: ${pipeline.name_ar || pipeline.key}` : null,
+    desc ? `الوصف: ${desc}` : null,
+    `الاستحقاق: ${due}`,
+    `المعرّف: ${project.slug}`
+  ].filter(Boolean).join('\n');
+
+  const thread = await forumChannel.threads
+    .create({ name: title, message: { content: summary } })
+    .catch(err => {
+      console.warn('[HabApp][project notify] failed to create forum thread', err?.code || err?.message || err);
+      return null;
+    });
+
   if (thread) {
     await postUpdate({
       client,

@@ -92,7 +92,7 @@ function formatProjectLine(view) {
   const descSnippet = shortDesc
     ? ` — ${shortDesc.slice(0, 60)}${shortDesc.length > 60 ? '…' : ''}`
     : '';
-  return `• ${title} — ${pipelineLabel} — الموعد: ${dueLabel} — المرحلة: ${stageLabel} — ${countsLabel}${descSnippet}`;
+  return `• ${title} — ${pipelineLabel} — الموعد: ${dueLabel} — المرحلة: ${stageLabel} — ${countsLabel} — المعرّف: ${view.slug}${descSnippet}`;
 }
 
 function formatTaskLine(task) {
@@ -134,7 +134,7 @@ function formatProjectSummary(snapshot) {
       : 'لا توجد مهام مفتوحة حالياً.';
 
   return [
-    `**${project.name || project.title || 'المشروع'}**`,
+    `**${project.name || project.title || project.slug}**`,
     desc ? `الوصف: ${desc}` : null,
     `الوحدة: ${unit?.name_ar || unit?.key || project.unit || 'غير محددة'}`,
     `المسار: ${
@@ -144,6 +144,7 @@ function formatProjectSummary(snapshot) {
     }`,
     `الموعد النهائي: ${due}`,
     `المرحلة: ${formatStage(project.stage)}`,
+    `المعرّف: ${project.slug}`,
     '',
     'المهام المفتوحة البارزة:',
     taskPreview,
