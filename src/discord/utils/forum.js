@@ -18,7 +18,6 @@ async function createForumPost(guild, forumId, { name, slug, due, templateSummar
 
   const baseLines = [
     `**مشروع:** ${name}`,
-    `**المعرّف:** ${slug}`,
     `**تاريخ التسليم:** ${due || 'غير محدّد'}`,
     `**المراحل:** التخطيط → التصوير → المونتاج → المراجعة → مؤرشف`,
     '',
@@ -30,7 +29,7 @@ async function createForumPost(guild, forumId, { name, slug, due, templateSummar
   }
 
   const post = await forum.threads.create({
-    name: `${slug} • ${name}`,
+    name: `${name}`,
     message: {
       content: baseLines.join('\n')
     },

@@ -81,7 +81,7 @@ function formatStatusLabel(status) {
 }
 
 function formatProjectLine(view) {
-  const title = view.titleAr || view.title || view.slug || 'بدون عنوان';
+  const title = view.titleAr || view.title || 'مشروع بدون اسم';
   const pipelineLabel = formatPipelineLabel(view.pipelineKey);
   const dueLabel = view.dueDate || 'بدون موعد محدد';
   const stageLabel = formatStage(view.stageNormalized || view.stage);
@@ -104,18 +104,18 @@ function formatTaskLine(task) {
     task?.reminders?.mainSentAt || task?.reminders?.handoverSentAt,
   );
   const reminderBadge = hasReminder ? ' 🔔' : '';
-  return `${size} ${title} — ${owner} — ${due}${reminderBadge}`;
+  return `${size} ${title} — الموكَّل إلى: ${owner} — الموعد: ${due}${reminderBadge}`;
 }
 
 function buildAmbiguousMessage(matches = []) {
   const list = matches
     .slice(0, 5)
-    .map(m => `• ${m.project.name || m.project.title} (${m.project.slug})`);
+    .map(m => `• ${m.project.name || m.project.title}`);
   return [
     'وجدنا أكثر من مشروع بهذا الاسم. وضّح أكثر:',
     ...list,
     '',
-    'أعد المحاولة بكتابة كلمة مميزة من العنوان أو استخدم المعرّف (slug).',
+    'أعد المحاولة بكتابة كلمة مميزة من العنوان أو اختَر من القائمة.',
   ]
     .filter(Boolean)
     .join('\n');
@@ -286,10 +286,10 @@ async function handleCreate(interaction) {
     const dueLabel = result?.project?.dueDate || normalizedDue;
     const sizeLine = summarizeSizes(result.tasks);
     const response = [
-      '✅ تم إنشاء المشروع:',
+      '✅ مشروعك جاهز:',
       `العنوان: ${title}`,
       `الوحدة: ${unit.name_ar || unit.key}`,
-      `المسار: ${pipeline.name_ar || pipeline.key} (${pipeline.key})`,
+      `المسار: ${pipeline.name_ar || pipeline.key}`,
       `تاريخ التسليم: ${dueLabel}`,
       '',
       sizeLine,
@@ -301,7 +301,7 @@ async function handleCreate(interaction) {
   } catch (err) {
     console.error('[HabApp][project]', err);
     const fallback =
-      'حدث خطأ غير متوقع أثناء إنشاء المشروع. \nجرّب مرة أخرى، وإذا استمر الخطأ، أرسل لقطة شاشة لفريق HabApp.';
+      'صار خطأ غير متوقع أثناء إنشاء المشروع.\nلو تكرّر، خبر فريق HabApp مع توضيح بسيط.';
     return safeEditOrReply(interaction, {
       content: fallback,
       ephemeral: true,
@@ -344,7 +344,7 @@ async function handleOpen(interaction) {
   } catch (err) {
     console.error('[HabApp][project-open]', err);
     const fallback =
-      'حدث خطأ أثناء جلب بيانات المشروع. حاول مرة ثانية أو تواصل مع فريق HabApp.';
+      'صار خطأ أثناء جلب بيانات المشروع. حاول مرة ثانية أو تواصل مع فريق HabApp.';
     return safeEditOrReply(interaction, {
       content: fallback,
       ephemeral: true,
@@ -387,8 +387,8 @@ async function handleTasks(interaction) {
     const sections = [];
 
     const header = `المهام للمشروع **${
-      project.name || project.title || project.slug
-    }** (${project.slug})`;
+      project.name || project.title || 'المشروع'
+    }**`;
     sections.push(header);
 
     const groupsToRender =
@@ -475,7 +475,7 @@ async function handleList(interaction) {
   } catch (err) {
     console.error('[HabApp][project-list]', err);
     return interaction.reply({
-      content: 'تعذر عرض قائمة المشاريع حالياً. حاول مرة أخرى أو أبلغ فريق HabApp.',
+      content: 'تعذر عرض قائمة المشاريع حالياً. جرّب بعد قليل أو أبلغ فريق HabApp.',
       ephemeral: true,
     });
   }
@@ -551,7 +551,7 @@ async function handleProjectAutocomplete(interaction) {
         const unitLabel = formatUnitLabel(p.unitKey);
         const name = p.titleAr || p.title || p.slug;
         return {
-          name: `${name} – [${unitLabel}] (${p.slug})`,
+          name: `${name} – [${unitLabel}]`,
           value: p.slug,
         };
       });

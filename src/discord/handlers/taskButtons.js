@@ -72,7 +72,7 @@ async function handleTaskButton(interaction, deps = {}) {
     const lookup = store.getTaskById ? store.getTaskById(taskId) : null;
     const taskRef = lookup?.task || lookup;
     const project = lookup?.project || null;
-    const projectSlug = project?.slug || null;
+  const projectTitle = project?.title || project?.name || 'المشروع';
 
     const memberProfile = (await getProfile(interaction)) || {};
     if (action === 'complete') {
@@ -85,18 +85,28 @@ async function handleTaskButton(interaction, deps = {}) {
 
       completeFn(project.slug, taskId, deps.storeRef);
       const title = taskRef.title || taskRef.title_ar || 'مهمة';
+      const sizeLabel = taskRef.size ? `[${String(taskRef.size).toUpperCase()}]` : '[—]';
+      const completedAt = new Date().toISOString().replace('T', ' ').slice(0, 16);
 
       if (interaction.update) {
         await interaction.update({ content: interaction.message?.content, components: [] }).catch(() => null);
       }
 
       await interaction.reply({
-        content: '✅ تم تعليم المهمة كمكتملة. شكرًا!',
+        content: '✅ تم تسجيل إنجاز المهمة. شكرًا لك!',
         ephemeral: true
       }).catch(() => null);
 
-      await postUpdate(projectSlug, `✅ تم إنجاز المهمة: ${title} — <@${interaction.user.id}>`, {
-        client: interaction.client
+      await postUpdate({
+        client: interaction.client,
+        project,
+        task: taskRef,
+        content:
+          '✅ تم إنهاء المهمة.\n' +
+          `المشروع: ${projectTitle}\n` +
+          `المهمة: ${title} (${sizeLabel})\n` +
+          `أنجزها: <@${interaction.user.id}>\n` +
+          `التاريخ: ${completedAt}`,
       });
       return;
     }
@@ -133,8 +143,18 @@ async function handleTaskButton(interaction, deps = {}) {
       await channel.send(payload);
 
       await interaction.reply({ content: '↩️ تم عرض المهمة على الفريق من جديد.', ephemeral: true }).catch(() => null);
-      await postUpdate(projectSlug, `↩️ تم عرض المهمة من جديد: ${updatedTask.title || 'مهمة'} — بدون صاحب`, {
-        client: interaction.client
+      const sizeLabel = updatedTask.size ? `[${String(updatedTask.size).toUpperCase()}]` : '[—]';
+      const dueLabel = updatedTask.due || updatedTask.dueDate || 'غير محدد';
+      const taskTitle = updatedTask.title || updatedTask.title_ar || 'مهمة';
+      await postUpdate({
+        client: interaction.client,
+        project,
+        task: updatedTask,
+        content:
+          `↩️ <@${interaction.user.id}> أعاد المهمة لتكون متاحة للاستلام.\n` +
+          `المشروع: ${projectTitle}\n` +
+          `المهمة: ${taskTitle} (${sizeLabel})\n` +
+          `الموعد: ${dueLabel}`,
       });
       return;
     }
@@ -144,20 +164,28 @@ async function handleTaskButton(interaction, deps = {}) {
     const task = claimFn(store, taskId, interaction.user.id, memberProfile);
     const title = task.title || task.title_ar || 'بدون عنوان';
     const due = task.due || task.dueDate || 'غير محدد';
+    const sizeLabel = task.size ? `[${String(task.size).toUpperCase()}]` : '[—]';
     const updatedContent =
       `مهمة جديدة:\n` +
-      `العنوان: ${title}\n` +
+      `المهمة: ${title} (${sizeLabel})\n` +
       `المالك: <@${interaction.user.id}>\n` +
       `الموعد: ${due}`;
 
     await interaction.update({ content: updatedContent, components: [] });
     await interaction.followUp({
-      content: 'تم تعيين المهمة لك.',
+      content: 'تم تعيين المهمة لك. بالتوفيق!',
       ephemeral: true
     });
 
-    await postUpdate(projectSlug, `📥 تم استلام المهمة: ${title} — <@${interaction.user.id}>`, {
-      client: interaction.client
+    await postUpdate({
+      client: interaction.client,
+      project,
+      task,
+      content:
+        `✅ <@${interaction.user.id}> استلم المهمة.\n` +
+        `المشروع: ${projectTitle}\n` +
+        `المهمة: ${title} (${sizeLabel})\n` +
+        `الموعد: ${due}`,
     });
   } catch (err) {
     if (err.code === 'TASK_NOT_CLAIMABLE') {

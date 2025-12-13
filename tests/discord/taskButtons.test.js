@@ -40,7 +40,7 @@ test('handleTaskButton parses task id and calls claimTask', async () => {
 
   assert.equal(calls.length, 1);
   assert.equal(calls[0].taskId, 42);
-  assert.equal(interaction.updated.content.includes('العنوان: Demo'), true);
+  assert.equal(interaction.updated.content.includes('المهمة: Demo'), true);
 });
 
 test('task reminder complete button marks task done and posts update', async () => {
@@ -60,14 +60,14 @@ test('task reminder complete button marks task done and posts update', async () 
   await handleTaskButton(interaction, {
     completeTask: (slug, id) => completeCalls.push({ slug, id }),
     store: fakeStore,
-    postUpdateToThread: async (slug, content) => updates.push({ slug, content })
+    postUpdateToThread: async payload => updates.push(payload)
   });
 
   assert.equal(completeCalls.length, 1);
   assert.deepEqual(completeCalls[0], { slug: 'demo', id: 7 });
   assert.equal(updates.length, 1);
-  assert.match(updates[0].content, /تم إنجاز المهمة/);
-  assert.equal(interaction.replied.content, '✅ تم تعليم المهمة كمكتملة. شكرًا!');
+  assert.match(updates[0].content, /تم إنهاء المهمة/);
+  assert.equal(interaction.replied.content, '✅ تم تسجيل إنجاز المهمة. شكرًا لك!');
 });
 
 test('task reminder offer button re-offers task and clears owner', async () => {
@@ -89,7 +89,7 @@ test('task reminder offer button re-offers task and clears owner', async () => {
     resolveTaskChannel: async () => ({ send: payload => sent.push(payload) }),
     resolveFallbackChannelKey: () => 'channel-id',
     buildOfferPayload: ({ task }) => ({ content: `payload:${task.id}` }),
-    postUpdateToThread: async (slug, content) => updates.push({ slug, content })
+    postUpdateToThread: async payload => updates.push(payload)
   });
 
   assert.equal(saved.length, 1);
@@ -97,6 +97,6 @@ test('task reminder offer button re-offers task and clears owner', async () => {
   assert.equal(sent.length, 1);
   assert.match(sent[0].content, /payload:9/);
   assert.equal(updates.length, 1);
-  assert.match(updates[0].content, /تم عرض المهمة/);
+  assert.match(updates[0].content, /أعاد المهمة لتكون متاحة/);
   assert.equal(interaction.replied.content, '↩️ تم عرض المهمة على الفريق من جديد.');
 });

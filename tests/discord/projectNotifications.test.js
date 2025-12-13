@@ -74,26 +74,29 @@ test('createForumThreadForProject opens forum thread when configured', async () 
     project,
     pipeline: { key: 'media.production', name_ar: 'إعلام' },
     persistProject: p => persisted.push(p),
-    postUpdate: async (slug, content) => posted.push({ slug, content })
+    postUpdate: async payload => posted.push(payload)
   });
 
   assert.equal(created.length, 1);
   assert.equal(created[0].name, 'مشروع المنتدى');
   assert.equal(persisted[0].forumThreadId, 'thread-99');
   assert.equal(posted.length, 1);
+  assert.match(posted[0].content, /تم إطلاق المشروع/);
 });
 
 test('postTaskUpdateToProjectThread sends when thread exists and no-ops without', async () => {
   const sent = [];
-  await postTaskUpdateToProjectThread('demo', 'hello', {
-    projectOverride: { slug: 'demo', forumThreadId: '123' },
+  await postTaskUpdateToProjectThread({
+    project: { slug: 'demo', forumThreadId: '123' },
+    content: 'hello',
     fetchChannel: async id => ({ send: async payload => sent.push({ id, payload }) })
   });
   assert.equal(sent.length, 1);
   assert.equal(sent[0].id, '123');
 
-  const noop = await postTaskUpdateToProjectThread('demo', 'ignored', {
-    projectOverride: { slug: 'demo' }
+  const noop = await postTaskUpdateToProjectThread({
+    project: { slug: 'demo' },
+    content: 'ignored'
   });
   assert.equal(noop, null);
 });

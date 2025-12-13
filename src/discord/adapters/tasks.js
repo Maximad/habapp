@@ -1,6 +1,7 @@
+const { ChannelType } = require('discord.js');
 const config = require('../../../config.json');
 const { buildErrorMessage } = require('../i18n/messages');
-const { listProjects } = require('../../core/work/projects');
+const { listProjects, upsertProject, findProject } = require('../../core/work/projects');
 const { getUnitByKey, getPipelineByKey } = require('../../core/work/units');
 const channelKeyMap = require('../config/channelKeys');
 const { resolveChannelKey } = require('../utils/channels');
@@ -9,7 +10,6 @@ const {
   listClaimableTasksForProject,
   searchProjectsByQuery,
 } = require('../../core/work/services/projectsService');
-const { findProject } = require('../../core/work/projects');
 
 async function replyLegacy(interaction) {
   const message = buildErrorMessage('tasks_command_legacy');
@@ -75,15 +75,15 @@ function buildTaskOfferPayload({ project, task, unitNameAr }) {
   const due = task.due || task.dueDate || 'غير محدد';
   const sizeLabel = `[${(task.size || '—').toString().toUpperCase()}]`;
   const title = task.title_ar || task.title || 'بدون عنوان';
+  const owner = task.ownerId ? `<@${task.ownerId}>` : 'غير معيّن بعد';
 
   return {
     content:
-      `مهمة جديدة:\n` +
-      `العنوان: ${title}\n` +
-      `المشروع: ${project.title || project.name || project.slug}\n` +
-      `الوحدة: ${unitNameAr}\n` +
-      `الموعد: ${due}\n` +
-      `الحجم: ${sizeLabel}`,
+      `مهمة جديدة جاهزة للاستلام:\n` +
+      `المشروع: ${project.title || project.name || 'المشروع'}\n` +
+      `المهمة: ${title} (${sizeLabel})\n` +
+      `الموكَّل إلى: ${owner}\n` +
+      `الموعد: ${due}`,
     components: [
       {
         type: 1,
@@ -100,24 +100,104 @@ function buildTaskOfferPayload({ project, task, unitNameAr }) {
   };
 }
 
-async function postTaskUpdateToProjectThread(projectSlug, content, options = {}) {
-  const { client = null, fetchChannel = null, projectOverride = null } = options;
-  const project = projectOverride || findProject(projectSlug);
-  if (!project || !project.forumThreadId) return null;
+async function ensureProjectThread({ client, project, pipeline, fetchChannel, persistProject = upsertProject }) {
+  if (!client || !project) return null;
+
+  const unitKey = (project.units && project.units[0]) || project.unit || pipeline?.unitKey || null;
+  const forumId = config.unitForumChannelIds && config.unitForumChannelIds[unitKey];
+  if (!forumId) return null;
 
   const fetcher =
     typeof fetchChannel === 'function'
       ? fetchChannel
-      : client && client.channels && client.channels.fetch
+      : client?.channels?.fetch
         ? id => client.channels.fetch(id)
         : null;
 
   if (!fetcher) return null;
 
+  const pipelineMeta = pipeline || (project.pipelineKey ? getPipelineByKey(project.pipelineKey) : null);
+  const description = (project.description || '').trim();
+  const due = project.dueDate || project.due || '—';
+
+  let forumChannel = await fetcher(forumId).catch(err => {
+    console.warn('[HabApp][task forum] failed to fetch forum channel', err?.code || err?.message || err);
+    return null;
+  });
+
+  if (!forumChannel || forumChannel.type !== ChannelType.GuildForum || !forumChannel.threads?.create) {
+    return null;
+  }
+
+  if (project.forumThreadId) {
+    const existing = await fetcher(project.forumThreadId).catch(() => null);
+    if (existing && typeof existing.send === 'function') return existing;
+  }
+
+  const title = project.title || project.name || 'مشروع جديد';
+  const summary = [
+    `الوحدة: ${unitKey || '—'}`,
+    pipelineMeta ? `المسار: ${pipelineMeta.name_ar || pipelineMeta.key}` : null,
+    description ? `الوصف: ${description}` : null,
+    `الاستحقاق: ${due}`,
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  const thread = await forumChannel.threads
+    .create({ name: title, message: { content: summary } })
+    .catch(err => {
+      console.warn('[HabApp][task forum] failed to create forum thread', err?.code || err?.message || err);
+      return null;
+    });
+
+  if (thread) {
+    const nextProject = {
+      ...project,
+      forumThreadId: thread.id,
+      forumChannelId: forumChannel.id,
+      metadata: {
+        ...(project.metadata || {}),
+        forumThreadId: thread.id,
+        forumChannelId: forumChannel.id,
+        threadId: thread.id,
+      },
+    };
+    persistProject(nextProject);
+    return thread;
+  }
+
+  return null;
+}
+
+async function postTaskUpdateToProjectThread({ client, guildId, project, task, content, components, fetchChannel, persistProject }) {
   try {
-    const thread = await fetcher(project.forumThreadId).catch(() => null);
-    if (!thread || typeof thread.send !== 'function') return null;
-    await thread.send({ content });
+    const baseProject = project || (task?.projectSlug ? findProject(task.projectSlug) : null);
+    if (!baseProject || !content) return null;
+
+    if (baseProject.forumThreadId && typeof fetchChannel === 'function') {
+      const thread = await fetchChannel(baseProject.forumThreadId).catch(() => null);
+      if (thread && typeof thread.send === 'function') {
+        await thread.send({ content, components });
+        return true;
+      }
+    }
+
+    const pipeline = baseProject.pipelineKey ? getPipelineByKey(baseProject.pipelineKey) : null;
+
+    if (!client) return null;
+
+    const forumThread = await ensureProjectThread({
+      client,
+      project: baseProject,
+      pipeline,
+      fetchChannel,
+      persistProject,
+    });
+
+    if (!forumThread || typeof forumThread.send !== 'function') return null;
+
+    await forumThread.send({ content, components });
     return true;
   } catch (err) {
     console.warn('[HabApp][task update] failed to post to forum thread', err?.code || err?.message || err);
@@ -155,13 +235,13 @@ async function handleTaskOffer(interaction, options = {}) {
     if (!project && matches && matches.length > 0) {
       const list = matches
         .slice(0, 5)
-        .map(m => `• ${m.project.name || m.project.title} (${m.project.slug})`)
+        .map(m => `• ${m.project.name || m.project.title}`)
         .join('\n');
       return interaction.reply({
         content:
           'وجدنا أكثر من مشروع بهذا الاسم. وضّح أكثر:\n' +
           `${list}\n\n` +
-          'أعد المحاولة بكتابة كلمة مميزة من العنوان أو استخدم المعرّف (slug).',
+          'أعد المحاولة بكتابة كلمة مميزة من العنوان أو اختَر من القائمة.',
         ephemeral: true,
       });
     }
@@ -243,6 +323,23 @@ async function handleTaskOffer(interaction, options = {}) {
       await channel.send(payload);
     }
 
+    for (const task of tasksToOffer.slice(0, 10)) {
+      const sizeLabel = `[${(task.size || '—').toString().toUpperCase()}]`;
+      const dueLabel = task.due || task.dueDate || 'غير محدد';
+      const title = task.title_ar || task.title || 'مهمة';
+      // eslint-disable-next-line no-await-in-loop
+      await postTaskUpdateToProjectThread({
+        client: interaction.client,
+        project,
+        task,
+        content:
+          'تم عرض المهمة للاستلام من جديد ✋\n' +
+          `المشروع: ${project.title || project.name || 'المشروع'}\n` +
+          `المهمة: ${title} (${sizeLabel})\n` +
+          `الموعد: ${dueLabel}`,
+      });
+    }
+
     return interaction.reply({
       content: 'تم نشر المهام المتاحة لهذا المشروع ليتمكن الأعضاء من استلامها.',
       ephemeral: true,
@@ -284,7 +381,7 @@ async function handleTaskAutocomplete(interaction, options = {}) {
           const unitKey = project.units?.[0] || project.unit || null;
           const unit = unitKey ? getUnitByKey(unitKey) : null;
           const unitLabel = unit?.name_ar || unitKey || '—';
-          const name = `${project.name || project.title || project.slug} – ${unitLabel} – (${project.slug})`;
+          const name = `${project.name || project.title || 'مشروع'} – ${unitLabel}`;
           return { name, value: project.slug };
         });
 
@@ -375,7 +472,7 @@ async function publishClaimableTasksByFunction({ client, project, tasks } = {}) 
       ? destination.roleIds.map(id => `<@&${id}>`).join(' ')
       : '';
 
-    const projectName = project.title || project.name || project.slug || 'مشروع بدون اسم';
+    const projectName = project.title || project.name || 'مشروع بدون اسم';
     const lines = group.tasks.map(task => {
       const sizeLabel = `[${String(task.size || '—').toUpperCase()}]`;
       const title = task.title_ar || task.title || 'بدون عنوان';
@@ -418,6 +515,7 @@ module.exports = {
   handleTaskAutocomplete,
   publishClaimableTasksByFunction,
   postTaskUpdateToProjectThread,
+  ensureProjectThread,
   buildTaskOfferPayload,
   resolveTaskChannel,
   resolveFallbackChannelKey

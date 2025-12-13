@@ -1,9 +1,12 @@
-const { ChannelType } = require('discord.js');
 const cfg = require('../../../config.json');
 const { resolveChannelKey: resolveDiscordChannel } = require('../utils/channels');
 const channelKeyMap = require('../config/channelKeys');
 const { getPipelineByKey } = require('../../core/work/units');
-const { publishClaimableTasksByFunction, postTaskUpdateToProjectThread } = require('./tasks');
+const {
+  publishClaimableTasksByFunction,
+  postTaskUpdateToProjectThread,
+  ensureProjectThread,
+} = require('./tasks');
 const { formatProjectSummary } = require('../utils/formatters');
 const { upsertProject } = require('../../core/work/projects');
 
@@ -28,13 +31,13 @@ function resolveProjectChannelKey(project, pipeline) {
 }
 
 async function createForumThreadForProject({ client, project, pipeline, persistProject = upsertProject, postUpdate = postTaskUpdateToProjectThread }) {
-  const unitKey = (project.units && project.units[0]) || project.unit || pipeline?.unitKey || null;
-  const forumId = cfg.unitForumChannelIds && cfg.unitForumChannelIds[unitKey];
-  if (!forumId || !client) return null;
+  if (!client || !project) return null;
 
-  const forumChannel = await client.channels.fetch(forumId).catch(err => {
-    console.warn('[HabApp][project notify] failed to fetch forum channel', err?.code || err?.message || err);
-    return null;
+  const thread = await ensureProjectThread({
+    client,
+    project,
+    pipeline,
+    persistProject,
   });
 
   if (!forumChannel || forumChannel.type !== ChannelType.GuildForum || !forumChannel.threads?.create) {
@@ -61,11 +64,10 @@ async function createForumThreadForProject({ client, project, pipeline, persistP
     });
 
   if (thread) {
-    const nextProject = { ...project, forumThreadId: thread.id, forumChannelId: forumChannel.id };
-    persistProject(nextProject);
-    await postUpdate(project.slug, 'تم إنشاء المشروع وتم فتح نقاش مخصص له هنا.', {
+    await postUpdate({
       client,
-      projectOverride: nextProject,
+      project,
+      content: 'تم إطلاق المشروع وفتح نقاشه هنا للمتابعة.',
     });
   }
 
@@ -92,13 +94,30 @@ async function notifyProjectCreated({ interaction, project, tasks }) {
 
   const content = `${ping ? `${ping}\n` : ''}` +
     ':rocket:\n' +
-    'تم إنشاء مشروع جديد\n' +
+    'مشروع جديد انطلق\n' +
     `${summary}${mentions ? `\nتنويه: ${mentions}` : ''}`;
 
   const message = await channel.send({ content });
 
   try {
     await publishClaimableTasksByFunction({ client: guild?.client, project, tasks });
+    const claimable = (tasks || []).filter(t => t && t.claimable);
+    for (const task of claimable) {
+      const sizeLabel = `[${String(task.size || '—').toUpperCase()}]`;
+      const dueLabel = task.due || task.dueDate || 'غير محدد';
+      const taskTitle = task.title_ar || task.title || 'مهمة';
+      // eslint-disable-next-line no-await-in-loop
+      await postTaskUpdateToProjectThread({
+        client: guild?.client || interaction?.client,
+        project,
+        task,
+        content:
+          'مهمة جاهزة للاستلام ✋\n' +
+          `المشروع: ${project.title || project.name || 'المشروع'}\n` +
+          `المهمة: ${taskTitle} (${sizeLabel})\n` +
+          `الموعد: ${dueLabel}`,
+      });
+    }
   } catch (err) {
     console.error('[HabApp][project notify] failed to publish claimable tasks', err);
   }
